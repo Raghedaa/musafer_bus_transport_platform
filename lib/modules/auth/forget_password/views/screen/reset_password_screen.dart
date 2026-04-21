@@ -16,7 +16,7 @@ class ResetPasswordScreen extends GetView<ForgetPasswordController> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: const BackButton(color: AppColor.white),
+        leading: BackButton(color: AppColor.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

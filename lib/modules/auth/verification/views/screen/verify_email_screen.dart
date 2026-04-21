@@ -20,7 +20,7 @@ class VerifyEmailScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           padding: EdgeInsets.only(left: 20.w),
-          icon: const Icon(Icons.arrow_back_ios, color: AppColor.black),
+          icon: Icon(Icons.arrow_back_ios, color: AppColor.black),
           onPressed: () {
             Get.back();
           },

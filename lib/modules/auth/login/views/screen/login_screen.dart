@@ -57,7 +57,7 @@ class LoginScreen extends GetView<LoginController> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoute.resetPassword);
+                      Get.toNamed(AppRoute.forget_password);
                     },
                     child: Text(
                       "Forgot Password?",
