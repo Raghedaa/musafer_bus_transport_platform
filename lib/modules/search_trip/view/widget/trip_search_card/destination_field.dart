@@ -13,7 +13,7 @@ class DestinationField extends GetView<TripSearchController> {
     return Obx(
       () => controller.isEditingDestination.value
           ? CustomTextFormField(
-              hint: "Destination",
+              hint: "Destination".tr,
               controller: controller.destinationController,
               prefixIcon: Icons.location_on_outlined,
               suffixIcon: Icons.map_outlined,
@@ -26,7 +26,7 @@ class DestinationField extends GetView<TripSearchController> {
               children: [
                 Icon(
                   Icons.location_on_outlined,
-                  color: AppColor.darkgreen,
+                  color: AppColor.primary,
                   size: 22.sp,
                 ),
                 SizedBox(width: 12.w),
@@ -35,16 +35,16 @@ class DestinationField extends GetView<TripSearchController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "DESTINATION",
-                        style: TextStyle(fontSize: 10.sp, color: AppColor.grey),
+                        "DESTINATION".tr,
+                        style: TextStyle(fontSize: 10.sp, color: AppColor.primaryGrey),
                       ),
                       Text(
-                        controller.destination.value,
+                        controller.destination.value.tr,
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: controller.destination.value.contains("Where")
-                              ? AppColor.grey
+                              ? AppColor.primaryGrey
                               : AppColor.black,
                         ),
                       ),
@@ -54,7 +54,7 @@ class DestinationField extends GetView<TripSearchController> {
                 IconButton(
                   onPressed: () {
                     if (controller.destination.value ==
-                        "Where are you going?") {
+                        "Where are you going?".tr) {
                       controller.destinationController.clear();
                     } else {
                       controller.destinationController.text =

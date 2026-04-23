@@ -10,23 +10,37 @@ class TripInfoHeader extends GetView<TripResultsController> {
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    return Obx(() {
+      return Row(
         children: [
           IconButton(
-            onPressed: () => Get.back(id: 1),
-            icon: Icon(Icons.arrow_back_ios, size: 20.sp, color: AppColor.black),
+            onPressed: () {
+              Get.find<MainLayoutController>().popExplore();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 20.sp,
+              color: AppColor.black,
+            ),
           ),
           Expanded(
             child: Column(
               children: [
                 Text(
-                  "Trip Results",
-                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  "Trip Results".tr,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                color: AppColor.black,
+                  ),
+
                 ),
-                Obx(() => Text(
-                  "${controller.travelDate.value} • ${controller.passengers.value}",
-                  style: TextStyle(fontSize: 12.sp, color: AppColor.grey),
-                )),
+                Obx(
+                  () => Text(
+                    "${controller.travelDate.value.tr} • ${controller.passengers.value.tr}",
+                    style: TextStyle(fontSize: 12.sp, color: AppColor.black),
+                  ),
+                ),
               ],
             ),
           ),
@@ -35,7 +49,7 @@ class TripInfoHeader extends GetView<TripResultsController> {
             icon: Icon(Icons.more_horiz, size: 24.sp),
           ),
         ],
-
-    );
+      );
+    });
   }
 }

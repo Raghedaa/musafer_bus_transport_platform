@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1096480624317",
+    "project_id": "musafer-bus-transport",
+    "storage_bucket": "musafer-bus-transport.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096480624317:android:5b8f2a63658a3b7bcdb1d4",
+        "android_client_info": {
+          "package_name": "com.example.musafer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjiPrSnk9vTJxQ_2V7lv7mt7jZ_ib-LVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

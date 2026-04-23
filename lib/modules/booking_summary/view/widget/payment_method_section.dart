@@ -9,35 +9,41 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "SELECT PAYMENT METHOD",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColor.grey,
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "SELECT PAYMENT METHOD".tr,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColor.black,
+            ),
           ),
-        ),
-        SizedBox(height: 12.h),
+          SizedBox(height: 12.h),
 
-        Obx(() => _buildOption(
-          title: "Digital Payment",
-          subtitle: "VISA, MASTERCARD, WALLET",
-          value: 'digital',
-          icon: Icons.account_balance_wallet_outlined,
-        )),
+          Obx(
+            () => _buildOption(
+              title: "Digital Payment".tr,
+              subtitle: "VISA, MASTERCARD, WALLET".tr,
+              value: 'digital'.tr,
+              icon: Icons.account_balance_wallet_outlined,
+            ),
+          ),
 
-        SizedBox(height: 10.h),
+          SizedBox(height: 10.h),
 
-        Obx(() => _buildOption(
-          title: "Cash / Other",
-          subtitle: "PAY AT BOARDING STATION",
-          value: 'cash',
-          icon: Icons.payments_outlined,
-        )),
-      ],
-    );
+          Obx(
+            () => _buildOption(
+              title: "Cash / Other".tr,
+              subtitle: "PAY AT BOARDING STATION".tr,
+              value: 'cash'.tr,
+              icon: Icons.payments_outlined,
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildOption({
@@ -56,7 +62,9 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
           color: isSelected ? AppColor.white : AppColor.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? AppColor.darkgreen : AppColor.grey.withOpacity(0.3),
+            color: isSelected
+                ? AppColor.primary
+                : AppColor.grey.withOpacity(0.3),
             width: 1.5,
           ),
         ),
@@ -68,7 +76,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
                 color: AppColor.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Icon(icon, color: AppColor.darkgreen),
+              child: Icon(icon, color: AppColor.primary),
             ),
 
             SizedBox(width: 12.w),
@@ -83,15 +91,14 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.sp,
+                      color: AppColor.black,
+
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: AppColor.grey,
-                    ),
+                    style: TextStyle(fontSize: 10.sp, color: AppColor.black),
                   ),
                 ],
               ),
@@ -105,11 +112,11 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected
-                      ? AppColor.darkgreen
+                      ? AppColor.primary
                       : AppColor.grey.withOpacity(0.3),
                   width: 2,
                 ),
-                color: isSelected ? AppColor.darkgreen : AppColor.white,
+                color: isSelected ? AppColor.primary : AppColor.white,
               ),
               child: isSelected
                   ? Icon(Icons.check, size: 14.sp, color: AppColor.white)

@@ -16,10 +16,10 @@ class TripSearchController extends GetxController {
 
   @override
   void onInit() {
-    originController.text = origin.value;
-    destinationController.text = destination.value == "Where are you going?"
+    originController.text = origin.value.tr;
+    destinationController.text = destination.value == "Where are you going?".tr
         ? ""
-        : destination.value;
+        : destination.value.tr;
     super.onInit();
   }
 
@@ -35,8 +35,8 @@ class TripSearchController extends GetxController {
     String temp = origin.value;
     origin.value = destination.value;
     destination.value = temp;
-    originController.text = origin.value;
-    destinationController.text = destination.value;
+    originController.text = origin.value.tr;
+    destinationController.text = destination.value.tr;
   }
 
   void updateDateValue(String date) => departureDate.value = date;

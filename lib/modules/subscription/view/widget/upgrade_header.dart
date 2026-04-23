@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'section_label.dart';
 
@@ -11,7 +12,7 @@ class UpgradeHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SectionLabel(label: "UPGRADE PACKAGES"),
+         SectionLabel(label: "UPGRADE PACKAGES".tr),
 
         Container(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -20,7 +21,7 @@ class UpgradeHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
           ),
           child: Text(
-            "20% OFF INCLUDED",
+            "20% OFF INCLUDED".tr,
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,

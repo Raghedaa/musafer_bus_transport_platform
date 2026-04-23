@@ -19,10 +19,10 @@ class SeatItem extends GetView<SelectSeatController> {
       Widget? content;
 
       if (isSelected) {
-        bgColor = AppColor.darkgreen;
+        bgColor = AppColor.primary;
         content = Text(
           seatNumber,
-          style: const TextStyle(color: AppColor.white),
+          style: TextStyle(color: AppColor.white),
         );
       } else if (status == 1) {
         // شاب
@@ -37,7 +37,7 @@ class SeatItem extends GetView<SelectSeatController> {
         bgColor = AppColor.grey.withOpacity(0.3);
         content = Icon(
           Icons.lock_outline,
-          color: AppColor.grey.withOpacity(0.3),
+          color: AppColor.primaryGrey.withOpacity(0.6),
           size: 18.sp,
         );
       } else {
@@ -46,7 +46,7 @@ class SeatItem extends GetView<SelectSeatController> {
 
       return GestureDetector(
         onTap: ()  {
-        print("TAPPED: $seatNumber");
+        print("TAPPED: $seatNumber".tr);
         controller.toggleSeat(seatNumber);
       },
         child: Container(
@@ -58,7 +58,7 @@ class SeatItem extends GetView<SelectSeatController> {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: AppColor.darkgreen.withOpacity(0.3),
+                      color: AppColor.primary.withOpacity(0.3),
                       blurRadius: 4,
                     ),
                   ]

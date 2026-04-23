@@ -30,9 +30,9 @@ class CustomHeaderOnBoarding extends GetView<OnBoardingControllerImp> {
             TextButton(
               onPressed: () => controller.skip(),
               child: Text(
-                "Skip",
+                "Skip".tr,
                 style: TextStyle(
-                  color: AppColor.darkgreen,
+                  color: AppColor.primary,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                 ),

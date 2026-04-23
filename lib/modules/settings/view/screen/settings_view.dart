@@ -50,12 +50,12 @@ class SettingsView extends GetView<SettingsController> {
                 children: [
                   TextButton(
                     onPressed: () => controller.changeLanguage('ar'),
-                    child: Text("العربية".tr, style: TextStyle(color: AppColor.darkgreen)),
+                    child: Text("العربية".tr, style: TextStyle(color: AppColor.primary)),
                   ),
-                  Text("|", style: TextStyle(color: AppColor.grey)),
+                  Text("|", style: TextStyle(color: AppColor.black)),
                   TextButton(
                     onPressed: () => controller.changeLanguage('en'),
-                    child: Text("English".tr, style: TextStyle(color: AppColor.darkgreen)),
+                    child: Text("English".tr, style: TextStyle(color: AppColor.primary)),
                   ),
                 ],
               ),
@@ -65,23 +65,23 @@ class SettingsView extends GetView<SettingsController> {
 
             _buildSettingTile(
               icon: Icons.dark_mode,
-              title: "darkMode".tr,
+              title: "DarkMode".tr,
               trailing: Switch(
                 value: themeController.isDarkMode.value,
                 onChanged: (val) {
                   themeController.toggleTheme();
                 },
-                activeColor: AppColor.darkgreen,
+                activeColor: AppColor.primary,
               ),
             ),
 
             Divider(color: AppColor.grey.withOpacity(0.2)),
 
             _buildSettingTile(
-              icon: Icons.report_problem_outlined, // أيقونة مناسبة للشكاوى
-              title: "sendComplaint".tr,
-              trailing: Icon(Icons.arrow_forward_ios, size: 16.sp, color: AppColor.grey),
-              onTap: () => Get.toNamed(AppRoute.complaints), // هذا السطر يفتح الصفحة
+              icon: Icons.report_problem_outlined,
+              title: "SendComplaint".tr,
+              trailing: Icon(Icons.arrow_forward_ios, size: 16.sp, color: AppColor.black),
+              onTap: () => Get.toNamed(AppRoute.complaints),
             ),
           ],
         ),
@@ -98,7 +98,7 @@ class SettingsView extends GetView<SettingsController> {
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: AppColor.darkgreen),
+      leading: Icon(icon, color: AppColor.primary),
       title: Text(
           title,
           style: TextStyle(

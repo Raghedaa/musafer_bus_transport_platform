@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
 class CustomStepIndicator extends StatelessWidget {
@@ -11,14 +12,16 @@ class CustomStepIndicator extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildStep(0, "OTP"),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          width: 200.w,
-          height: 2.h,
-          color: currentStep >= 1 ? AppColor.darkgreen : Colors.grey[300],
+        _buildStep(0, "OTP".tr),
+        Expanded(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            width: 200.w,
+            height: 2.h,
+            color: currentStep >= 1 ? AppColor.primary : AppColor.primaryGrey,
+          ),
         ),
-        _buildStep(1, "Profile"),
+        _buildStep(1, "Profile".tr),
       ],
     );
   }
@@ -33,11 +36,11 @@ class CustomStepIndicator extends StatelessWidget {
           width: 45.r,
           height: 45.r,
           decoration: BoxDecoration(
-            color: isCompleted ? AppColor.darkgreen : Colors.grey[200],
+            color: isCompleted ? AppColor.primary : AppColor.primaryGrey,
             shape: BoxShape.circle,
             boxShadow: isCompleted
                 ? [
-              BoxShadow(color: AppColor.darkgreen.withOpacity(0.3),
+              BoxShadow(color: AppColor.primary.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4))
             ]
@@ -60,7 +63,7 @@ class CustomStepIndicator extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
-            color: isCompleted ? AppColor.darkgreen : AppColor.grey,
+            color: isCompleted ? AppColor.primary : AppColor.primaryGrey,
           ),
           child: Text(label),
         ),

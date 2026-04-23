@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
 class AmenitiesSection extends StatelessWidget {
@@ -10,15 +11,15 @@ class AmenitiesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Bus Amenities", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        Text("Bus Amenities".tr, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 15.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildAmenityItem(Icons.wifi, "WI-FI"),
-            _buildAmenityItem(Icons.ac_unit, "AIR CON"),
-            _buildAmenityItem(Icons.usb, "USB PORT"),
-            _buildAmenityItem(Icons.fastfood_outlined, "SNACKS"),
+            _buildAmenityItem(Icons.wifi, "WI-FI".tr),
+            _buildAmenityItem(Icons.ac_unit, "AIR CON".tr),
+            _buildAmenityItem(Icons.usb, "USB PORT".tr),
+            _buildAmenityItem(Icons.fastfood_outlined, "SNACKS".tr),
           ],
         ),
       ],

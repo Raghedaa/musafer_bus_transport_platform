@@ -8,6 +8,6 @@ class AppImageAsset{
   static String onBoardingImageFour="$rootImage/onBoardingImageFour.png";
   static String google_logo="$rootImage/google-logo.svg";
   static String forget_password="$rootImage/forget_password.png";
-  // static String forgetImage="$rootImage/forget_image.jpg";
+  static String app_icon="$rootImage/app_icon.png";
 
 }

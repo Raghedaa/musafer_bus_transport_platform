@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../constants/app_color.dart';
 
@@ -33,66 +34,67 @@ class ManagementTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(15.r),
-      child: Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: bgColor ?? AppColor.white,
-          borderRadius: BorderRadius.circular(15.r),
-          border: borderColor != null
-              ? Border.all(color: borderColor!, width: borderWidth ?? 1.w)
-              : null,
-          boxShadow: [
-            if (bgColor == null || bgColor == AppColor.white)
-              BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+    return Obx(() {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15.r),
+        child: Container(
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: bgColor ?? AppColor.white,
+            borderRadius: BorderRadius.circular(15.r),
+            border: borderColor != null
+                ? Border.all(color: borderColor!, width: borderWidth ?? 1.w)
+                : null,
+            boxShadow: [
+              if (bgColor == null || bgColor == AppColor.white)
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: iconBgColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: iconColor, size: 20.sp),
               ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // الأيقونة مع الخلفية الدائرية
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: iconBgColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 20.sp),
-            ),
-            SizedBox(width: 15.w),
-            // النصوص
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: textColor ?? Colors.black,
+              SizedBox(width: 15.w),
+              // النصوص
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: textColor ?? AppColor.black,
+                      ),
                     ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: textColor?.withOpacity(0.7) ?? Colors.grey,
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: textColor?.withOpacity(0.7) ?? AppColor.black,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            // الأيقونة في النهاية
-            trailing ?? Icon(Icons.arrow_forward_ios, size: 14.sp, color: Colors.grey),
-          ],
+              // الأيقونة في النهاية
+              trailing ?? Icon(Icons.arrow_forward_ios, size: 14.sp, color: AppColor.black),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

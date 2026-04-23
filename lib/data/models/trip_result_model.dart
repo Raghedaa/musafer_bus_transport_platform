@@ -12,6 +12,8 @@ class TripResultModel {
   final String duration;
   final bool isDirect;
   final String? tag;
+  final String tripDate;
+
 
   TripResultModel({
     required this.id,
@@ -25,9 +27,9 @@ class TripResultModel {
     required this.departureTerminal,
     required this.arrivalTerminal,
     required this.duration,
+    required this.tripDate,
     this.isDirect = true,
     this.tag,
   });
 
-// لاحقاً يمكنك إضافة FromJson هنا للربط مع الـ API
 }

@@ -7,8 +7,6 @@ import 'package:musafer/core/constants/app_color.dart';
 import '../shared/custom_button.dart';
 import '../shared/custom_text_form_field.dart';
 
-
-// core/utils/app_pickers.dart
 class AppPickers {
 
   static Future<DateTime?> showCustomDatePicker(BuildContext context) async {
@@ -18,15 +16,42 @@ class AppPickers {
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
       builder: (context, child) {
+        final isDark = Get.isDarkMode;
+
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: AppColor.darkgreen),
+            colorScheme: ColorScheme(
+              brightness: isDark ? Brightness.dark : Brightness.light,
+              primary: AppColor.primary,
+              onPrimary: Colors.white,
+              secondary: AppColor.primary,
+              onSecondary: Colors.white,
+              surface: AppColor.cardColor,
+              onSurface: AppColor.black,
+              background: AppColor.background,
+              onBackground: AppColor.black,
+              error: AppColor.red,
+              onError: AppColor.white,
+            ),
+
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: AppColor.primary,
+              selectionColor: AppColor.primary.withOpacity(0.3),
+              selectionHandleColor: AppColor.primary,
+            ),
+
+            dialogBackgroundColor: AppColor.cardColor,
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColor.primary,
+              ),
+            ),
           ),
           child: child!,
         );
-      },    );
+      },
+    );
   }
-
   static void showPassengerPicker({
     required BuildContext context,
     required TextEditingController customController,
@@ -36,24 +61,24 @@ class AppPickers {
       Container(
         height: 300.h,
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColor.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Select Number of Passengers :", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+               Text("Select Number of Passengers :".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 15),
               Wrap(
                 spacing: 10,
                 children: List.generate(5, (index) {
                   int num = index + 1;
                   return ActionChip(
-                    label: Text("$num Adult"),
+                    label: Text("$num Adult".tr),
                     onPressed: () {
-                      onSelected("$num Adult");
+                      onSelected("$num Adult".tr);
                       Get.back();
                     },
                   );
@@ -66,17 +91,17 @@ class AppPickers {
                     child: CustomTextFormField(
                       controller: customController,
                       keyboardType: TextInputType.number,
-                      hint: "E.g. 10",
+                      hint: "E.g. 10".tr,
                     ),
                   ),
                   const SizedBox(width: 10),
                   CustomButton(
-                    text: "Confirm",
+                    text: "Confirm".tr,
                     width: 100.w,
                     height: 55.h,
                     onPressed: () {
                       if (customController.text.isNotEmpty) {
-                        onSelected("${customController.text} Adults");
+                        onSelected("${customController.text} Adults".tr);
                         customController.clear();
                         Get.back();
                       }

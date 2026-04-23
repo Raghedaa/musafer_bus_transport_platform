@@ -14,7 +14,7 @@ class OnBoarding extends GetView<OnBoardingControllerImp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.scaffoldBackground,
       body: SafeArea(
         child: Stack(
           children: [
@@ -30,13 +30,13 @@ class OnBoarding extends GetView<OnBoardingControllerImp> {
                         const CustomDotControllerOnBoarding(),
                         const Spacer(),
                         CustomButton(
-                          text: "Next",
+                          text: "Next".tr,
                           onPressed: controller.next,
                           width: 220.w,
                           height: 55.h,
-                          color: AppColor.darkgreen,
+                          color: AppColor.primary,
                           borderRadius: 25.r,
-                          textColor: Colors.white,
+                          textColor: AppColor.white,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                         ),

@@ -33,11 +33,11 @@ class VerificationCodeField extends StatelessWidget {
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           maxLength: 1,
-          cursorColor: AppColor.darkgreen,
+          cursorColor: AppColor.primary,
           decoration: InputDecoration(
             counterText: "",
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor:AppColor.primaryGrey,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(color: Colors.grey[300]!),

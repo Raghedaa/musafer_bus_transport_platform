@@ -27,16 +27,16 @@ class FilterButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
           margin: EdgeInsets.only(right: 10.w),
           decoration: BoxDecoration(
-            color: isSelected ? AppColor.darkgreen : Colors.grey.withOpacity(0.05),
+            color: isSelected ? AppColor.primary : Colors.grey.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: isSelected ? AppColor.darkgreen : Colors.transparent,
+              color: isSelected ? AppColor.primary : Colors.transparent,
             ),
           ),
           child: Text(
-            label,
+            label.tr,
             style: TextStyle(
-              color: isSelected ? AppColor.white : AppColor.grey,
+              color: isSelected ? AppColor.white : AppColor.black,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               fontSize: 13.sp,
             ),

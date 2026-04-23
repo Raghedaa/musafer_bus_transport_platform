@@ -1,4 +1,3 @@
-// lib/modules/complaints/controllers/complaints_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +7,7 @@ class ComplaintsController extends GetxController {
   late TextEditingController complaintController;
   var isLoading = false.obs;
   final formKey = GlobalKey<FormState>();
+
   @override
   void onInit() {
     tripNumberController = TextEditingController();
@@ -17,25 +17,15 @@ class ComplaintsController extends GetxController {
   }
 
   void sendComplaint() async {
-
     if (formKey.currentState!.validate()) {
-
       isLoading.value = true;
 
-
-
       try {
-
-        // محاكاة إرسال البيانات للسيرفر (2 ثانية)
-
         await Future.delayed(const Duration(seconds: 2));
 
-
-
-        Get.back(); // العودة لصفحة الإعدادات
+        Get.back();
 
         Get.snackbar(
-
           "success".tr,
 
           "complaintSentSuccess".tr,
@@ -47,17 +37,11 @@ class ComplaintsController extends GetxController {
           colorText: Colors.white,
 
           margin: const EdgeInsets.all(15),
-
         );
-
       } finally {
-
         isLoading.value = false;
-
       }
-
     }
-
   }
 
   @override
@@ -68,5 +52,4 @@ class ComplaintsController extends GetxController {
     super.onClose();
   }
 
-// دالة الإرسال...
 }

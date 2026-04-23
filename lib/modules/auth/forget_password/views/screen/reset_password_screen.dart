@@ -31,7 +31,7 @@ class ResetPasswordScreen extends GetView<ForgetPasswordController> {
                   height: 250.h,
                   fit: BoxFit.fill,
                   errorBuilder: (context, error, stackTrace) =>
-                      Container(color: AppColor.darkgreen, height: 350.h),
+                      Container(color: AppColor.primary, height: 350.h),
                 ),
 
                 Container(
@@ -69,42 +69,42 @@ class ResetPasswordScreen extends GetView<ForgetPasswordController> {
                       "***",
                       style: TextStyle(
                         fontSize: 45.sp,
-                        color: AppColor.darkgreen,
+                        color: AppColor.primary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 5,
                       ),
                     ),
 
                     Text(
-                      "Reset Password",
+                      "Reset Password".tr,
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColor.darkgreen,
+                        color: AppColor.primary,
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    const Text("Enter the 6-digit code sent to your email"),
+                     Text("Enter the 4-digit code sent to your email".tr),
                     SizedBox(height: 30.h),
                     const VerificationCodeField(),
                     SizedBox(height: 20.h),
                     CustomTextFormField(
-                      hint: "New Password",
+                      hint: "New Password".tr,
                       controller: controller.passwordController,
                       prefixIcon: Icons.lock_outline,
                       obscureText: true,
                     ),
                     SizedBox(height: 15.h),
                     CustomTextFormField(
-                      hint: "Confirm Password",
+                      hint: "Confirm Password".tr,
                       controller: controller.confirmPasswordController,
                       prefixIcon: Icons.lock_reset,
                       obscureText: true,
                     ),
                     SizedBox(height: 30.h),
                     CustomButton(
-                      text: "Reset Password",
-                      color: AppColor.darkgreen,
+                      text: "Reset Password".tr,
+                      color: AppColor.primary,
                       onPressed: () => controller.resetPassword(),
                     ),
                     SizedBox(height: 15.h),
@@ -113,9 +113,9 @@ class ResetPasswordScreen extends GetView<ForgetPasswordController> {
                         /* Logic */
                       },
                       child: Text(
-                        "Resend Code",
+                        "Resend Code".tr,
                         style: TextStyle(
-                          color: AppColor.darkgreen,
+                          color: AppColor.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 16.sp,
                         ),

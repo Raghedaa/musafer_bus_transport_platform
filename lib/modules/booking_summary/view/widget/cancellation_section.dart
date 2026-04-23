@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
 class CancellationSection extends StatelessWidget {
@@ -23,7 +24,7 @@ class CancellationSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Cancellation Terms",
+                  "Cancellation Terms".tr,
                   style: TextStyle(
                     color: HSLColor.fromColor(AppColor.orange)
                         .withLightness(
@@ -36,7 +37,7 @@ class CancellationSection extends StatelessWidget {
                 ),
                 SizedBox(height: 5.h),
                 Text(
-                  "Full refund if cancelled 24h before departure. 50% refund if cancelled 12h before.",
+                  "Full refund if cancelled 24h before departure. 50% refund if cancelled 12h before.".tr,
                   style: TextStyle(
                     fontSize: 11.sp,
                     color: AppColor.orange,

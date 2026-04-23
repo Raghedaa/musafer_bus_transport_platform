@@ -30,7 +30,6 @@ class ComplaintsView extends GetView<ComplaintsController> {
                 const ComplaintsHeader(),
                 SizedBox(height: 25.h),
 
-                // الصف الذي يحتوي على رقم الرحلة ورقم التذكرة
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,17 +45,14 @@ class ComplaintsView extends GetView<ComplaintsController> {
 
                 SizedBox(height: 20.h),
 
-                // حقل وصف المشكلة
                 ComplaintTextField(controller: controller.complaintController),
 
                 SizedBox(height: 20.h),
 
-                // قسم المرفقات
                 AttachmentsSection(),
 
                 SizedBox(height: 40.h),
 
-                // زر الإرسال
                 Obx(() => CustomButton(
                   onPressed: controller.sendComplaint,
                   isLoading: controller.isLoading.value,

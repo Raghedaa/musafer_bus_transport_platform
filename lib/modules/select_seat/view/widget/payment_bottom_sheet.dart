@@ -17,7 +17,11 @@ class PaymentBottomSheet extends GetView<SelectSeatController> {
           color: AppColor.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: Offset(0, -5))
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: Offset(0, -5),
+            ),
           ],
         ),
         child: Column(
@@ -29,25 +33,34 @@ class PaymentBottomSheet extends GetView<SelectSeatController> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("TOTAL PRICE", style: TextStyle(color: AppColor.grey, fontSize: 10.sp)),
+                    Text(
+                      "TOTAL PRICE".tr,
+                      style: TextStyle(color: AppColor.black, fontSize: 12.sp,fontWeight: FontWeight.bold),
+                    ),
                     Text(
                       "\$${controller.totalPrice.value.toStringAsFixed(2)}",
-                      style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: AppColor.darkgreen),
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary,
+                      ),
                     ),
                   ],
                 ),
+
                 Text(
-                  "${controller.selectedSeats.length} Seats",
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+                  "${controller.selectedSeats.length} " + "Seats".tr,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 15.h),
             CustomButton(
-              text: "Proceed to Payment",
-              onPressed: controller.selectedSeats.isNotEmpty
-                  ? () => controller.goToPayment()
-                  : null,
+              text: "Proceed to Payment".tr,
+              onPressed: () => controller.goToPayment(),
             ),
           ],
         ),

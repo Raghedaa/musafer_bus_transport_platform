@@ -32,8 +32,8 @@ class TripSearchScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Popular Routes", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                    Text("View All", style: TextStyle(fontSize: 14.sp, color: AppColor.grey)),
+                    Text("Popular Routes".tr, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold,color: AppColor.black),),
+                    Text("View All".tr, style: TextStyle(fontSize: 14.sp, color: AppColor.primaryGrey)),
                   ],
                 ),
               ],

@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:musafer/core/constants/app_color.dart';
-import 'package:musafer/core/constants/app_image.dart'; // تأكد أن google_logo معرف هنا
+import 'package:musafer/core/constants/app_image.dart';
+import 'package:musafer/core/shared/custom_social_button.dart';
 
-class SocialLogin extends StatelessWidget {
+import '../../controllers/login_controller.dart';
+
+class SocialLogin extends GetView<LoginController> {
   const SocialLogin({super.key});
 
   @override
@@ -18,8 +23,8 @@ class SocialLogin extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Text(
-                "OR CONTINUE WITH",
-                style: TextStyle(fontSize: 10.sp, color: AppColor.grey),
+                "OR CONTINUE WITH".tr,
+                style: TextStyle(fontSize: 10.sp, color: AppColor.primaryGrey),
               ),
             ),
             const Expanded(child: Divider()),
@@ -29,8 +34,10 @@ class SocialLogin extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildSocialBtn(
-                label: "Google",
+              child: CustomSocialButton(
+                label: "Google".tr,
+                onPressed: () => {},
+                    // controller.signInWithGoogle(),
                 customIcon: SvgPicture.asset(
                   AppImageAsset.google_logo,
                   height: 18.sp,
@@ -42,41 +49,6 @@ class SocialLogin extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildSocialBtn({
-    required String label,
-    dynamic icon,
-    Color? iconColor,
-    Widget? customIcon,
-  }) {
-    return OutlinedButton.icon(
-      onPressed: () {
-        // أضف الأكشن هنا
-      },
-      icon: customIcon ??
-          FaIcon(
-            icon,
-            color: iconColor,
-            size: 18.sp,
-          ),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: AppColor.black,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColor.black,
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        side: BorderSide(color: Colors.grey.shade300, width: 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-      ),
     );
   }
 }

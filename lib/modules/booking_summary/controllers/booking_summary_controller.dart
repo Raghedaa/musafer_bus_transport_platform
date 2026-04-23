@@ -7,17 +7,9 @@ class BookingSummaryController extends GetxController {
 
   var bookingSummaryModel = Rxn<BookingSummaryModel>();
   var paymentMethod = 'digital'.obs;
-
   final String pnrNumber = "BUS-8829-XP";
 
-  @override
-  void onInit() {
-    super.onInit();
 
-    if (Get.arguments != null) {
-      bookingSummaryModel.value = Get.arguments as BookingSummaryModel;      update();
-    }
-  }
   void copyPNR() {
     Clipboard.setData(ClipboardData(text: pnrNumber));
     Get.snackbar("Copied", "PNR number has been copied successfully");  }

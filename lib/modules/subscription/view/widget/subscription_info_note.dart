@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
 class SubscriptionInfoNote extends StatelessWidget {
@@ -19,8 +20,8 @@ class SubscriptionInfoNote extends StatelessWidget {
           SizedBox(width: 10.w),
           Expanded(
             child: Text(
-              "Monthly subscription discounts (20%) are applied automatically to all corporate packages. Subscriptions renew every 30 days.",
-              style: TextStyle(color: AppColor.orange, fontSize: 11.sp),
+                "subscription_note".tr,
+                style: TextStyle(color: AppColor.orange, fontSize: 11.sp),
             ),
           ),
         ],

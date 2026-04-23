@@ -26,7 +26,7 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
             child: Obx(
               () => _buildInfo(
                 Icons.calendar_today,
-                "DEPARTURE",
+                "DEPARTURE".tr,
                 controller.departureDate.value,
               ),
             ),
@@ -36,7 +36,7 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
         Container(
           width: 1,
           height: 30.h,
-          color: AppColor.grey.withOpacity(0.3),
+          color: AppColor.primaryGrey,
         ),
 
         SizedBox(width: 20.w),
@@ -53,8 +53,8 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
             child: Obx(
               () => _buildInfo(
                 Icons.group_outlined,
-                "PASSENGERS",
-                controller.passengers.value,
+                "PASSENGERS".tr,
+                controller.passengers.value.tr,
               ),
             ),
           ),

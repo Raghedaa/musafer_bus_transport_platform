@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/core/shared/verification_code_field.dart';
@@ -17,8 +18,8 @@ class Step1Otp extends GetView<VerificationController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height:20 ,),
-            Text("Verify Phone",
-                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold)),
+            Text("Verify Phone".tr,
+                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold,color: AppColor.black)),
         
             SizedBox(height: 10.h),
         
@@ -26,13 +27,13 @@ class Step1Otp extends GetView<VerificationController> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: "We've sent a 4-digit code to your phone number",
-                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                    text: "We've sent a 4-digit code to your phone number".tr,
+                    style: TextStyle(color: AppColor.primaryGrey, fontSize: 14.sp),
                   ),
                   TextSpan(
-                    text: " +963 *** *** 42",
+                    text: " +963 *** *** 42".tr,
                     style: TextStyle(
-                      color: AppColor.darkgreen,
+                      color: AppColor.primary,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -55,12 +56,12 @@ class Step1Otp extends GetView<VerificationController> {
               Column(
                 children: [
                   Text(
-                    "Didn't receive the code?",
-                    style: TextStyle(fontWeight: FontWeight.bold,color: AppColor.darkgreen),
+                    "Didn't receive the code?".tr,
+                    style: TextStyle(fontWeight: FontWeight.bold,color: AppColor.primary),
                   ),
                   Text(
-                    "Resend (45s)",
-                    style: TextStyle(fontWeight: FontWeight.bold,color: AppColor.darkgreen),
+                    "${"Resend".tr} (45s)",
+                    style: TextStyle(fontWeight: FontWeight.bold,color: AppColor.primary,fontSize: 18.sp),
                   ),
                 ],
               ),

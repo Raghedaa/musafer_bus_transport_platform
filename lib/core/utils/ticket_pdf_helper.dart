@@ -12,6 +12,7 @@ class TicketPdfHelper {
     required String fromCity,
     required String toCity,
     required String departureTime,
+    required String departureDate,
   }) async {
     final pdf = pw.Document();
 
@@ -63,6 +64,8 @@ class TicketPdfHelper {
                       _buildDataRow("PNR Number:", pnr),
                       pw.SizedBox(height: 8),
                       _buildDataRow("Departure Time:", departureTime),
+                      pw.SizedBox(height: 8),
+                      _buildDataRow("Departure Date:", departureDate),
                     ],
                   ),
                 ),
@@ -72,8 +75,7 @@ class TicketPdfHelper {
                 // 4. QR Code Section
                 pw.BarcodeWidget(
                   barcode: pw.Barcode.qrCode(),
-                  data: "PNR:$pnr | Name:$passengerName | From:$fromCity To:$toCity",
-                  width: 140,
+                  data: "PNR:$pnr | Name:$passengerName | From:$fromCity To:$toCity | Date:$departureDate",                  width: 140,
                   height: 140,
                 ),
                 pw.SizedBox(height: 10),

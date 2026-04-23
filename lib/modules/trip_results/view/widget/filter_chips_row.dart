@@ -37,11 +37,11 @@ class FilterChipsRow extends GetView<TripResultsController> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColor.darkgreen : AppColor.white,
+                    color: isSelected ? AppColor.primary : AppColor.white,
                     borderRadius: BorderRadius.circular(25.r),
                     border: Border.all(
                       color: isSelected
-                          ? AppColor.darkgreen
+                          ? AppColor.primary
                           : AppColor.grey.withOpacity(0.2),
                     ),
                   ),
@@ -54,13 +54,12 @@ class FilterChipsRow extends GetView<TripResultsController> {
                           size: 16.sp,
                           color: isSelected
                               ? AppColor.white
-                              : AppColor.darkgreen,
+                              : AppColor.primary,
                         ),
                         SizedBox(width: 8.w),
                       ],
                       Text(
-                        filter['label'],
-                        style: TextStyle(
+                        filter['label'].toString().tr,                        style: TextStyle(
                           color: isSelected ? AppColor.white : AppColor.black,
                           fontSize: 13.sp,
                           fontWeight: isSelected

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/shared/custom_text_form_field.dart';
 
@@ -13,14 +14,13 @@ class TripNumberField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Trip Number",
+          "Trip Number".tr,
           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColor.black),
         ),
         SizedBox(height: 8.h),
         CustomTextFormField(
           controller: controller,
-          hint: "e.g. BUS-8829", // نمرر الـ hint مباشرة
-          // إذا أردت أيقونة يمكنك إضافتها هنا:
+          hint: "BUS-8829",
           // prefixIcon: Icons.directions_bus,
         ),
       ],

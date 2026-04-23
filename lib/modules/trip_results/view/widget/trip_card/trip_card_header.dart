@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/data/models/trip_result_model.dart';
 
@@ -17,10 +18,10 @@ class TripCardHeader extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 20.r,
-              backgroundColor: AppColor.grey.withOpacity(0.1),
+              backgroundColor: AppColor.grey.withOpacity(0.2),
               child: Icon(
                 Icons.directions_bus,
-                color: AppColor.darkgreen,
+                color: AppColor.primary,
                 size: 22.sp,
               ),
             ),
@@ -32,6 +33,7 @@ class TripCardHeader extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
+                      color: AppColor.black
                   ),
                 ),
                 Row(
@@ -62,11 +64,11 @@ class TripCardHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColor.darkgreen,
+                color: AppColor.primary,
               ),
             ),
             Text(
-              "PER SEAT",
+              "PER SEAT".tr,
               style: TextStyle(fontSize: 10.sp, color: AppColor.grey),
             ),
           ],

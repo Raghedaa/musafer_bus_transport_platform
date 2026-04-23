@@ -13,8 +13,8 @@ class ComplaintTextField extends StatelessWidget {
     return CustomTextFormField(
       controller: controller,
       hint: "writeYourComplaint".tr,
-      maxLines: 8, // هنا نحدد عدد الأسطر ليصبح الحقل كبيراً
-      keyboardType: TextInputType.multiline, // لدعم الانتقال لسطر جديد عند الكتابة
+      maxLines: 8,
+      keyboardType: TextInputType.multiline,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return "Please write something first".tr;

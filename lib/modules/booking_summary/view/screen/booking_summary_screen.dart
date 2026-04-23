@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/shared/custom_button.dart';
+import '../../../main_layout/controller/main_layout_controller.dart';
+import '../../../ticket_details/controllers/ticket_controller.dart';
+import '../../../ticket_details/view/screen/ticket_details_screen.dart';
 import '../../controllers/booking_summary_controller.dart';
 import '../widget/summary_header.dart';
 import '../widget/trip_details_section.dart';
@@ -15,9 +18,7 @@ class BookingSummaryScreen extends GetView<BookingSummaryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Obx(() {
-        // ✅ استخدام Obx لمراقبة التغيرات
         final model = controller.bookingSummaryModel.value;
 
         if (model == null) {
@@ -43,18 +44,22 @@ class BookingSummaryScreen extends GetView<BookingSummaryController> {
                     SizedBox(height: 20.h),
                     const PaymentMethodSection(),
                     SizedBox(height: 30.h),
+                    // داخل BookingSummaryScreen
                     CustomButton(
-                      text: "Confirm & Pay",
+                      text: "Confirm & Pay".tr,
                       onPressed: () {
-                        if (controller.bookingSummaryModel != null) {
-                          Get.toNamed(
-                            '/ticket_details',
-                            arguments: controller.bookingSummaryModel.value,
-                          );
+                        // Get.offNamed('/ticket_details', id: MainLayoutController.exploreNavId);
+
+                        final currentBookingData = controller.bookingSummaryModel.value;
+                        if (currentBookingData != null) {
+                          final ticketCtrl = Get.put(TicketController());
+                          ticketCtrl.ticketData = currentBookingData;
+                          ticketCtrl.update();
+                          Get.find<MainLayoutController>().pushToExplore(const TicketDetailsScreen());
                         }
-                      },
+                        },
                     ),
-                    SizedBox(height: 30.h),
+                    SizedBox(height: 50.h),
                   ],
                 ),
               ),

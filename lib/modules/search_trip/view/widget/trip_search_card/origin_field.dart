@@ -12,7 +12,7 @@ class OriginField extends GetView<TripSearchController> {
   Widget build(BuildContext context) {
     return Obx(() => controller.isEditingOrigin.value
         ? CustomTextFormField(
-      hint: "Origin",
+      hint: "Origin".tr,
       controller: controller.originController,
       prefixIcon: Icons.radio_button_checked,
       suffixIcon: Icons.map_outlined,
@@ -22,14 +22,14 @@ class OriginField extends GetView<TripSearchController> {
     )
         : Row(
       children: [
-        Icon(Icons.radio_button_checked, color: AppColor.darkgreen, size: 22.sp),
+        Icon(Icons.radio_button_checked, color: AppColor.primary, size: 22.sp),
         SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("ORIGIN", style: TextStyle(fontSize: 10.sp, color: AppColor.grey)),
-              Text(controller.origin.value, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+              Text("ORIGIN".tr, style: TextStyle(fontSize: 10.sp, color: AppColor.primaryGrey)),
+              Text(controller.origin.value.tr, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
             ],
           ),
         ),

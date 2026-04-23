@@ -5,7 +5,7 @@ import 'package:get_storage/get_storage.dart';
 class LocaleController extends GetxController {
   final GetStorage _storage = GetStorage();
 
-  Locale? initialLocale;
+  var initialLocale = const Locale('en').obs;
 
   @override
   void onInit() {
@@ -16,15 +16,17 @@ class LocaleController extends GetxController {
   void getSavedLocale() {
     String? savedLocale = _storage.read('lang');
     if (savedLocale == 'ar') {
-      initialLocale = const Locale('ar');
+      initialLocale.value = const Locale('ar');
     } else {
-      initialLocale = const Locale('en');
+      initialLocale.value = const Locale('en');
     }
+    Get.updateLocale(initialLocale.value);
   }
 
   void changeLocale(String langCode) {
     Locale locale = Locale(langCode);
     _storage.write('lang', langCode);
+    initialLocale.value = locale;
     Get.updateLocale(locale);
   }
 }

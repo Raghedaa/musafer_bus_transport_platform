@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
@@ -23,38 +24,38 @@ class Step2Profile extends GetView<VerificationController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Complete Profile",
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
+                Text("Complete Profile".tr,
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold,color: AppColor.black)),
 
                 SizedBox(height: 20.h),
 
                 CustomTextFormField(
-                  hint: "Enter your full name",
+                  hint: "Enter your full name".tr,
                   controller: controller.fullNameController,
                   prefixIcon: Icons.person_outline,
                 ),
 
                 SizedBox(height: 20.h),
 
-                Text("GENDER",
+                Text("GENDER".tr,
                     style: TextStyle(fontSize: 12.sp, color: AppColor.grey)),
 
                 SizedBox(height: 10.h),
 
                 Row(
                   children: [
-                    _genderOption(controller, "Male", Icons.male, "male"),
+                    _genderOption(controller, "Male".tr, Icons.male, "male"),
                     SizedBox(width: 20.w),
-                    _genderOption(controller, "Female", Icons.female, "female"),
+                    _genderOption(controller, "Female".tr, Icons.female, "female"),
                   ],
                 ),
 
                 SizedBox(height: 40.h),
 
                 CustomButton(
-                  text: "Verify & Continue",
+                  text: "Verify & Continue".tr,
                   onPressed: (){
-                    Get.toNamed(AppRoute.main_layout);
+                    Get.offAllNamed(AppRoute.main_layout,arguments: 2);
                   },
                 ),
               ],

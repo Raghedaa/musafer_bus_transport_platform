@@ -16,7 +16,7 @@ class VerifyEmailScreen extends StatelessWidget {
     final controller = Get.put(VerificationController());
 
     return Scaffold(
-      backgroundColor: AppColor.white,
+      backgroundColor: AppColor.scaffoldBackground,
       appBar: AppBar(
         leading: IconButton(
           padding: EdgeInsets.only(left: 20.w),
@@ -32,7 +32,7 @@ class VerifyEmailScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
         child: Column(
           children: [
-            Text("Verification",
+            Text("Verification".tr,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColor.black)),
             SizedBox(height: 20.h),
 

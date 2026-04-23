@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
+import '../../../trip_results/controllers/trip_results_controller.dart';
 import '../../controllers/booking_summary_controller.dart';
 
 class TripDetailsSection extends GetView<BookingSummaryController> {
   const TripDetailsSection({super.key});
+
+  String formatTime(String time) {
+    if (Get.locale?.languageCode == 'ar') {
+      return time
+          .toUpperCase()
+          .replaceAll("AM", "صباحاً")
+          .replaceAll("PM", "مساءً");
+    }
+    return time;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +30,22 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
         );
       }
       final trip = booking.tripDetails;
-
+      final trip_result_controller = Get.find<TripResultsController>();
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "TRIP DETAILS",
+            "TRIP DETAILS".tr,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.sp,
-              color: AppColor.grey,
+              color: AppColor.black,
             ),
           ),
           SizedBox(height: 10.h),
           Card(
             elevation: 0,
+            color: AppColor.grey.withOpacity(0.2),
             shape: RoundedRectangleBorder(
               side: BorderSide(color: AppColor.grey.withOpacity(0.3)),
               borderRadius: BorderRadius.circular(12.r),
@@ -48,8 +60,9 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
                       Column(
                         children: [
                           Text(
-                            trip.departureTime,
+                            formatTime(trip.departureTime),
                             style: TextStyle(
+                              color: AppColor.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 20.sp,
                             ),
@@ -59,33 +72,60 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
                             trip.departureTerminal,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: AppColor.grey,
+                              color: AppColor.black,
                             ),
                           ),
                         ],
                       ),
-
-                      Icon(
-                        Icons.directions_bus,
-                        color: AppColor.darkgreen,
-                        size: 30.sp,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.circle_outlined,
+                              size: 12.sp,
+                              color: AppColor.grey,
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: AppColor.grey.withOpacity(0.3),
+                                thickness: 1,
+                              ),
+                            ),
+                            Icon(
+                              Icons.directions_bus,
+                              size: 16.sp,
+                              color: AppColor.darkgreen,
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: AppColor.grey.withOpacity(0.3),
+                                thickness: 1,
+                              ),
+                            ),
+                            Icon(
+                              Icons.circle,
+                              size: 12.sp,
+                              color: AppColor.grey,
+                            ),
+                          ],
+                        ),
                       ),
-
                       Column(
                         children: [
                           Text(
-                            trip.arrivalTime,
+                            formatTime(trip.arrivalTime),
                             style: TextStyle(
+                              color: AppColor.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 20.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            trip.arrivalTerminal,
+                            formatTime(trip.arrivalTime),
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: AppColor.grey,
+                              color: AppColor.black,
                             ),
                           ),
                         ],
@@ -98,21 +138,22 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // التاريخ
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Date",
+                            "Date".tr,
                             style: TextStyle(
-                              color: AppColor.grey,
+                              color: AppColor.black,
                               fontSize: 11.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            trip.departureTime, // يفضل هنا استخدام تاريخ الرحلة الفعلي إذا توفر
+                            trip_result_controller.travelDate.value,
                             style: TextStyle(
+                              color: AppColor.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 12.sp,
                             ),
@@ -120,14 +161,14 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
                         ],
                       ),
 
-                      // المقاعد المختارة
+                      //  المختارة
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Seats",
+                            "Seats".tr,
                             style: TextStyle(
-                              color: AppColor.grey,
+                              color: AppColor.black,
                               fontSize: 11.sp,
                             ),
                           ),
@@ -135,6 +176,7 @@ class TripDetailsSection extends GetView<BookingSummaryController> {
                           Text(
                             booking.selectedSeats.join(", "),
                             style: TextStyle(
+                              color: AppColor.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 12.sp,
                             ),

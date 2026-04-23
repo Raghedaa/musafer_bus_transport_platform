@@ -57,38 +57,48 @@ class CustomTextFormField<T> extends StatelessWidget {
         isExpanded: isExpanded ?? false,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(color: AppColor.darkgreen),
+          hintStyle: TextStyle(color: AppColor.primary),
           prefixIcon: prefixIcon != null
-              ? Icon(prefixIcon, color: AppColor.darkgreen)
+              ? Icon(prefixIcon, color: AppColor.primary)
               : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
-            borderSide: BorderSide(color: AppColor.darkgreen), // شلنا const
+            borderSide: BorderSide(color: AppColor.primary),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
-            borderSide: BorderSide(color: AppColor.darkgreen), // شلنا const
+            borderSide: BorderSide(color: AppColor.primary),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
             borderSide: BorderSide(
-              color: AppColor.darkgreen,
+              color: AppColor.primary,
               width: 2,
             ),
           ),
-          floatingLabelStyle: TextStyle(color: AppColor.darkgreen), // شلنا const
+          floatingLabelStyle: TextStyle(color: AppColor.primary),
         ),
         hint: initialDropdownHint != null
             ? Text(
           initialDropdownHint!,
-          style: TextStyle(color: AppColor.darkgreen),
+          style: TextStyle(color: AppColor.primary),
         )
             : null,
       );
     }
 
-    return TextFormField(
-      cursorColor: AppColor.darkgreen,
+    return Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppColor.primary,
+            selectionColor: AppColor.primary.withOpacity(0.3),
+            selectionHandleColor: AppColor.primary,
+          ),
+        ),
+      child:
+      TextFormField(
+
+      cursorColor: AppColor.primary,
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
@@ -99,33 +109,33 @@ class CustomTextFormField<T> extends StatelessWidget {
       onEditingComplete: onEditingComplete,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: AppColor.darkgreen), // شلنا const
+        hintStyle: TextStyle(color: AppColor.primary),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppColor.darkgreen)
+            ? Icon(prefixIcon, color: AppColor.primary)
             : null,
         suffixIcon: suffixIcon != null
             ? IconButton(
           onPressed: onSuffixPressed,
-          icon: Icon(suffixIcon, color: AppColor.darkgreen),
+          icon: Icon(suffixIcon, color: AppColor.primary),
         )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColor.darkgreen), // شلنا const
+          borderSide: BorderSide(color: AppColor.primary),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColor.darkgreen), // شلنا const
+          borderSide: BorderSide(color: AppColor.primary),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
           borderSide: BorderSide(
-            color: AppColor.darkgreen,
+            color: AppColor.primary,
             width: 2,
           ),
         ),
-        floatingLabelStyle: TextStyle(color: AppColor.darkgreen), // شلنا const
+        floatingLabelStyle: TextStyle(color: AppColor.primary),
       ),
-    );
+      ));
   }
 }

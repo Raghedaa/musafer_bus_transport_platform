@@ -5,6 +5,7 @@ import 'package:musafer/core/constants/app_color.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+  final bool isLoading;
   final double? width;
   final double? height;
   final double borderRadius;
@@ -18,11 +19,12 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
+    this.isLoading = false,
     this.width,
     this.height,
     this.borderRadius = 12,
     this.color = AppColor.darkgreen,
-    this.textColor = AppColor.white,
+    this.textColor = Colors.white,
     this.fontSize = 16,
     this.fontWeight = FontWeight.bold,
     this.margin,
@@ -35,13 +37,21 @@ class CustomButton extends StatelessWidget {
       width: width ?? double.infinity,
       height: height ?? 50.h,
       decoration: BoxDecoration(
-        color: color,
+        color: isLoading ? color.withOpacity(0.7) : color,
         borderRadius: BorderRadius.circular(borderRadius.r),
       ),
-      child:
-      TextButton(
-        onPressed: onPressed,
-        child: Text(
+      child: TextButton(
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? SizedBox(
+          height: 20.h,
+          width: 20.h,
+          child: const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,
+          ),
+        )
+            : Text(
           text,
           style: TextStyle(
             color: textColor,

@@ -28,7 +28,7 @@ class CustomSliderOnBoarding extends GetView<OnBoardingControllerImp> {
                   width: (model.width ?? 300).w,
                   height: (model.height ?? 300).h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColor.white,
                     border: Border.all(
                       color: model.borderColor ?? Colors.transparent,
                       width: model.borderWidth ?? 0,
@@ -48,12 +48,12 @@ class CustomSliderOnBoarding extends GetView<OnBoardingControllerImp> {
               SizedBox(height: 30.h),
 
               Text(
-                model.title!,
+                model.title!.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 26.sp,
-                  color: AppColor.darkgreen,
+                  color: AppColor.primary,
                 ),
               ),
 
@@ -62,11 +62,11 @@ class CustomSliderOnBoarding extends GetView<OnBoardingControllerImp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Text(
-                  model.body!,
+                  model.body!.tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     height: 1.6,
-                    color: AppColor.darkgreen,
+                    color: AppColor.primary,
                     fontWeight: FontWeight.w500,
                     fontSize: 16.sp,
                   ),

@@ -7,6 +7,7 @@ class BookingSummaryModel {
   final double totalPrice;
   final DateTime bookingDate;
 
+
   BookingSummaryModel({
     required this.tripDetails,
     required this.selectedSeats,

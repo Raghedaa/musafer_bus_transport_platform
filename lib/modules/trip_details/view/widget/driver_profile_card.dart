@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
 class DriverProfileCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class DriverProfileCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Driver Profile", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        Text("Driver Profile".tr, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 15.h),
         Container(
           padding: EdgeInsets.all(15.w),

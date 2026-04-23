@@ -10,6 +10,7 @@ import 'package:musafer/modules/search_trip/view/widget/trip_search_card/origin_
 import 'package:musafer/routes/app_routes/app_routes.dart';
 
 import '../../../../main_layout/controller/main_layout_controller.dart';
+import '../../../../trip_results/view/screen/trip_results_screen.dart';
 import '../../../controllers/search_controller.dart';
 
 class SearchCard extends StatelessWidget {
@@ -17,52 +18,59 @@ class SearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 320.h,
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Stack(
-            alignment: Alignment.centerRight,
-            children: [
-              Column(
-                children: [
-                  const OriginField(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    child: Divider(color: AppColor.grey.withOpacity(0.3), thickness: 1),
-                  ),
-                  const DestinationField(),
-                ],
-              ),
-              Positioned(
-                right: 10.w,
-                top: 40.h, 
-                child: _buildSwapButton(),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          const DateAndPassengersRow(),
-          SizedBox(height: 20.h),
-          CustomButton(
-            text: "Find Trips",
-            onPressed: () => Get.toNamed('/results', id: 1),
-          ),
-        ],
-      ),
-    );
+    return Obx(() {
+       return Container(
+        height: 320.h,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppColor.cardColor,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                Column(
+                  children: [
+                    const OriginField(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                      child: Divider(
+                          color: AppColor.grey.withOpacity(0.3), thickness: 1),
+                    ),
+                    const DestinationField(),
+                  ],
+                ),
+                Positioned(
+                  right: 10.w,
+                  top: 40.h,
+                  child: _buildSwapButton(),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            const DateAndPassengersRow(),
+            SizedBox(height: 20.h),
+            CustomButton(
+              text: "Find Trips".tr,
+              onPressed: () {
+                // Get.toNamed('/results', id: MainLayoutController.exploreNavId);
+                final mainController = Get.find<MainLayoutController>();
+                mainController.pushToExplore(const TripResultsScreen());
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -87,7 +95,7 @@ Widget _buildSwapButton() {
       ),
       child: Icon(
         Icons.swap_vert,
-        color: AppColor.darkgreen,
+        color: AppColor.primary,
         size: 20.sp,
       ),
     ),

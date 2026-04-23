@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/data/models/trip_result_model.dart';
 
@@ -8,13 +9,22 @@ class TripCardTimeLine extends StatelessWidget {
 
   const TripCardTimeLine({super.key, required this.tripResultModel});
 
+  String formatTime(String time) {
+    if (Get.locale?.languageCode == 'ar') {
+      return time
+          .replaceAll("AM", "صباحاً")
+          .replaceAll("PM", "مساءً");
+    }
+    return time;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildTimeInfo(
-          tripResultModel.departureTime,
+          formatTime(tripResultModel.departureTime),
           tripResultModel.departureTerminal,
         ),
 
@@ -33,7 +43,7 @@ class TripCardTimeLine extends StatelessWidget {
                 Icon(
                   Icons.directions_bus,
                   size: 16.sp,
-                  color: AppColor.darkgreen,
+                  color: AppColor.primary,
                 ),
                 Expanded(
                   child: Divider(
@@ -47,7 +57,7 @@ class TripCardTimeLine extends StatelessWidget {
           ),
         ),
         _buildTimeInfo(
-          tripResultModel.arrivalTime,
+          formatTime(tripResultModel.arrivalTime),
           tripResultModel.arrivalTerminal,
         ),
       ],
@@ -60,10 +70,10 @@ class TripCardTimeLine extends StatelessWidget {
       children: [
         Text(
           time,
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold,color: AppColor.black),
         ),
         Text(
-          terminal,
+          terminal.tr,
           style: TextStyle(fontSize: 12.sp, color: AppColor.grey),
         ),
       ],

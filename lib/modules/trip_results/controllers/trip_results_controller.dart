@@ -46,6 +46,8 @@ class TripResultsController extends GetxController {
         departureTerminal: "SF Terminal",
         arrivalTerminal: "LA Union",
         duration: "5h 45m",
+        tripDate: travelDate.value,
+
       ),
       TripResultModel(
         id: "2",
@@ -56,11 +58,13 @@ class TripResultsController extends GetxController {
         price: 38.0,
         departureTime: "09:15 AM",
         arrivalTime: "03:30 PM",
-        departureTerminal: "SF Terminal",
-        arrivalTerminal: "LA Union",
+        departureTerminal: "Damascus",
+        arrivalTerminal: "Homs",
         duration: "6h 15m",
         isDirect: false,
         tag: "NEXT DEPARTURE",
+        tripDate: travelDate.value,
+
       ),
     ];
   }
