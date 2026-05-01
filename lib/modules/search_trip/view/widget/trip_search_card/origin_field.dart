@@ -14,7 +14,7 @@ class OriginField extends GetView<TripSearchController> {
         ? CustomTextFormField(
       hint: "Origin".tr,
       controller: controller.originController,
-      prefixIcon: Icons.radio_button_checked,
+      prefixIcon: Icon(Icons.radio_button_checked),
       suffixIcon: Icons.map_outlined,
       onSuffixPressed: () => print("Open Map"),
       onChanged: (val) => controller.origin.value = val,

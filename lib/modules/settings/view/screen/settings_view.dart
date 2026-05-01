@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../../routes/app_routes/app_routes.dart';
+import '../../../main_layout/controller/main_layout_controller.dart';
 import '../../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -20,11 +21,7 @@ class SettingsView extends GetView<SettingsController> {
       backgroundColor: AppColor.scaffoldBackground,
       appBar: AppBar(
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () =>
-              Get.back()
-        ),
+
         title: Text(
             "settings".tr,
             style: TextStyle(
@@ -50,12 +47,12 @@ class SettingsView extends GetView<SettingsController> {
                 children: [
                   TextButton(
                     onPressed: () => controller.changeLanguage('ar'),
-                    child: Text("العربية".tr, style: TextStyle(color: AppColor.primary)),
+                    child: Text("العربية".tr, style: TextStyle(color: AppColor.black)),
                   ),
                   Text("|", style: TextStyle(color: AppColor.black)),
                   TextButton(
                     onPressed: () => controller.changeLanguage('en'),
-                    child: Text("English".tr, style: TextStyle(color: AppColor.primary)),
+                    child: Text("English".tr, style: TextStyle(color: AppColor.black)),
                   ),
                 ],
               ),

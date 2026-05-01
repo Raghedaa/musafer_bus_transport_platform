@@ -11,62 +11,59 @@ import 'firebase_options.dart';
 import 'core/constants/app_theme.dart';
 import 'core/localization/locale_controller.dart';
 import 'core/theme/theme_controller.dart';
-
-// SharedPreferences? sharedpref;
-
-
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService.initialize();
-
   await GetStorage.init();
 
-  final themeController = Get.put(ThemeController(), permanent: true);
-  final localeController = Get.put(LocaleController(), permanent: true);
 
+  Get.put(ThemeController(), permanent: true);
+  Get.put(LocaleController(), permanent: true);
 
-
-  runApp(MyApp(localeController: localeController, themeController: themeController));
+  runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
-  final LocaleController localeController;
-  final ThemeController themeController;
-  final String? token;
-  const MyApp({super.key, this.token,required this.localeController, required this.themeController});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.find<ThemeController>();
+    final LocaleController localeController = Get.find<LocaleController>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       builder: (context, child) {
+        return Obx(() {
+          final box = GetStorage();
+          final bool savedTheme = box.read('isDarkMode') ?? false;
+          final String? token = box.read('token');
+          final bool isFirstTime = box.read('isFirstTime') ?? true;
 
+          return GetMaterialApp(
+            title: 'Musafer',
+            translations: MyTranslation(),
 
-        // final MyLocaleController localeController = Get.find();
+            locale: localeController.initialLocale.value,
 
-        return Obx(() => GetMaterialApp(
-          translations: MyTranslation(),
-          locale: localeController.initialLocale.value,
-          // supportedLocales: const [
-          //   Locale('ar'),
-          //   Locale('en'),
-          // ],
-          // localizationsDelegates: const [
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
-          debugShowCheckedModeBanner: false,
-          theme: AppThemes.light,
-          darkTheme: AppThemes.dark,
-          themeMode: themeController.theme,
-          getPages: AppPages.pages,
-          initialRoute: AppRoute.onboarding,
-        ));
+            theme: AppThemes.light,
+            darkTheme: AppThemes.dark,
+
+            themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+
+            initialRoute: (token != null && token.isNotEmpty)
+                ? AppRoute.main_layout
+                : (isFirstTime ? AppRoute.onboarding : AppRoute.login),
+
+            getPages: AppPages.pages,
+            debugShowCheckedModeBanner: false,
+          );
+        });
       },
     );
   }

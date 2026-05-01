@@ -3,34 +3,20 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ThemeController extends GetxController {
-  static ThemeController get to => Get.find();
-
   final _box = GetStorage();
   final _key = 'isDarkMode';
 
-  var isDarkMode = false.obs;
+  RxBool isDarkMode = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    isDarkMode.value = _loadTheme();
+    isDarkMode.value = GetStorage().read('isDarkMode') ?? false;
   }
 
-  bool _loadTheme() {
-    final storedValue = _box.read(_key);
-    if (storedValue != null) {
-      return storedValue;
-    }
-    return Get.isPlatformDarkMode;
-  }
-
-  ThemeMode get theme => isDarkMode.value ? ThemeMode.dark : ThemeMode.light;
-
-  void toggleTheme() {
+  void toggleTheme() async {
     isDarkMode.value = !isDarkMode.value;
-    _box.write(_key, isDarkMode.value);
-
+    await _box.write(_key, isDarkMode.value);
     Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-    update();
   }
 }

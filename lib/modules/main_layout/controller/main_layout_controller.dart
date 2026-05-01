@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import '../../booking_summary/controllers/booking_summary_controller.dart';
 import '../../booking_summary/view/screen/booking_summary_screen.dart';
 import '../../search_trip/view/screen/search_screen.dart';
@@ -12,7 +11,7 @@ import '../../ticket_details/view/screen/ticket_details_screen.dart';
 
 
 class MainLayoutController extends GetxController {
-  final RxInt currentIndex = 0.obs;
+  final RxInt currentIndex = 2.obs;
 
   RxList<Widget> exploreStack = <Widget>[const TripSearchScreen()].obs;
 

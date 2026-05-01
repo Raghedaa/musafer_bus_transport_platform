@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:musafer/core/utils/validators/auth_validator.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/shared/custom_text_form_field.dart';
-import '../../../../../routes/app_routes/app_routes.dart';
 import '../../controllers/login_controller.dart';
 
 class LoginFormFields extends GetView<LoginController> {
@@ -11,51 +11,50 @@ class LoginFormFields extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "PHONE NUMBER OR EMAIL".tr,
-          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: AppColor.primaryGrey),
-        ),
-        SizedBox(height: 8.h),
-        CustomTextFormField(
-          hint: "e.g. +963 72** *** 890".tr,
-          controller: controller.usernameController,
-          prefixIcon: Icons.person_outline,
-          keyboardType: TextInputType.emailAddress,
-        ),
-        SizedBox(height: 20.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "PASSWORD".tr,
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: AppColor.primaryGrey),
-            ),
-            GestureDetector(
-              onTap: () => Get.toNamed(AppRoute.forget_password),
-              child: Text(
-                "Forgot Password?".tr,
-                style: TextStyle(color: AppColor.primary, fontSize: 12.sp, fontWeight: FontWeight.w600),
+    return Form(
+      key: controller.formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "PHONE NUMBER ".tr,
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: AppColor.primaryGrey),
+          ),
+          SizedBox(height: 8.h),
+          CustomTextFormField(
+            hint: "09** *** ***".tr,
+            controller: controller.phoneController,
+
+            keyboardType: TextInputType.number,
+
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.phone_android, color: AppColor.primaryGrey, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Text(
+                    "+963".tr,
+                    style: TextStyle(
+                      color: AppColor.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Container(
+                    height: 20.h,
+                    width: 1,
+                    color: AppColor.primaryGrey.withOpacity(0.5),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        Obx(
-              () => CustomTextFormField(
-            hint: "********",
-            controller: controller.passwordController,
-            prefixIcon: Icons.lock_outline,
-            suffixIcon: controller.isPasswordHidden.value
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
-            obscureText: controller.isPasswordHidden.value,
-            onSuffixPressed: () => controller.togglePasswordVisibility(),
+            validator: AuthValidator.phone,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

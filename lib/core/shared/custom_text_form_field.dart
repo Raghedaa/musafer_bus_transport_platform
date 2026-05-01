@@ -8,7 +8,7 @@ class CustomTextFormField<T> extends StatelessWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final IconData? suffixIcon;
   final VoidCallback? onSuffixPressed;
   final void Function(String)? onChanged;
@@ -19,7 +19,7 @@ class CustomTextFormField<T> extends StatelessWidget {
   final T? dropdownValue;
   final void Function(T?)? onDropdownChanged;
   final String? Function(T?)? dropdownValidator;
-
+  final Widget? prefix;
   final String? initialValue;
   final String? initialDropdownHint;
 
@@ -32,6 +32,7 @@ class CustomTextFormField<T> extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.suffixIcon,
+    this.prefix,
     this.onSuffixPressed,
     this.onChanged,
     this.maxLines,
@@ -58,9 +59,14 @@ class CustomTextFormField<T> extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(color: AppColor.primary),
-          prefixIcon: prefixIcon != null
-              ? Icon(prefixIcon, color: AppColor.primary)
-              : null,
+          prefixIcon: prefixIcon,
+          prefix: prefix,
+          prefixStyle: TextStyle(
+            color: AppColor.black, // اللون اللي بدك ياه يثبت عليه
+            fontWeight: FontWeight.bold,
+            fontSize: 14.sp,
+          ),
+
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
             borderSide: BorderSide(color: AppColor.primary),
@@ -107,12 +113,18 @@ class CustomTextFormField<T> extends StatelessWidget {
       maxLines: obscureText ? 1 : maxLines,
       initialValue: initialValue,
       onEditingComplete: onEditingComplete,
+
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: AppColor.primary),
-        prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppColor.primary)
-            : null,
+        hintStyle: TextStyle(color: AppColor.primaryGrey),
+        prefixIcon: prefixIcon,
+        prefix: prefix,
+        prefixStyle: TextStyle(
+          color: AppColor.black, // اللون اللي بدك ياه يثبت عليه
+          fontWeight: FontWeight.bold,
+          fontSize: 14.sp,
+        ),
+
         suffixIcon: suffixIcon != null
             ? IconButton(
           onPressed: onSuffixPressed,

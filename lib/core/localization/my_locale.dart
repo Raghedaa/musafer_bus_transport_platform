@@ -17,17 +17,19 @@ class MyTranslation extends Translations {
       "No need for paper. Your ticket is always with you, even offline.": "لا داعي للأوراق. تذكرتك معك دائماً، حتى بدون اتصال بالإنترنت.",
 
       // --- Sign Up (Phone Auth) ---
+      "FULL NAME":"الاسم الكامل",
+      "name":"الاسم",
       "PHONE NUMBER": "رقم الهاتف",
       "Send Verification Code": "إرسال رمز التحقق",
       "Please enter your phone number": "يرجى إدخال رقم الهاتف",
       "Alert": "تنبيه",
+      'GENDER':'الجنس',
+      'Male':'ذكر',
+      'Female':'أنثى',
+      '09** *** ***': '*** *** **09',
+      "+963":"963+",
 
-      // --- Forgot Password ---
-      "Forgot Password?": "هل نسيت كلمة المرور؟",
-      "Enter your email to receive reset code.": "أدخل بريدك الإلكتروني لتلقي رمز إعادة التعيين.",      "Email": "البريد الإلكتروني",
-      "pleaseEnterEmail": "يرجى إدخال البريد الإلكتروني",
-      "pleaseEnterValidEmail": "يرجى إدخال بريد إلكتروني صالح",
-      "Send Code": "إرسال الرمز",
+
 
       // --- Reset Password ---
       "Reset Password": "إعادة تعيين كلمة المرور",
@@ -41,33 +43,38 @@ class MyTranslation extends Translations {
       "Plan your next intercity journey": "خطط لرحلتك القادمة بين المدن",
       "Login": "تسجيل الدخول",
       "SignUp": "إنشاء حساب",
-      "PHONE NUMBER OR EMAIL": "رقم الهاتف أو البريد الإلكتروني",
+      "PHONE NUMBER ": "رقم الهاتف ",
       "e.g. +1 234 567 890": "مثال: +1 234 567 890",
       "PASSWORD": "كلمة المرور",
       "Remember me": "تذكرني",
       "New traveler? ": "مسافر جديد؟ ",
       "Create an account": "إنشاء حساب جديد",
+      'otp_sent_success': 'تم إرسال رمز التحقق بنجاح',
 
-      // --- Social Login ---
-      "OR CONTINUE WITH": "أو الاستمرار بواسطة",
-      "Google": "جوجل",
-      "خطأ": "خطأ",
-      "فشل تسجيل الدخول عبر جوجل": "فشل تسجيل الدخول عبر جوجل",
 
       // --- Verification ---
       "Verification": "التحقق",
       "OTP": "رمز التحقق",
       "Profile": "الملف الشخصي",
       "Verify Phone": "تحقق من الهاتف",
-      "We've sent a 4-digit code to your phone number": "لقد أرسلنا رمزاً مكوناً من 4 أرقام إلى رقم هاتفك",
+      "We've sent a 6-digit code to your phone number": "لقد أرسلنا رمزاً مكوناً من 6 أرقام إلى رقم هاتفك",
       "Didn't receive the code?": "لم يصلك الرمز؟",
       "Resend": "إعادة إرسال",
-      "Complete Profile": "إكمال الملف الشخصي",
-      "Enter your full name": "أدخل اسمك الكامل",
-      "GENDER": "الجنس",
-      "Male": "ذكر",
-      "Female": "أنثى",
       "Verify & Continue": "تحقق واستمر",
+      'alert_title': 'تنبيه',
+      'error_title': 'خطأ',
+      'verify_error_title': 'خطأ في التحقق',
+      'success_title': 'نجاح',
+      'unexpected_error': 'حدث خطأ غير متوقع',
+      'resend_success_msg': 'تم إعادة إرسال الكود بنجاح',
+      'resend_failed_msg': 'فشل إعادة إرسال الكود',
+      'invalid_data': 'خطأ في البيانات',
+      'invalid_otp': 'الكود غير صحيح',
+      'did_not_receive_code': 'لم يصلك الكود؟',
+      'resend': 'إعادة إرسال',
+      'send': 'إرسال',
+      'verify': 'تحقق',
+      'Send Code':'ارسال الكود',
 
       // --- Trip Search ---
       "Where to?": "إلى أين؟",
@@ -260,6 +267,10 @@ class MyTranslation extends Translations {
       "Sign out of your account": "تسجيل الخروج من حسابك",
       "Total Trips":"إجمالي الرحات",
       "Active PNR":"رقم الحجز النشط",
+      "Email":"الإيميل",
+      "Address":"العنوان",
+      "Save":"حفظ",
+      "Edit Profile":"تعديل الملف الشخصي",
 
 
       // --- Booking History ---
@@ -292,24 +303,18 @@ class MyTranslation extends Translations {
       "No need for paper. Your ticket is always with you, even offline.": "No need for paper. Your ticket is always with you, even offline.",
 
       // --- Sign Up (Phone Auth) ---
+      "FULL NAME":"FULL NAME",
+      "name":"name",
       "PHONE NUMBER": "PHONE NUMBER",
       "Send Verification Code": "Send Verification Code",
       "Please enter your phone number": "Please enter your phone number",
       "Alert": "Alert",
-
-      // --- Forgot Password ---
-      "Forgot Password?": "Forgot Password?",
-      "Enter your email to receive reset code.": "Enter your email to receive reset code.",      "Email": "Email",
-      "pleaseEnterEmail": "Please enter your email",
-      "pleaseEnterValidEmail": "Please enter a valid email",
-      "Send Code": "Send Code",
-
-      // --- Reset Password ---
-      "Reset Password": "Reset Password",
-      "Enter the 6-digit code sent to your email": "Enter the 6-digit code sent to your email",
-      "New Password": "New Password",
-      "Confirm Password": "Confirm Password",
       "Resend Code": "Resend Code",
+      '09** *** ***': '09** *** ***',
+      "+963":"+963",
+      'GENDER': 'Gender',
+      'Male': 'Male',
+      'Female': 'Female',
 
       // --- Verification ---
       "Verification": "Verification",
@@ -319,30 +324,34 @@ class MyTranslation extends Translations {
       "We've sent a 4-digit code to your phone number": "We've sent a 4-digit code to your phone number",
       "Didn't receive the code?": "Didn't receive the code?",
       "Resend": "Resend",
-      "Complete Profile": "Complete Profile",
-      "Enter your full name": "Enter your full name",
-      "GENDER": "GENDER",
-      "Male": "Male",
-      "Female": "Female",
       "Verify & Continue": "Verify & Continue",
+      'alert_title': 'Alert',
+      'error_title': 'Error',
+      'verify_error_title': 'Verification Error',
+      'success_title': 'Success',
+      'unexpected_error': 'An unexpected error occurred',
+      'resend_success_msg': 'Code resent successfully',
+      'resend_failed_msg': 'Failed to resend code',
+      'invalid_data': 'Invalid data',
+      'invalid_otp': 'The code is incorrect',
+      'did_not_receive_code': "Didn't receive the code?",
+      'resend': 'Resend',
+      'send': 'Send',
+      'verify': 'Verify',
+      'Send Code':'Send Code',
 
       // --- Login & Header ---
       "Welcome": "Welcome",
       "Plan your next intercity journey": "Plan your next intercity journey",
       "Login": "Login",
       "Sign Up": "Sign Up",
-      "PHONE NUMBER OR EMAIL": "PHONE NUMBER OR EMAIL",
+      "PHONE NUMBER": "PHONE NUMBER",
       "e.g. +1 234 567 890": "e.g. +1 234 567 890",
       "PASSWORD": "PASSWORD",
       "Remember me": "Remember me",
       "New traveler? ": "New traveler? ",
       "Create an account": "Create an account",
-
-      // --- Social Login ---
-      "OR CONTINUE WITH": "OR CONTINUE WITH",
-      "Google": "Google",
-      "خطأ": "Error",
-      "فشل تسجيل الدخول عبر جوجل": "Google sign-in failed",
+      'otp_sent_success': 'OTP sent successfully',
 
       // --- Trip Search ---
       "Where to?": "Where to?",
@@ -535,8 +544,13 @@ class MyTranslation extends Translations {
       "Sign out of your account": "Sign out of your account",
       "Total Trips":"Total Trips",
       "Active PNR":"Active PNR",
+      "Email":"Email",
+      "Address":"Address",
+      "Save":"Save",
+      "Edit Profile":"Edit Profile",
 
-      // --- Booking History ---
+
+// --- Booking History ---
 
       "booking_history": "Booking History",
       "All": "All",

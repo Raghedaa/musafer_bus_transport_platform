@@ -2,31 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+
 class LocaleController extends GetxController {
   final GetStorage _storage = GetStorage();
 
-  var initialLocale = const Locale('en').obs;
+  late Rx<Locale> initialLocale;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getSavedLocale();
-  }
-
-  void getSavedLocale() {
-    String? savedLocale = _storage.read('lang');
-    if (savedLocale == 'ar') {
-      initialLocale.value = const Locale('ar');
+  LocaleController() {
+    String? savedLang = _storage.read('lang');
+    if (savedLang != null) {
+      initialLocale = Locale(savedLang).obs;
     } else {
-      initialLocale.value = const Locale('en');
+      initialLocale = Locale(Get.deviceLocale?.languageCode ?? 'ar').obs;
     }
-    Get.updateLocale(initialLocale.value);
   }
 
   void changeLocale(String langCode) {
-    Locale locale = Locale(langCode);
     _storage.write('lang', langCode);
-    initialLocale.value = locale;
-    Get.updateLocale(locale);
+    initialLocale.value = Locale(langCode);
+    Get.updateLocale(initialLocale.value);
   }
 }

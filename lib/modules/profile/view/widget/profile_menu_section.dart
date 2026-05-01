@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/shared/management_tile.dart';
+import '../../../../routes/app_routes/app_routes.dart';
 import '../../../main_layout/controller/main_layout_controller.dart';
+import 'package:get_storage/get_storage.dart';
+
 
 class ProfileMenuSection extends StatelessWidget {
   const ProfileMenuSection({super.key});
@@ -37,8 +40,9 @@ class ProfileMenuSection extends StatelessWidget {
           icon: Icons.person_outline,
           iconColor: AppColor.blue,
           iconBgColor: Colors.blue.withOpacity(0.1),
-          onTap: () {},
-        ),
+          onTap: () {
+            Get.toNamed(AppRoute.personal_info);
+          },        ),
         SizedBox(height: 12.h),
 
         ManagementTile(
@@ -60,8 +64,11 @@ class ProfileMenuSection extends StatelessWidget {
           textColor: AppColor.red,
           trailing: const SizedBox.shrink(),
           onTap: () {
-            // منطق تسجيل الخروج
-          },
+            final box = GetStorage();
+            box.remove('token');
+            box.remove('user_info');
+            Get.offAllNamed(AppRoute.login);
+            },
         ),
       ],
     );

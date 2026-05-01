@@ -12,7 +12,20 @@
           "package_name": "com.example.musafer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1096480624317-hvdlim3tlcr7a07h4a5jmemrknfr5d2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.musafer",
+            "certificate_hash": "ad64679998bb5f678a9a4e4da764e7ee9c447437"
+          }
+        },
+        {
+          "client_id": "1096480624317-ic2i2s35vemu6etu86t5qv97nd8kh4i4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCjiPrSnk9vTJxQ_2V7lv7mt7jZ_ib-LVs"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096480624317-ic2i2s35vemu6etu86t5qv97nd8kh4i4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1096480624317-ven8j3fqckvkemok2g49ht1tm3gtne3b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.musafer"
+              }
+            }
+          ]
         }
       }
     }

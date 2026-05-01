@@ -7,6 +7,13 @@ class AppThemes {
     brightness: Brightness.light,
     scaffoldBackgroundColor: const Color(0xFFF8F9FC),
     primaryColor: AppColor.darkgreen,
+
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColor.darkgreen, // لون الخط الواق واقف (المؤشر)
+      selectionColor: Color(0x4D3D4E3C), // لون التظليل عند تحديد النص (أخضر شفاف)
+      selectionHandleColor: AppColor.darkgreen, // لون النقطة اللي بتطلع تحت المؤشر
+    ),
+
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -48,6 +55,11 @@ class AppThemes {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xFF121212),
     primaryColor: AppColor.darkgreen,
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Color(0xFF5F7F5C),
+      selectionColor: Color(0x4D5F7F5C),
+      selectionHandleColor: Color(0xFF5F7F5C),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,

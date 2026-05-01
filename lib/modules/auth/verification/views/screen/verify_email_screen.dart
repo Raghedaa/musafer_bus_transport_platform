@@ -5,7 +5,6 @@ import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/modules/auth/verification/controllers/verification_controller.dart';
 import 'package:musafer/modules/auth/verification/views/widget/custom_step_indicator.dart';
 import 'package:musafer/modules/auth/verification/views/widget/step_1_otp.dart';
-import 'package:musafer/modules/auth/verification/views/widget/step_2_otp.dart';
 
 
 class VerifyEmailScreen extends StatelessWidget {
@@ -13,7 +12,7 @@ class VerifyEmailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(VerificationController());
+    final controller = Get.find<VerificationController>();
 
     return Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
@@ -37,19 +36,13 @@ class VerifyEmailScreen extends StatelessWidget {
             SizedBox(height: 20.h),
 
             Obx(() => CustomStepIndicator(
-              currentStep: controller.currentStep.value,
+              currentLength: controller.otpLength.value,
             )),
 
             SizedBox(height: 40.h),
 
             Expanded(
-              child: Obx(() {
-                if (controller.currentStep.value == 0) {
-                  return const Step1Otp();
-                } else {
-                  return const Step2Profile();
-                }
-              }),
+              child: const Step1Otp(),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../booking_history/controllers/booking_history_controller.dart';
 import '../../booking_summary/controllers/booking_summary_controller.dart';
+import '../../profile/controller/profile_controller.dart';
 import '../../select_seat/controllers/select_seat_controller.dart';
 import '../../subscription/controllers/subscription_controller.dart';
 import '../../ticket_details/controllers/ticket_controller.dart';
@@ -19,5 +20,6 @@ class MainLayoutBinding extends Bindings {
     Get.lazyPut(() => SelectSeatController());
     Get.lazyPut(() => BookingSummaryController());
     Get.lazyPut(() => TicketController());
+    Get.lazyPut(() => ProfileController());
   }
 }

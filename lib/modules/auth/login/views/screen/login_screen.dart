@@ -3,15 +3,13 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/shared/custom_button.dart';
-import '../../../../../routes/app_routes/app_routes.dart';
+import '../../../sign_up/controllers/signup_controller.dart';
 import '../../../sign_up/view/widget/signup_form_card.dart';
 import '../../controllers/login_controller.dart';
 import '../widget/auth_header.dart';
 import '../widget/auth_toggle.dart';
-import '../widget/social_login.dart';
-import '../widget/login_form_fields.dart';
-import '../widget/remember_me_section.dart';
 import '../widget/login_footer.dart';
+import '../widget/login_form_fields.dart';
 
 
 class LoginScreen extends GetView<LoginController> {
@@ -26,20 +24,19 @@ class LoginScreen extends GetView<LoginController> {
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
-              SizedBox(height: 40.h),
+              SizedBox(height: 60.h),
               const AuthHeader(),
-              SizedBox(height: 30.h),
+              SizedBox(height: 40.h),
               const AuthToggle(),
-              SizedBox(height: 30.h),
+              SizedBox(height: 40.h),
 
               Obx(() => controller.isLogin.value
                   ? _buildLoginForm()
-                  : const SignUpFormCard()
-              ),
+                  : _buildSignUpForm()),
 
-              SizedBox(height: 30.h),
-              const SocialLogin(),
+              SizedBox(height: 50.h),
               const LoginFooter(),
+
             ],
           ),
         ),
@@ -51,9 +48,26 @@ class LoginScreen extends GetView<LoginController> {
     return Column(
       children: [
         const LoginFormFields(),
-        const RememberMeSection(),
-        SizedBox(height: 20.h),
-        CustomButton(text: "Login".tr, onPressed: () => controller.login()),
+        SizedBox(height: 24.h),
+        CustomButton(
+            text: "Send Code".tr,
+            onPressed: () => controller.login()
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignUpForm() {
+    final signUpController = Get.find<SignUpController>();
+
+    return Column(
+      children: [
+        const SignUpFormCard(),
+        SizedBox(height: 24.h),
+        CustomButton(
+            text: "Send Code".tr,
+            onPressed: () => signUpController.signUp()
+        ),
       ],
     );
   }

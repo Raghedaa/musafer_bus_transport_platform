@@ -15,7 +15,7 @@ class DestinationField extends GetView<TripSearchController> {
           ? CustomTextFormField(
               hint: "Destination".tr,
               controller: controller.destinationController,
-              prefixIcon: Icons.location_on_outlined,
+              prefixIcon:Icon(Icons.location_on_outlined),
               suffixIcon: Icons.map_outlined,
               onSuffixPressed: () => print("Open Map"),
               onChanged: (val) => controller.destination.value = val,
