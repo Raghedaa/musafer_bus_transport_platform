@@ -29,13 +29,26 @@ class TripSearchScreen extends StatelessWidget {
                 SizedBox(height: 25.h),
 
                 // Popular Routes
-                Row(
+                Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Popular Routes".tr, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold,color: AppColor.black),),
-                    Text("View All".tr, style: TextStyle(fontSize: 14.sp, color: AppColor.primaryGrey)),
+                    Text(
+                      "Popular Routes".tr,
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.black, // رح يتغير فوراً للأبيض بفضل Obx
+                      ),
+                    ),
+                    Text(
+                      "View All".tr,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColor.primaryGrey,
+                      ),
+                    ),
                   ],
-                ),
+                )),
               ],
             ),
           ),

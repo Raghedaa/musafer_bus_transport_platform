@@ -20,7 +20,7 @@ class UpgradeHeader extends StatelessWidget {
             color: AppColor.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(20.r),
           ),
-          child: Text(
+          child: Obx(() =>Text(
             "20% OFF INCLUDED".tr,
             style: TextStyle(
               fontSize: 10.sp,
@@ -28,6 +28,7 @@ class UpgradeHeader extends StatelessWidget {
               color:  AppColor.black,
             ),
           ),
+        )
         )
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/modules/settings/view/screen/settings_view.dart';
@@ -14,14 +15,14 @@ class MainLayoutScreen extends GetView<MainLayoutController> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        final shouldExit = await controller.onWillPop();
-        if (shouldExit) SystemNavigator.pop();
-      },
-      child: Scaffold(
-        body:
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) return;
+          final shouldExit = await controller.onWillPop();
+          if (shouldExit) SystemNavigator.pop();
+        },
+        child: Scaffold(
+          body:
           Obx(() {
             return IndexedStack(
               index: controller.currentIndex.value,
@@ -38,53 +39,88 @@ class MainLayoutScreen extends GetView<MainLayoutController> {
               ],
             );
           }),
-        bottomNavigationBar: Obx(() =>BottomNavigationBar(
-          currentIndex: controller.currentIndex.value,
-          onTap: controller.changePage,
-          selectedItemColor: AppColor.darkgreen,
-          unselectedItemColor: AppColor.grey,
-          type: BottomNavigationBarType.fixed,
-          selectedFontSize: 14,
-          unselectedFontSize: 12,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.confirmation_num_outlined,
-                size: controller.currentIndex.value == 0 ? 28 : 22,
-              ),
-              label: "Bookings".tr,
+
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Obx(() => Container(
+            margin: EdgeInsets.only(top: 38.h),
+            height: 60.r,
+            width: 60.r,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Get.isDarkMode
+                      ? Colors.black.withOpacity(0.4)
+                      : Colors.grey.withOpacity(0.2),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.local_offer_outlined,
-                size: controller.currentIndex.value == 1 ? 28 : 22,
+            child: FloatingActionButton(
+              elevation: 0,
+              backgroundColor: AppColor.white,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: AppColor.black.withOpacity(0.3),
+                  width: 1,
+                ),
               ),
-              label: "Offers".tr,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                size: controller.currentIndex.value == 2 ? 32 : 24, // 👈 أكبر شوي
+              onPressed: () => controller.changePage(2),
+              child: Icon(
+                Icons.home,
+                color: AppColor.darkgreen,
+                size: 28.r,
               ),
-              label: "Explore".tr,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings_outlined,
-                size: controller.currentIndex.value == 3 ? 28 : 22,
+          )),
+
+          bottomNavigationBar: Obx(() =>BottomNavigationBar(
+            currentIndex: controller.currentIndex.value,
+            onTap: controller.changePage,
+            selectedItemColor: AppColor.darkgreen,
+            unselectedItemColor: AppColor.grey,
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: 14,
+            unselectedFontSize: 12,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.confirmation_num_outlined,
+                  size: controller.currentIndex.value == 0 ? 28 : 22,
+                ),
+                label: "Bookings".tr,
               ),
-              label: "Settings".tr,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_outline,
-                size: controller.currentIndex.value == 4 ? 28 : 22,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.local_offer_outlined,
+                  size: controller.currentIndex.value == 1 ? 28 : 22,
+                ),
+                label: "Offers".tr,
               ),
-              label: "Profile".tr,
-            ),
-          ],
-        )
-      ),)
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home, color: Colors.transparent),
+                label: "",
+              ),
+
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings_outlined,
+                  size: controller.currentIndex.value == 3 ? 28 : 22,
+                ),
+                label: "Settings".tr,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person_outline,
+                  size: controller.currentIndex.value == 4 ? 28 : 22,
+                ),
+                label: "Profile".tr,
+              ),
+            ],
+          )
+          ),)
     );
   }
 }
