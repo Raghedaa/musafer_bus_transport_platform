@@ -1,7 +1,7 @@
-import 'trip_result_model.dart';
+import 'trip_model.dart';
 
 class BookingSummaryModel {
-  final TripResultModel tripDetails;
+  final TripModel tripDetails;
   final List<String> selectedSeats;
   final String pnrNumber;
   final double totalPrice;

@@ -12,60 +12,61 @@ class SeatItem extends GetView<SelectSeatController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      int status = controller.seatStatus[seatNumber] ?? 0;
+      final seat = controller.vehicleModel.value?.seats.firstWhereOrNull((s) => s.label == seatNumber);
+      if (seat == null) return const SizedBox();
+
+      bool isBooked = seat.status == 3;
       bool isSelected = controller.selectedSeats.contains(seatNumber);
+      bool isFemale = seat.gender?.toLowerCase() == 'female';
+      bool isMale = seat.gender?.toLowerCase() == 'male';
 
-      Color bgColor = AppColor.white;
-      Widget? content;
+      Color getBgColor() {
+        if (isSelected) return const Color(0xFF384D3B);
+        if (isBooked) {
+          if (isFemale) return const Color(0xFFFCE4EC);
+          if (isMale) return const Color(0xFFE3F2FD);
+          return const Color(0xFFE0E0E0);
+        }
+        return Colors.white;
+      }
 
-      if (isSelected) {
-        bgColor = AppColor.primary;
-        content = Text(
-          seatNumber,
-          style: TextStyle(color: AppColor.white),
-        );
-      } else if (status == 1) {
-        // شاب
-        bgColor = AppColor.blue.withOpacity(0.3);
-        bgColor = AppColor.blue.withOpacity(0.3);
-        content = Icon(Icons.person, color: AppColor.blue, size: 20.sp);
-      } else if (status == 2) {
-        // فتاة
-        bgColor = AppColor.pink.withOpacity(0.3);
-        content = Icon(Icons.person, color: AppColor.pink, size: 20.sp);
-      } else if (status == 3) {
-        bgColor = AppColor.grey.withOpacity(0.3);
-        content = Icon(
-          Icons.lock_outline,
-          color: AppColor.primaryGrey.withOpacity(0.6),
-          size: 18.sp,
-        );
-      } else {
-        content = Text(seatNumber, style: TextStyle(color: AppColor.grey));
+      Color getBorderColor() {
+        if (isSelected) return const Color(0xFF384D3B);
+        if (isBooked) {
+          if (isFemale) return const Color(0xFFF06292);
+          if (isMale) return const Color(0xFF64B5F6);
+          return const Color(0xFFBDBDBD);
+        }
+        return const Color(0xFFBDBDBD);
       }
 
       return GestureDetector(
-        onTap: ()  {
-        print("TAPPED: $seatNumber".tr);
-        controller.toggleSeat(seatNumber);
-      },
+        onTap: isBooked ? null : () => controller.toggleSeat(seatNumber),
         child: Container(
           margin: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
-            color: bgColor,
+            color: getBgColor(),
+            border: Border.all(color: getBorderColor(), width: 1.w),
             borderRadius: BorderRadius.circular(8.r),
-            border: Border.all(color: AppColor.grey.withOpacity(0.2)),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColor.primary.withOpacity(0.3),
-                      blurRadius: 4,
-                    ),
-                  ]
-                : null,
           ),
-          alignment: Alignment.center,
-          child: content,
+          child: Center(
+            child: isBooked
+                ? (isFemale || isMale)
+                ? Icon(
+              isFemale ? Icons.person : Icons.person,
+              color: isFemale ? const Color(0xFFD81B60) : const Color(0xFF1E88E5),
+              size: 20.sp,
+            )
+                : Icon(Icons.lock, color: const Color(0xFF9E9E9E), size: 18.sp)
+                : Text(
+              seatNumber,
+              style: TextStyle(
+                color: isSelected ? Colors.white : const Color(0xFF757575),
+                fontWeight: FontWeight.w500,
+                fontSize: 12.sp,
+              ),
+            ),
+          ),
         ),
       );
     });

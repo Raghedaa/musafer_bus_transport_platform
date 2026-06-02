@@ -1,18 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:musafer/core/constants/app_color.dart';
+import '../../../../core/constants/app_color.dart';
+import '../../controllers/trip_results_controller.dart';
 
-import '../../../search_trip/controllers/search_controller.dart';
-
-class TripRouteCard extends StatelessWidget {
+class TripRouteCard extends GetView<TripResultsController> {
   const TripRouteCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final searchController = Get.find<TripSearchController>();
-
     return Obx(() {
       return Container(
         height: 100.h,
@@ -33,22 +30,21 @@ class TripRouteCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             children: [
-              _buildLoc("FROM".tr, searchController.origin.value.tr,
-                  CrossAxisAlignment.start), Expanded(
+              // الاستماع المباشر لأسماء المدن الممررة بالـ Controller الجديد
+              _buildLoc("FROM".tr, controller.originName.value.tr, CrossAxisAlignment.start),
+              Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.directions_bus, color: AppColor.darkgreen,
-                        size: 20.sp),
+                    Icon(Icons.directions_bus, color: AppColor.darkgreen, size: 20.sp),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.w),
-                      child: Divider(color: AppColor.grey.withOpacity(0.2),
-                          thickness: 1),
+                      child: Divider(color: AppColor.grey.withOpacity(0.2), thickness: 1),
                     ),
                   ],
                 ),
               ),
-              _buildLoc("TO".tr, searchController.destination.value.tr,
-                  CrossAxisAlignment.end),
+              _buildLoc("TO".tr, controller.destinationName.value.tr, CrossAxisAlignment.end),
             ],
           ),
         ),
@@ -59,9 +55,10 @@ class TripRouteCard extends StatelessWidget {
   Widget _buildLoc(String label, String city, CrossAxisAlignment align) {
     return Column(
       crossAxisAlignment: align,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(label, style: TextStyle(color: AppColor.grey, fontSize: 10.sp)),
-        Text(city, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp,color: AppColor.black)),
+        Text(city, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp, color: AppColor.black)),
       ],
     );
   }

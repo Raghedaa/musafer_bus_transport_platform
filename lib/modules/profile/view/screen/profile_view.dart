@@ -6,31 +6,38 @@ import '../../controller/profile_controller.dart';
 import '../widget/profile_header.dart';
 import '../widget/profile_menu_section.dart';
 import '../widget/stats_section.dart';
+import '../widget/wallet_section.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        backgroundColor: AppColor.scaffoldBackground,
-        body: SafeArea(
-          child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: AppColor.scaffoldBackground,
+      body: SafeArea(
+        child: Obx(() {
+          final wallets = controller.userData['wallets'] ?? [];
+
+          return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
             child: Column(
               children: [
                 SizedBox(height: 30.h),
                 const ProfileHeader(),
                 SizedBox(height: 25.h),
-                const StatsSection(),
+                if (wallets.isNotEmpty)
+                  WalletSection(wallets: wallets)
+                else
+                  Text("No wallets found".tr),
+
                 SizedBox(height: 30.h),
                 const ProfileMenuSection(),
               ],
             ),
-          ),
-        ),
-      );
-    });
+          );
+        }),
+      ),
+    );
   }
 }

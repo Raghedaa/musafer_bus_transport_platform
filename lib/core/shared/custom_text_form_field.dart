@@ -56,6 +56,10 @@ class CustomTextFormField<T> extends StatelessWidget {
         onChanged: onDropdownChanged,
         validator: dropdownValidator,
         isExpanded: isExpanded ?? false,
+        hint: initialDropdownHint != null
+            ? Text(initialDropdownHint!, style: TextStyle(color: AppColor.primary))
+            : Text(hint, style: TextStyle(color: AppColor.primary)),
+
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(color: AppColor.primary),
@@ -84,12 +88,6 @@ class CustomTextFormField<T> extends StatelessWidget {
           ),
           floatingLabelStyle: TextStyle(color: AppColor.primary),
         ),
-        hint: initialDropdownHint != null
-            ? Text(
-          initialDropdownHint!,
-          style: TextStyle(color: AppColor.primary),
-        )
-            : null,
       );
     }
 

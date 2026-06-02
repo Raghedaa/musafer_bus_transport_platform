@@ -1,66 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../../core/constants/app_color.dart';
-import '../widget/tracking_sheet.dart';
+import '../../../../core/services/api_service.dart';
+import '../../controllers/trip_tracking_controller.dart';
 
-class TripTrackingScreen extends StatelessWidget {
+class TripTrackingScreen extends GetView<TripTrackingController> {
   const TripTrackingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // 1. قسم الخريطة (حالياً خلفية ملونة)
-          Container(
-            width: double.infinity,
-            height: 0.6.sh, // تأخذ 60% من ارتفاع الشاشة
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xff4a3427), Color(0xffd6a77a)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: Center(
-              child: Icon(Icons.directions_bus, size: 50.sp, color: Colors.white),
-            ),
-          ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (controller.isMapReady.value &&
+              controller.busLocation.value != null) {
+            controller.mapController.move(controller.busLocation.value!, 15.0);
+          } else {
+            debugPrint("الموقع غير جاهز بعد");
+          }
+        },
 
-          // 2. الـ Custom AppBar
-          Positioned(
-            top: 50.h,
-            left: 20.w,
-            right: 20.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        backgroundColor: AppColor.darkgreen,
+        child: Icon(Icons.my_location, color: AppColor.white),
+      ),
+      body: Obx(() {
+        final apiService = Get.find<ApiService>();
+        if (!apiService.isConnected.value) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildCircleIcon(Icons.arrow_back_ios_new, () => Get.back()),
-                Text(
-                  "Trip Tracking",
-                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: AppColor.darkgreen),
+                const Icon(Icons.wifi_off, size: 80, color: AppColor.darkgreen),
+                SizedBox(height: 16.h),
+                Text("No internet connection, please check your network and try again.".tr),
+                ElevatedButton(
+                  onPressed: () async {
+                    bool connected = await apiService.checkConnection();
+                    if (connected) {
+                      controller.fetchTripDetails();
+                    }
+                  },
+                  child: Text("إعادة المحاولة".tr),
                 ),
-                _buildCircleIcon(Icons.more_horiz, () {}),
               ],
             ),
+          );
+        }
+
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppColor.darkgreen),
+          );
+        }
+        return FlutterMap(
+          mapController: controller.mapController,
+          options: MapOptions(
+            initialZoom: 7,
+            onMapReady: () => controller.onMapReady(),
           ),
+          children: [
 
-          // 3. الـ Bottom Sheet (التفاصيل)
-          const TrackingSheet(),
-        ],
-      ),
-    );
-  }
+            TileLayer(
+              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              additionalOptions: {
+                'lang': 'ar',
+              },
+              userAgentPackageName: 'com.musafer.app',
+              errorTileCallback: (tile, error, stackTrace) {},
+            ),
+            Obx(
+              () => PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: controller.polylinePoints.toList(),
+                    strokeWidth: 5,
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            ),
 
-  Widget _buildCircleIcon(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(10.w),
-        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Icon(icon, size: 20.sp, color: AppColor.darkgreen),
-      ),
+            Obx(() => MarkerLayer(markers: controller.markers.toList())),
+
+            Obx(
+              () => controller.busLocation.value != null
+                  ? MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: controller.busLocation.value!,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColor.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.location_on,
+                                color: AppColor.darkgreen,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

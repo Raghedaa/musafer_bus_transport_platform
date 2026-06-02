@@ -1,79 +1,133 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:musafer/core/constants/app_color.dart';
-import 'package:musafer/core/shared/custom_button.dart';
-import 'package:musafer/modules/search_trip/view/widget/trip_search_card/date_passengers_row.dart';
-import 'package:musafer/modules/search_trip/view/widget/trip_search_card/destination_field.dart';
-import 'package:musafer/modules/search_trip/view/widget/trip_search_card/origin_field.dart';
-import 'package:musafer/routes/app_routes/app_routes.dart';
-
+import '../../../../../core/constants/app_color.dart';
+import '../../../../../core/services/api_service.dart';
+import '../../../../../core/shared/custom_button.dart';
+import '../../../../../core/shared/custom_snackbar.dart';
 import '../../../../main_layout/controller/main_layout_controller.dart';
+import '../../../../trip_results/controllers/trip_results_controller.dart';
 import '../../../../trip_results/view/screen/trip_results_screen.dart';
 import '../../../controllers/search_controller.dart';
+import 'date_passengers_row.dart';
+import 'destination_field.dart';
+import 'origin_field.dart';
 
-class SearchCard extends StatelessWidget {
+class SearchCard extends GetView<TripSearchController> {
   const SearchCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-       return Container(
-        height: 320.h,
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: AppColor.cardColor,
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Stack(
-              alignment: Alignment.centerRight,
+      bool isExpanded = controller.isCardExpanded.value;
+
+      return InkWell(
+        onTap: isExpanded ? null : () => controller.toggleSearchCard(),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: isExpanded ? 270.h : 60.h,
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: AppColor.cardColor,
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 5),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: isExpanded
+                ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                Stack(
+                  alignment: Alignment.centerRight,
                   children: [
-                    const OriginField(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: Divider(
-                          color: AppColor.grey.withOpacity(0.3), thickness: 1),
+                    Column(
+                      children: [
+                        const OriginField(),
+                        SizedBox(height: 12.h),
+                        const DestinationField(),
+                      ],
                     ),
-                    const DestinationField(),
+                    Positioned(
+                      right: 10.w,
+                      top: 48.h,
+                      child: _buildSwapButton(),
+                    ),
                   ],
                 ),
-                Positioned(
-                  right: 10.w,
-                  top: 40.h,
-                  child: _buildSwapButton(),
+                SizedBox(height: 15.h),
+                const DateAndPassengersRow(),
+                SizedBox(height: 15.h),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_up, color: AppColor.primary),
+                      onPressed: () => controller.toggleSearchCard(),
+                    ),
+                    Expanded(
+                      child:
+                      CustomButton(
+                        text: "Find Trips".tr,
+                        onPressed: () async {
+                          if (controller.selectedOriginCity.value == null || controller.selectedDestinationCity.value == null) {
+                            CustomSnackBar.showError("Please select cities");
+                            return;
+                          }
+
+                          if (Get.isRegistered<TripResultsController>()) {
+                            Get.delete<TripResultsController>();
+                          }
+
+                          final tripCtrl = Get.put(TripResultsController());
+
+                          tripCtrl.setSearchParams(
+                            originId: controller.selectedOriginCity.value!.id.toString(),
+                            originName: controller.selectedOriginCity.value!.name,
+                            destinationId: controller.selectedDestinationCity.value!.id.toString(),
+                            destinationName: controller.selectedDestinationCity.value!.name,
+                            date: controller.departureDate.value,
+                            time: controller.departureTime.value == "Select Time" ? "" : controller.departureTime.value,
+                          );
+
+                          Get.find<MainLayoutController>().pushToExplore(const TripResultsScreen());
+                        },
+                      )
+                    ),
+                  ],
                 ),
               ],
+            )
+                : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.search, color: AppColor.primary, size: 22.sp),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "${controller.selectedOriginCity.value?.name.tr ?? 'Select Origin'.tr} → ${controller.selectedDestinationCity.value?.name.tr ?? 'Anywhere'.tr}",
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColor.black),
+                    ),
+                  ],
+                ),
+                Icon(Icons.keyboard_arrow_down, color: AppColor.grey, size: 22.sp),
+              ],
             ),
-            SizedBox(height: 20.h),
-            const DateAndPassengersRow(),
-            SizedBox(height: 20.h),
-            CustomButton(
-              text: "Find Trips".tr,
-              onPressed: () {
-                // Get.toNamed('/results', id: MainLayoutController.exploreNavId);
-                final mainController = Get.find<MainLayoutController>();
-                mainController.pushToExplore(const TripResultsScreen());
-              },
-            ),
-          ],
+          ),
         ),
       );
     });
   }
 }
-
 
 Widget _buildSwapButton() {
   final controller = Get.find<TripSearchController>();
@@ -84,20 +138,9 @@ Widget _buildSwapButton() {
       decoration: BoxDecoration(
         color: AppColor.white,
         shape: BoxShape.circle,
-        border: Border.all(color: AppColor.grey.withOpacity(0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
-      child: Icon(
-        Icons.swap_vert,
-        color: AppColor.primary,
-        size: 20.sp,
-      ),
+      child: Icon(Icons.swap_vert, color: AppColor.primary, size: 20.sp),
     ),
   );
 }

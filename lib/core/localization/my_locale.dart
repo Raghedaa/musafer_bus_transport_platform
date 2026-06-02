@@ -80,11 +80,7 @@ class MyTranslation extends Translations {
       "Where to?": "إلى أين؟",
       "Find your next intercity journey": "ابحث عن رحلتك القادمة بين المدن",
       "Popular Routes": "الوجهات الشائعة",
-      "View All": "عرض الكل",
       "ORIGIN": "من",
-      "DESTINATION": "إلى",
-      "DEPARTURE": "المغادرة",
-      "PASSENGERS": "المسافرون",
       "Find Trips": "بحث عن رحلات",
       "Where are you going?": "إلى أين تذهب؟",
       "Cairo, Egypt": "القاهرة، مصر",
@@ -92,45 +88,51 @@ class MyTranslation extends Translations {
       "Destination": "الوجهة",
       "Select Number of Passengers :": "اختر عدد الركاب:",
       "Confirm": "تأكيد",
-      "E.g. 10": "مثال: 10",
-      "1 Adult": "1 شخص بالغ",
-      "2 Adult": "2 شخص بالغ",
-      "3 Adult": "3 شخص بالغ",
-      "4 Adult": "4 شخص بالغ",
-      "5 Adult": "5 شخص بالغ",
-      "Adults": "ركاب",
+      "DEPARTURE DATE": "تاريخ المغادرة",
+      "DEPARTURE TIME": "وقت المغادرة",
+      "Select Time": "اختر الوقت",
+      "Select Origin": "اختر نقطة الانطلاق",
+      "Anywhere": "إلى أين؟",
+      "Alert": "تنبيه",
+      "Please select an origin city": "الرجاء اختيار مدينة الانطلاق",
+      "No popular routes found": "لم يتم العثور على رحلات شائعة",
+
 
       // --- Trip Results ---
       "Trip Results": "نتائج الرحلات",
-      "Filters": "الفلاتر",
-      "Nearest Time": "الأقرب وقتاً",
+      "No Filter": "بدون فلترة",
+      "Cheapest Price": "أرخص سعر",
       "Highest Rated": "الأعلى تقييماً",
-      "Select Seats": "اختيار المقاعد",
+      'View Details': 'عرض التفاصيل',
       "PER SEAT": "للمقعد",
       "reviews": "تقييم",
       "FROM": "من",
       "TO": "إلى",
       "NEXT DEPARTURE": "الرحلة القادمة",
+      "No trips found matching your search criteria.": "لم يتم العثور على رحلات تطابق معايير البحث الخاصة بك.",
+
 
       // --- Trip Details ---
       "Trip Details": "تفاصيل الرحلة",
-      "Bus Amenities": "ميزات الحافلة",
-      "Driver Profile": "ملف السائق",
-      "TOTAL ESTIMATED": "الإجمالي التقديري",
-      "EXECUTIVE": "درجة ممتازة",
-      "WI-FI": "واي فاي",
-      "AIR CON": "تكييف",
-      "USB PORT": "شحن USB",
-      "SNACKS": "وجبات خفيفة",
-      "reviews": "تقييم",
-      "Capt. Marcus Sterling": "الكابتن ماركوس ستيرلينغ",
+      "Price": "السعر",
+      "SP": "ل.س",
+      "Rest Areas": "الاستراحات",
+      "min": "دقيقة",
+      "Route Details": "تفاصيل مسار الرحلة",
+      "Trip Details Info": "معلومات الرحلة الإضافية",
+      "Driver": "سائق",
+      "Vehicle Plate": "رقم لوحة المركبة",
+      "Seats": "المقاعد",
+      "Select Seats": "اختيار المقاعد",
+      "error_loading": "حدث خطأ أثناء تحميل البيانات، يرجى المحاولة لاحقاً",
+
 
       // --- Select Seat ---
       "Select Seat": "اختر المقعد",
       "Route 402 • Executive": "الخط 402 • درجة ممتازة",
       "Available": "متاح",
       "Selected": "محدد",
-      "Booked": "محجوز",
+      "Blocked": "غير متاح",
       "TOTAL PRICE": "السعر الإجمالي",
       "Seats": "مقاعد",
       "Proceed to Payment": "المتابعة للدفع",
@@ -138,6 +140,9 @@ class MyTranslation extends Translations {
       "Trip data is missing": "بيانات الرحلة مفقودة",
       "Notice": "تنبيه",
       "Please select at least one seat": "يرجى اختيار مقعد واحد على الأقل",
+      'Window': 'بجانب النافذة',
+      'Extra Space': 'مساحة إضافية',
+
 
       // --- Booking Summary ---
       "Booking Summary": "ملخص الحجز",
@@ -160,6 +165,9 @@ class MyTranslation extends Translations {
       "Cash / Other": "نقداً / أخرى",
       "PAY AT BOARDING STATION": "الدفع في محطة الركوب",
       "Confirm & Pay": "تأكيد ودفع",
+      'Apply Coupon': 'تطبيق قسيمة خصم',
+      'Enter coupon code': 'أدخل كود الخصم',
+      'Apply': 'تطبيق',
 
       // --- Ticket Details ---
       "Your Ticket": "تذكرتك",
@@ -197,6 +205,41 @@ class MyTranslation extends Translations {
       "Enterprise": "المؤسسات",
       "Intercity Trips": "رحلات بين المدن",
       "subscription_note": "يتم تطبيق خصومات الاشتراك الشهري (20٪) تلقائياً على جميع باقات الشركات. تتجدد الاشتراكات كل 30 يوماً.",
+      "Welcome to Musafer": "أهلاً بك في مسافر",
+      "Choose your perfect plan and travel with ease.": "اختر الباقة الأنسب لك وسافر بكل سهولة.",
+      "New Offers": "عروض جديدة",
+
+
+
+      // --- Subscription Details Module ---
+      "Plan Details": "تفاصيل الباقة",
+      "General Info": "معلومات عامة",
+      "Type": "النوع",
+      "Price": "السعر",
+      "Validity": "الصلاحية",
+      "Days": "أيام",
+      "Total Trips": "إجمالي الرحلات",
+      "Conditions": "الشروط",
+      "Max Tickets/Trip": "أقصى تذاكر لكل رحلة",
+      "Company Info": "معلومات الشركة",
+      "Company": "الشركة",
+      "Rating": "التقييم",
+      "Phone": "رقم الهاتف",
+      "Subscribe Now": "اشترك الآن",
+      "multi_trip": "رحلات متعددة",
+      "single_trip": "رحلة واحدة",
+      "insufficient_funds": "رصيدك غير كافٍ. يرجى تعبئة رصيدك.",
+
+
+      // --- My Subscription  ---
+
+      "My Subscriptions": "اشتراكاتي",
+      "Check your active plans": "تحقق من باقاتك النشطة",
+      "No active subscriptions": "لا توجد اشتراكات نشطة",
+      "Remaining": "المتبقي",
+      "Subscribed successfully!": "تم الاشتراك بنجاح!",
+      "Failed to subscribe, please try again.": "فشل الاشتراك، يرجى المحاولة مرة أخرى.",
+
 
       // --- Main layout ---
       "Explore": "اكتشف",
@@ -271,6 +314,20 @@ class MyTranslation extends Translations {
       "Address":"العنوان",
       "Save":"حفظ",
       "Edit Profile":"تعديل الملف الشخصي",
+      "FULL NAME": "الاسم الكامل",
+      "name": "الاسم",
+      "USERNAME": "اسم المستخدم",
+      "Username": "اسم المستخدم",
+      "PHONE NUMBER ": "رقم الهاتف",
+      "City": "المدينة",
+      "Select City": "اختر المدينة",
+      "Address": "العنوان",
+      "Email": "البريد الإلكتروني",
+      "success": "نجاح",
+      "error": "خطأ",
+      "Profile Updated Successfully": "تم تحديث الملف الشخصي بنجاح",
+      "Failed to update profile.": "فشل تحديث الملف الشخصي",
+      "Your Wallet": "محفظتك",
 
 
       // --- Booking History ---
@@ -281,7 +338,74 @@ class MyTranslation extends Translations {
       "Cancelled": "ملغية",
       "no_bookings": "لا توجد حجوزات",
       "view_ticket": "عرض التذكرة",
-      "pnr": "رقم الحجز",
+      "PNR": "رقم الحجز",
+      "from":"من",
+      "to":"الى",
+      "InProgress": "رحلة جارية",
+      "This booking has been cancelled.": "تم إلغاء هذا الحجز.",
+      "This trip has already ended.": "لقد انتهت هذه الرحلة بالفعل.",
+
+
+      // notification //
+      'notifications': 'الإشعارات',
+      'no_notifications': 'لا توجد تنبيهات حالياً',
+      'mark_all_read': 'تحديد الكل كمقروء',
+      'success': 'نجاح',
+      'all_marked_read': 'تم تحديد جميع الإشعارات كمقروءة',
+      'error': 'خطأ',
+
+
+      //------ trip_tracking -----------//
+      "Rate Your Trip": "قيم رحلتك",
+      "Help us improve": "رأيك يساعدنا على التحسين",
+      "Company Rating": "تقييم الشركة",
+      "Driver Rating": "تقييم السائق",
+      "Write about company...": "أخبرنا عن تجربتك مع الشركة...",
+      "Write about driver...": "أخبرنا عن تجربتك مع السائق...",
+      "Submit Review": "إرسال التقييم",
+      "thanks for your rating!": "شكراً لتقييمك!",
+
+
+
+      //------ promo_codes -----------//
+
+      "Promo Codes": "أكواد الخصم",
+      "Check out our latest offers": "اطلع على أحدث عروضنا",
+      "No active promo codes": "لا توجد أكواد خصم حالية",
+      "Copy Code": "نسخ الكود",
+      "Valid until": "صالح حتى",
+      "Code copied to clipboard": "تم نسخ الكود بنجاح",
+      "Promo Details": "تفاصيل الخصم",
+      "Name": "الاسم",
+      "Description": "الوصف",
+      "Code": "الكود",
+      "Type": "النوع",
+      "Discount Value": "قيمة الخصم",
+      "Max Discount": "أقصى قيمة للخصم",
+      "Valid Until": "صالح حتى",
+      "Valid Days": "الأيام الصالحة",
+
+
+
+      "Network Alert": "تنبيه الشبكة",
+      "No internet connection, please check your network and try again.": "لا يوجد اتصال بالإنترنت، الرجاء التحقق من الشبكة وإعادة المحاولة",
+      "SP": "ل.س",
+      "Departure Station": "محطة المغادرة",
+      "Arrival Station": "محطة الوصول",
+      "Date & Time": "التاريخ والوقت",
+      "Passenger": "الراكب",
+      "Seats": "المقاعد",
+      "PNR Code": "رمز الحجز (PNR)",
+      "None": "لا يوجد",
+      "success": "نجاح",
+      "error": "خطأ",
+      "seat_booked_by_another": "المقعد @seatNumber تم حجزه من قبل مسافر آخر!",
+      "failed_update_seats": "فشل تحديث حالة المقاعد. يرجى المحاولة مرة أخرى.",
+      "select_at_least_one": "يرجى اختيار مقعد واحد على الأقل.",
+          "failed_refresh_booking": "فشل تحديث تفاصيل الحجز. يرجى المحاولة مرة أخرى.",
+      "failed_refresh_booking": "فشل تحديث تفاصيل الحجز. يرجى المحاولة مرة أخرى.",
+      "booking_confirmed_successfully": "تم تأكيد الحجز بنجاح!",
+      "something_went_wrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     },
 
 
@@ -357,58 +481,57 @@ class MyTranslation extends Translations {
       "Where to?": "Where to?",
       "Find your next intercity journey": "Find your next intercity journey",
       "Popular Routes": "Popular Routes",
-      "View All": "View All",
       "ORIGIN": "ORIGIN",
-      "DESTINATION": "DESTINATION",
-      "DEPARTURE": "DEPARTURE",
-      "PASSENGERS": "PASSENGERS",
       "Find Trips": "Find Trips",
       "Where are you going?": "Where are you going?",
       "Cairo, Egypt": "Cairo, Egypt",
       "Origin": "Origin",
       "Destination": "Destination",
-      "1 Adult": "1 Adult",
-      "Select Number of Passengers :": "Select Number of Passengers :",
       "Confirm": "Confirm",
-      "E.g. 10": "E.g. 10",
-      "1 Adult": "1 Adult",
-      "2 Adult": "2 Adult",
-      "3 Adult": "3 Adult",
-      "4 Adult": "4 Adult",
-      "5 Adult": "5 Adult",
-      "Adults": "Adults",
+      "DEPARTURE DATE": "DEPARTURE DATE",
+      "DEPARTURE TIME": "DEPARTURE TIME",
+      "Select Time": "Select Time",
+      "Select Origin": "Select Origin",
+      "Anywhere": "Anywhere",
+      "Alert": "Alert",
+      "Please select an origin city": "Please select an origin city",
+      "No popular routes found": "No popular routes found",
+
 
       // --- Trip Results ---
+      "No trips found matching your search criteria.": "No trips found matching your search criteria.",
       "Trip Results": "Trip Results",
-      "Filters": "Filters",
-      "Nearest Time":"Nearest Time",
-      "Highest Rated": "Highest Rated",
-      "Select Seats":  "Select Seats",
+        "No Filter": "No Filter",
+        "Cheapest Price": "Cheapest Price",
+        "Highest Rated": "Highest Rated",
       "PER SEAT": "PER SEAT",
       "reviews":"reviews",
       "FROM": "FROM",
       "TO": "TO",
       "NEXT DEPARTURE": "NEXT DEPARTURE",
+      'View Details': 'View Details',
 
       // --- Trip Details ---
       "Trip Details": "Trip Details",
-      "Bus Amenities":  "Bus Amenities",
-      "Driver Profile": "Driver Profile",
-      "TOTAL ESTIMATED": "TOTAL ESTIMATED",
-      "EXECUTIVE": "EXECUTIVE",
-      "WI-FI": "WI-FI",
-      "AIR CON": "AIR CON",
-      "USB PORT": "USB PORT",
-      "SNACKS": "SNACKS",
-      "reviews": "reviews",
-      "Capt. Marcus Sterling": "Capt. Marcus Sterling",
+      "Price": "Price",
+      "SP": "SP",
+      "Rest Areas": "Rest Areas",
+      "min": "min",
+      "Route Details": "Route Details",
+      "Trip Details Info": "Trip Details Info",
+      "Driver": "Driver",
+      "Vehicle Plate": "Vehicle Plate",
+      "Seats": "Seats",
+      "Select Seats": "Select Seats",
+
+      "error_loading": "Error loading trip details, please try again later.",
 
       // --- Select Seat ---
       "Select Seat": "Select Seat",
       "Route 402 • Executive": "Route 402 • Executive",
       "Available": "Available",
       "Selected": "Selected",
-      "Booked": "Booked",
+      "Blocked": "Blocked",
       "TOTAL PRICE": "TOTAL PRICE",
       "Seats": "Seats",
       "Proceed to Payment": "Proceed to Payment",
@@ -416,6 +539,8 @@ class MyTranslation extends Translations {
       "Trip data is missing": "Trip data is missing",
       "Notice": "Notice",
       "Please select at least one seat": "Please select at least one seat",
+      'Window': 'Window',
+      'Extra pace': 'Extra Space',
 
       // --- Booking Summary ---
       "Booking Summary": "Booking Summary",
@@ -438,6 +563,11 @@ class MyTranslation extends Translations {
       "Cash / Other": "Cash / Other",
       "PAY AT BOARDING STATION": "PAY AT BOARDING STATION",
       "Confirm & Pay": "Confirm & Pay",
+      'Apply Coupon': 'Apply Coupon',
+      'Enter coupon code': 'Enter coupon code',
+      'Apply': 'Apply',
+
+
 
       // --- Ticket Details ---
       "Your Ticket": "Your Ticket",
@@ -473,6 +603,40 @@ class MyTranslation extends Translations {
       "Enterprise": "Enterprise",
       "Intercity Trips": "Intercity Trips",
       "subscription_note": "Monthly subscription discounts (20%) are applied automatically to all corporate packages. Subscriptions renew every 30 days.",
+      "Welcome to Musafer": "Welcome to Musafer",
+      "Choose your perfect plan and travel with ease.": "Choose your perfect plan and travel with ease.",
+      "New Offers": "New Offers",
+
+
+
+      // --- Subscription Details Module ---
+      "Plan Details": "Plan Details",
+      "General Info": "General Info",
+      "Type": "Type",
+      "Price": "Price",
+      "Validity": "Validity",
+      "Days": "Days",
+      "Total Trips": "Total Trips",
+      "Conditions": "Conditions",
+      "Max Tickets/Trip": "Max Tickets/Trip",
+      "Company Info": "Company Info",
+      "Company": "Company",
+      "Rating": "Rating",
+      "Phone": "Phone",
+      "Subscribe Now": "Subscribe Now",
+      "multi_trip": "Multi Trip",
+      "single_trip": "Single Trip",
+      "insufficient_funds": "Insufficient funds. Please top up your balance.",
+
+
+      // --- My Subscription  ---
+
+      "My Subscriptions": "My Subscriptions",
+      "Check your active plans": "Check your active plans",
+      "No active subscriptions": "No active subscriptions",
+      "Remaining": "Remaining",
+      "Subscribed successfully!": "Subscribed successfully!",
+      "Failed to subscribe, please try again.": "Failed to subscribe, please try again.",
 
       // --- Main layout ---
 
@@ -548,7 +712,20 @@ class MyTranslation extends Translations {
       "Address":"Address",
       "Save":"Save",
       "Edit Profile":"Edit Profile",
-
+      "FULL NAME": "FULL NAME",
+      "name": "name",
+      "USERNAME": "USERNAME",
+      "Username": "Username",
+      "PHONE NUMBER ": "PHONE NUMBER ",
+      "City": "City",
+      "Select City": "Select City",
+      "Address": "Address",
+      "Email": "Email",
+      "success": "success",
+      "error": "error",
+      "Profile Updated Successfully": "Profile Updated Successfully",
+      "Failed to update profile.": "Failed to update profile.",
+      "Your Wallet": "Your Wallet",
 
 // --- Booking History ---
 
@@ -559,7 +736,77 @@ class MyTranslation extends Translations {
       "Cancelled": "Cancelled",
       "no_bookings": "No bookings found.",
       "view_ticket": "View Ticket",
-      "pnr": "PNR",
+      "PNR": "PNR",
+      "from":"from",
+      "to":"to",
+      "InProgress": "رحلة جارية",
+      "This booking has been cancelled.": "This booking has been cancelled.",
+      "This trip has already ended.": "This trip has already ended.",
+
+
+      // notification //
+      'notifications': 'Notifications',
+      'no_notifications': 'No notifications currently',
+      'mark_all_read': 'Mark all as read',
+      'success': 'Success',
+      'all_marked_read': 'All notifications marked as read',
+      'error': 'Error',
+
+
+      //------ trip_tracking -----------//
+
+        "Rate Your Trip": "Rate Your Trip",
+        "Help us improve": "Your opinion helps us improve",
+        "Company Rating": "Company Rating",
+        "Driver Rating": "Driver Rating",
+        "Write about company...": "Write about company...",
+        "Write about driver...": "Write about driver...",
+        "Submit Review": "Submit Review",
+      "thanks for your rating!": "Thanks for your rating!",
+
+
+
+      //------ promo_codes -----------//
+
+      "Promo Codes": "Promo Codes",
+      "Check out our latest offers": "Check out our latest offers",
+      "No active promo codes": "No active promo codes",
+      "Copy Code": "Copy Code",
+      "Valid until": "Valid until",
+      "Code copied to clipboard": "Code copied to clipboard",
+      "Promo Details": "Promo Details",
+      "Name": "Name",
+      "Description": "Description",
+      "Code": "Code",
+      "Type": "Type",
+      "Discount Value": "Discount Value",
+      "Max Discount": "Max Discount",
+      "Valid Until": "Valid Until",
+      "Valid Days": "Valid Days",
+
+
+
+
+
+      "Network Alert": "Network Alert",
+      "No internet connection, please check your network and try again.": "No internet connection, please check your network and try again.",
+      "SP": "SP",
+      "Departure Station": "Departure Station",
+      "Arrival Station": "Arrival Station",
+      "Date & Time": "Date & Time",
+      "Passenger": "Passenger",
+      "Seats": "Seats",
+      "PNR Code": "PNR Code",
+      "None": "None",
+      "success": "Success",
+      "error": "Error",
+      "seat_booked_by_another": "The seat @seatNumber has been booked by another passenger!",
+      "failed_update_seats": "Failed to update seat status. Please try again.",
+      "select_at_least_one": "Please select at least one seat.",
+      "failed_refresh_booking": "Failed to refresh booking details. Please try again.",
+      "failed_refresh_booking": "Failed to refresh booking details. Please try again.",
+      "booking_confirmed_successfully": "Booking confirmed successfully!",
+      "something_went_wrong": "Something went wrong. Please try again."
     }
   };
 }

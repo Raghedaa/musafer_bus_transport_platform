@@ -23,7 +23,7 @@ class PersonalInfoHeader extends GetView<PersonalInfoController> {
                   : null,
               backgroundColor: AppColor.grey.withOpacity(0.2),
               child: controller.imagePath.value.isEmpty
-                  ? Icon(Icons.camera_alt, size: 30.sp)
+                  ? Icon(Icons.camera_alt, size: 30.sp,color: AppColor.darkgreen)
                   : null,
             ),
           ),

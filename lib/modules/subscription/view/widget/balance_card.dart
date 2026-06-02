@@ -3,79 +3,60 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 
+import '../../controllers/subscription_controller.dart';
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Container(
-        padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(
-          color: AppColor.darkgreen,
-          borderRadius: BorderRadius.circular(20.r),
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: AppColor.darkgreen,
+        borderRadius: BorderRadius.circular(20.r),
+        gradient: LinearGradient(
+          colors: [AppColor.darkgreen, AppColor.darkgreen.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.darkgreen.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Remaining Trips".tr,
+                  "Welcome to Musafer".tr,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withOpacity(0.9),
                     fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColor.white.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    "PREMIUM PLUS".tr,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+                SizedBox(height: 8.h),
+                Text(
+                  "Choose your perfect plan and travel with ease.".tr,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    height: 1.4,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 5.h),
-            Text(
-              "12" + "Trips".tr,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 32.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 15.h),
-            LinearProgressIndicator(
-              value: 0.6,
-              backgroundColor: Colors.white.withOpacity(0.2),
-              color: Colors.white,
-              minHeight: 6.h,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            SizedBox(height: 15.h),
-            Text(
-              "${"Valid until".tr} Oct 24, 2024 • ${"Global Access".tr}",
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
-                fontSize: 11.sp,
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+          ),
+          Icon(Icons.card_travel, size: 50.sp, color: Colors.white.withOpacity(0.2)),
+        ],
+      ),
+    );
   }
 }

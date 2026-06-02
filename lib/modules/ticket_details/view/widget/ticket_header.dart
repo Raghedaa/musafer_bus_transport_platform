@@ -17,9 +17,10 @@ class TicketHeader extends StatelessWidget {
             children: [
               Align(
                 alignment: AlignmentDirectional.centerStart,
-                child: IconButton(
+                child: // داخل TicketHeader
+                IconButton(
                   onPressed: () {
-                    Get.find<MainLayoutController>().popExplore();
+                    Get.find<MainLayoutController>().navigateBack();
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,

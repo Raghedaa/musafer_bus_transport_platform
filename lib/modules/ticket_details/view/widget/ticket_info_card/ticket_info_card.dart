@@ -10,6 +10,7 @@ import '../../../../trip_results/controllers/trip_results_controller.dart';
 import '../../../controllers/ticket_controller.dart';
 import 'location_column.dart';
 
+
 class TicketInfoCard extends StatelessWidget {
   const TicketInfoCard({super.key});
 
@@ -17,30 +18,30 @@ class TicketInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<TicketController>();
     final data = controller.ticketData;
-    final bool isValid = data is BookingSummaryModel;
-    final tripResultController = Get.find<TripResultsController>();
+
+    if (data == null) return const SizedBox();
+
+    final trip = data['trip'];
+    final seats = (data['seat_numbers'] as List? ?? [])
+        .map((e) => e.toString())
+        .toList();
 
     return Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: AppColor.darkgreen,
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Column(
-          children: [
-            const TicketHeaderRow(),
-            SizedBox(height: 5.h),
-            TicketPnrRow(pnr: controller.pnr),
-            Divider(color: AppColor.white.withOpacity(0.3), height: 30.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(color: AppColor.darkgreen, borderRadius: BorderRadius.circular(20.r)),
+      child: Column(
+        children: [
+          const TicketHeaderRow(),
+          SizedBox(height: 5.h),
+          TicketPnrRow(pnr: controller.pnr),
+          Divider(color: Colors.white.withOpacity(0.3), height: 30.h),
 
-            TicketJourneyDetails(isValid: isValid, data: isValid ? data : null),
+          TicketJourneyDetails(trip: trip),
 
-            if (isValid) ...[
-              SizedBox(height: 15.h),
-              TicketSeatInfo(seats: data.selectedSeats, date:  tripResultController.travelDate.value,),
-            ],
-          ],
-        ),
-      );
+          SizedBox(height: 15.h),
+          TicketSeatInfo(seats: seats, date: trip['departure_time'].toString().substring(0, 10)),
+        ],
+      ),
+    );
   }
 }

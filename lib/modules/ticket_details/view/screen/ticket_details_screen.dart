@@ -18,7 +18,12 @@ class TicketDetailsScreen extends GetView<TicketController> {
         backgroundColor: AppColor.white,
         body: GetBuilder<TicketController>(
           builder: (controller) {
-            return Column(
+            return RefreshIndicator(
+                color: AppColor.darkgreen,
+                onRefresh: () async {
+                  await controller.refreshTicketDetails();
+                },
+                child:Column(
               children: [
                 TicketHeader(),
                 Expanded(
@@ -29,7 +34,7 @@ class TicketDetailsScreen extends GetView<TicketController> {
                       children: [
                         const TicketInfoCard(),
                         SizedBox(height: 20.h),
-                        QrSection(data: controller.pnr),
+                        QrSection(pnr: controller.getQrData()),
                         SizedBox(height: 30.h),
                         const BookingManagement(),
                         SizedBox(height: 30.h),
@@ -38,7 +43,7 @@ class TicketDetailsScreen extends GetView<TicketController> {
                   ),
                 ),
               ],
-            );
+                )  );
           },
         ),
       );

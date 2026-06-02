@@ -1,42 +1,25 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
-import '../../../routes/app_routes/app_routes.dart';
+import '../../../data/repositories/profile_repository.dart';
 
 class ProfileController extends GetxController {
-  final GetStorage _storage = GetStorage();
+  final ProfileRepository _repo = ProfileRepository();
+  var userData = {}.obs;
+  var isLoading = true.obs;
 
-  var userName = "".obs;
-  var userPhone = "".obs;
-  RxString imagePath = ''.obs;
-
+  String get userName => userData['name'] ?? "No Name";
+  String get userPhone => userData['phone_number'] ?? "No Phone";
 
   @override
   void onInit() {
     super.onInit();
-    _loadUserData();
+    fetchData();
   }
 
-  void _loadUserData() {
-    print("------- Storage Check -------");
-    print("All Keys in Storage: ${_storage.getKeys()}");
-
-    var userData = _storage.read("user_info");
-    print("User Info Data: $userData");
-
-    if (userData != null) {
-      userName.value = userData['name'] ?? "No Name";
-      userPhone.value = userData['phone_number'] ?? "No Phone";
-    }
-
-    imagePath.value = _storage.read("profile_image") ?? '';
-
-  }
-
-  void logout() {
-    final box = GetStorage();
-    box.remove('token');
-    box.remove('user_info');
-    Get.offAllNamed(AppRoute.login);
+  void fetchData() async {
+    isLoading.value = true;
+    var data = await _repo.getProfile();
+    if (data != null) userData.value = data;
+    isLoading.value = false;
   }
 }

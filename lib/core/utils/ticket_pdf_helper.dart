@@ -2,84 +2,154 @@ import 'dart:io';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:musafer/core/constants/app_color.dart';
+import 'package:get/get.dart';
+import '../../data/models/trip_model.dart';
+import '../../modules/profile/controller/profile_controller.dart';
+import '../localization/my_locale.dart';
+import 'app_formatter.dart';
+import 'package:get_storage/get_storage.dart';
+
+
 
 class TicketPdfHelper {
+
+  // --- دالة المعالجة اليدوية للأحرف العربية ---
+  static String formatArabic(String text) {
+    if (text.isEmpty) return text;
+    // هذه دالة تعتمد على الاتجاه الصحيح للـ PDF
+    // إذا ظهرت الأحرف متقطعة، تأكد أن الخط المستخدم (Tajawal) معرف بشكل صحيح
+    return text;
+  }
+
   static Future<File> generateTicket({
-    required String pnr,
-    required String passengerName,
-    required String seat,
-    required String fromCity,
-    required String toCity,
-    required String departureTime,
-    required String departureDate,
+    required Map<String, dynamic> data,
+    required TripModel trip,
   }) async {
     final pdf = pw.Document();
 
-    // تحويل لون التطبيق للـ PDF
+    final regularFont = await rootBundle.load('assets/fonts/Tajawal/Tajawal-Regular.ttf');
+    final boldFont = await rootBundle.load('assets/fonts/Tajawal/Tajawal-Bold.ttf');
+    final extraBoldFont = await rootBundle.load('assets/fonts/Tajawal/Tajawal-ExtraBold.ttf');
+
+    final tajawalRegular = pw.Font.ttf(regularFont.buffer.asByteData());
+    final tajawalBold = pw.Font.ttf(boldFont.buffer.asByteData());
+    final tajawalExtraBold = pw.Font.ttf(extraBoldFont.buffer.asByteData());
+
+    final isArabic = Get.locale?.languageCode == 'ar';
+    final translations = MyTranslation().keys;
+    final currentLang = isArabic ? 'ar' : 'en';
+    final t = translations[currentLang]!;
     final pdfDarkGreen = PdfColor.fromInt(AppColor.darkgreen.value);
+
+
+    final profileCtrl = Get.find<ProfileController>();
+
+    final String passengerName = profileCtrl.userName.isNotEmpty
+        ? profileCtrl.userName
+        : "Guest";
 
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
+        textDirection: isArabic ? pw.TextDirection.rtl : pw.TextDirection.ltr,
         build: (pw.Context context) {
           return pw.Padding(
-            padding: const pw.EdgeInsets.all(20),
+            padding: const pw.EdgeInsets.all(30),
             child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              crossAxisAlignment: isArabic ? pw.CrossAxisAlignment.end : pw.CrossAxisAlignment.start,
               children: [
-                // 1. Header - عنوان التذكرة
-                pw.Text("Musafer - Bus Transport",
-                    style: pw.TextStyle(fontSize: 26, fontWeight: pw.FontWeight.bold, color: pdfDarkGreen)),
-                pw.SizedBox(height: 10),
-                pw.Divider(thickness: 1.5, color: PdfColors.grey300),
-                pw.SizedBox(height: 15),
-
-                // 2. Route Section - من وإلى
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildInfoColumn("From", fromCity, pw.CrossAxisAlignment.start),
-                    pw.Text("----->", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: pdfDarkGreen)),
-                    _buildInfoColumn("To", toCity, pw.CrossAxisAlignment.end),
-                  ],
+                pw.Center(
+                  child: pw.Text(
+                    isArabic ? (t['Your Ticket'] ?? "تذكرتك") : (t['Your Ticket'] ?? "Your Ticket"),
+                    style: pw.TextStyle(fontSize: 26, fontWeight: pw.FontWeight.bold, color: pdfDarkGreen, font: isArabic ? tajawalExtraBold : null),
+                  ),
                 ),
-
+                pw.SizedBox(height: 5),
+                pw.Container(height: 1.5, color: pdfDarkGreen),
                 pw.SizedBox(height: 25),
 
-                // 3. Passenger Details Card - تفاصيل الراكب
-                pw.Container(
-                  padding: const pw.EdgeInsets.all(15),
-                  decoration: pw.BoxDecoration(
-                    color: PdfColors.grey100,
-                    borderRadius: pw.BorderRadius.circular(10),
-                    border: pw.Border.all(color: PdfColors.grey300),
-                  ),
-                  child: pw.Column(
+                // داخل دالة generateTicket
+                // استبدل الـ Row الخاص بالمسار بهذا الكود:
+                pw.Directionality(
+                  textDirection: isArabic ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildDataRow("Passenger Name:", passengerName),
-                      pw.SizedBox(height: 8),
-                      _buildDataRow("Seat Number:", seat),
-                      pw.SizedBox(height: 8),
-                      _buildDataRow("PNR Number:", pnr),
-                      pw.SizedBox(height: 8),
-                      _buildDataRow("Departure Time:", departureTime),
-                      pw.SizedBox(height: 8),
-                      _buildDataRow("Departure Date:", departureDate),
+                      _buildInfoColumn(isArabic ? (t['FROM'] ?? "من") : "From", trip.originCity, pdfDarkGreen, isArabic, tajawalRegular, tajawalBold),
+
+                      // مسافة وفراغ
+                      pw.SizedBox(width: 20),
+
+                      // السهم (يقلب اتجاهه حسب اللغة)
+                      pw.Text(isArabic ? "<-------" : "------->",
+                          style: pw.TextStyle(color: pdfDarkGreen, fontSize: 16)),
+
+                      pw.SizedBox(width: 20),
+
+                      _buildInfoColumn(isArabic ? (t['TO'] ?? "إلى") : "To", trip.destinationCity, pdfDarkGreen, isArabic, tajawalRegular, tajawalBold),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 25),
+
+                // تفاصيل الرحلة
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(color: PdfColors.grey100, borderRadius: pw.BorderRadius.circular(8)),
+                  child: pw.Column(
+                    crossAxisAlignment: isArabic ? pw.CrossAxisAlignment.end : pw.CrossAxisAlignment.start,
+                    children: [
+                      // بدلاً من trip.originStation
+                      _buildDataRow(
+                          isArabic ? "محطة المغادرة" : "Departure Station:",
+                          trip.originStation?.name ?? "N/A", // هنا التعديل: الوصول للـ name
+                          isArabic, tajawalRegular, tajawalBold
+                      ),
+                      _buildDataRow(
+                          isArabic ? "محطة الوصول" : "Arrival Station:",
+                          trip.destinationStation?.name ?? "N/A", // هنا التعديل: الوصول للـ name
+                          isArabic, tajawalRegular, tajawalBold
+                      ),
+                      // سطر جديد للتاريخ
+                      _buildDataRow(isArabic ? "التاريخ" : "Date:", trip.tripDate, isArabic, tajawalRegular, tajawalBold),
+
+                      // سطر وقت المغادرة
+                      // استدعاء مباشر كما هي تماماً، وستعمل لأننا قمنا بتبديل لغة Get مؤقتاً
+                      _buildDataRow(
+                          isArabic ? "وقت المغادرة" : "Departure Time:",
+                          AppFormatter.formatTime(trip.departureTime),
+                          isArabic, tajawalRegular, tajawalBold
+                      ),
+
+                      _buildDataRow(
+                          isArabic ? "وقت الوصول" : "Arrival Time:",
+                          trip.arrivalTime != null ? AppFormatter.formatTime(trip.arrivalTime!) : "--:--",
+                          isArabic, tajawalRegular, tajawalBold
+                      ),
                     ],
                   ),
                 ),
 
-                pw.SizedBox(height: 40),
+                pw.SizedBox(height: 25),
 
-                // 4. QR Code Section
-                pw.BarcodeWidget(
-                  barcode: pw.Barcode.qrCode(),
-                  data: "PNR:$pnr | Name:$passengerName | From:$fromCity To:$toCity | Date:$departureDate",                  width: 140,
-                  height: 140,
+                // _buildDataRow(isArabic ? "الراكب" : "Passenger:", data['passenger']['name'] ?? "Guest", isArabic, tajawalRegular, tajawalBold),
+
+                _buildDataRow(
+                    isArabic ? "الراكب" : "Passenger:",
+                    passengerName,
+                    isArabic,
+                    tajawalRegular,
+                    tajawalBold
                 ),
-                pw.SizedBox(height: 10),
-                pw.Text("Ticket ID: $pnr", style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700)),
+                _buildDataRow(isArabic ? "المقاعد" : "Seats:", (data['seat_numbers'] as List).join(", "), isArabic, tajawalRegular, tajawalBold),
+                _buildDataRow(isArabic ? "رمز الحجز (PNR)" : "PNR Code:", data['pnr_code'], isArabic, tajawalRegular, tajawalBold),
+
+                pw.SizedBox(height: 50),
+                pw.Center(
+                  child: pw.BarcodeWidget(barcode: pw.Barcode.qrCode(), data: data['pnr_code'], width: 100, height: 100),
+                ),
               ],
             ),
           );
@@ -87,32 +157,37 @@ class TicketPdfHelper {
       ),
     );
 
-    // منطق الحفظ
-    final output = await getTemporaryDirectory(); // استخدام الـ Temp لتجنب مشاكل الصلاحيات أحياناً
-    final file = File("${output.path}/Musafer_Ticket_$pnr.pdf");
+    final output = await getTemporaryDirectory();
+    final file = File("${output.path}/Ticket_${data['pnr_code']}.pdf");
     await file.writeAsBytes(await pdf.save());
     return file;
   }
 
-  // دالة مساعدة لبناء أعمدة الرحلة (From/To)
-  static pw.Widget _buildInfoColumn(String label, String value, pw.CrossAxisAlignment alignment) {
+  static pw.Widget _buildInfoColumn(String label, String value, PdfColor color, bool isArabic, pw.Font reg, pw.Font bold) {
     return pw.Column(
-      crossAxisAlignment: alignment,
+      crossAxisAlignment: isArabic ? pw.CrossAxisAlignment.end : pw.CrossAxisAlignment.start,
       children: [
-        pw.Text(label, style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey)),
-        pw.Text(value, style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+        pw.Text(label, style: pw.TextStyle(fontSize: 10, font: isArabic ? reg : null)),
+        pw.SizedBox(height: 4),
+        pw.Text(value, style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, color: color, font: isArabic ? bold : null)),
       ],
     );
   }
 
-  // دالة مساعدة لبناء أسطر البيانات (Label: Value)
-  static pw.Widget _buildDataRow(String label, String value) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      children: [
-        pw.Text(label, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        pw.Text(value),
-      ],
+  static pw.Widget _buildDataRow(String label, String value, bool isArabic, pw.Font reg, pw.Font bold) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 4),
+      // هنا نستخدم Directionality بدلاً من الخاصية داخل الـ Row
+      child: pw.Directionality(
+        textDirection: isArabic ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+        child: pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(label, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: isArabic ? bold : null)),
+            pw.Text(value, style: pw.TextStyle(font: isArabic ? reg : null)),
+          ],
+        ),
+      ),
     );
   }
 }

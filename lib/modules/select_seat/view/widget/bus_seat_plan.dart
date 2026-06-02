@@ -10,35 +10,30 @@ class BusSeatPlan extends GetView<SelectSeatController> {
 
   @override
   Widget build(BuildContext context) {
-    int rows = 6;
-    int columns = 5;
     return Obx(() {
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: 40.w),
-        padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          border: Border.all(color: AppColor.grey, width: 1),
-          borderRadius: BorderRadius.circular(30.r),
-        ),
+      if (controller.isLoading.value) return const Center(child: CircularProgressIndicator());
+
+      final vehicle = controller.vehicleModel.value!;
+      final layout = vehicle.layoutConfig;
+
+      final rows = layout['grid']['rows'] as int;
+      final cols = layout['grid']['columns'] as int;
+      final aisle = (layout['static_elements'] as List).firstWhereOrNull((e) => e['type'] == "aisle")?['column'];
+
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: GridView.builder(
-          itemCount: rows * columns,
+          itemCount: (rows * cols).toInt(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            mainAxisSpacing: 10.h,
-            crossAxisSpacing: 10.w,
+            crossAxisCount: cols.toInt(),
+            childAspectRatio: 1.1,
           ),
           itemBuilder: (context, index) {
-            if (index % 5 == 2) return const SizedBox();
-
-            int row = index ~/ 5;
-            int col = index % 5;
-
-            int adjustedCol = col > 2 ? col - 1 : col;
-
-            String seatLabel =
-                "${row + 1}${String.fromCharCode(65 + adjustedCol)}";
-
+            int row = (index ~/ cols) + 1;
+            int col = (index % cols) + 1;
+            if (col == aisle) return const SizedBox();
+            String seatLabel = controller.getSeatLabel(row, col);
+            if (seatLabel.isEmpty) return const SizedBox();
             return SeatItem(seatNumber: seatLabel);
           },
         ),

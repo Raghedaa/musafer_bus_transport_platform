@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:musafer/core/constants/app_color.dart';
+import '../../../../core/constants/app_color.dart';
 import '../../controllers/trip_results_controller.dart';
 
 class FilterChipsRow extends GetView<TripResultsController> {
@@ -10,8 +10,8 @@ class FilterChipsRow extends GetView<TripResultsController> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> filters = [
-      {"label": "Filters", "icon": Icons.tune},
-      {"label": "Nearest Time", "icon": null},
+      {"label": "No Filter", "icon": Icons.tune},
+      {"label": "Cheapest Price", "icon": null},
       {"label": "Highest Rated", "icon": null},
     ];
 
@@ -25,11 +25,10 @@ class FilterChipsRow extends GetView<TripResultsController> {
           final filter = filters[index];
 
           return Obx(() {
-            bool isSelected =
-                controller.selectedFilter.value == filter['label'];
+            bool isSelected = controller.selectedFilter.value == filter['label'];
 
             return Padding(
-              padding: EdgeInsets.only(right: 10.w),
+              padding: EdgeInsetsDirectional.only(end: 10.w),
               child: GestureDetector(
                 onTap: () => controller.applyFilter(filter['label']),
                 child: AnimatedContainer(
@@ -40,9 +39,7 @@ class FilterChipsRow extends GetView<TripResultsController> {
                     color: isSelected ? AppColor.primary : AppColor.white,
                     borderRadius: BorderRadius.circular(25.r),
                     border: Border.all(
-                      color: isSelected
-                          ? AppColor.primary
-                          : AppColor.grey.withOpacity(0.2),
+                      color: isSelected ? AppColor.primary : AppColor.grey.withOpacity(0.2),
                     ),
                   ),
                   child: Row(
@@ -52,19 +49,16 @@ class FilterChipsRow extends GetView<TripResultsController> {
                         Icon(
                           filter['icon'],
                           size: 16.sp,
-                          color: isSelected
-                              ? AppColor.white
-                              : AppColor.primary,
+                          color: isSelected ? AppColor.white : AppColor.primary,
                         ),
                         SizedBox(width: 8.w),
                       ],
                       Text(
-                        filter['label'].toString().tr,                        style: TextStyle(
+                        filter['label'].toString().tr,
+                        style: TextStyle(
                           color: isSelected ? AppColor.white : AppColor.black,
                           fontSize: 13.sp,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ],

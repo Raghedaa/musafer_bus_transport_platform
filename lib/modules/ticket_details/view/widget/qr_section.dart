@@ -5,9 +5,9 @@ import 'package:musafer/core/constants/app_color.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrSection extends StatelessWidget {
-  final String data;
+  final String pnr;
 
-  const QrSection({super.key, required this.data});
+  const QrSection({super.key, required this.pnr});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class QrSection extends StatelessWidget {
         child: Column(
           children: [
             QrImageView(
-              data: data,
+              data: pnr,
               version: QrVersions.auto,
               size: 160.w,
               gapless: false,

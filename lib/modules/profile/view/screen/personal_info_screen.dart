@@ -17,30 +17,30 @@ class PersonalInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(PersonalInfoController());
 
+
+    if (controller.isLoading.value) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColor.darkgreen),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
-      appBar: AppBar(
-        title: Text("Personal Information".tr),
-        centerTitle: true,
+      appBar: AppBar(title: Text("Personal Information".tr), centerTitle: true),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(bottom:70.h,left: 40.w,right: 40.w,top: 20.h),
+        child: CustomButton(
+          text: "Save".tr,
+          onPressed: () => controller.saveChanges(),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.w),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Center(child: PersonalInfoHeader()),
             SizedBox(height: 25.h),
-
             const PersonalInfoForm(),
-
-            SizedBox(height: 30.h),
-
-            Center(
-              child: CustomButton(
-                text: "Save".tr,
-                onPressed: () => controller.saveChanges(),
-              ),
-            ),
+            SizedBox(height: 20.h),
           ],
         ),
       ),

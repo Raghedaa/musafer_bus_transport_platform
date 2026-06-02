@@ -1,75 +1,110 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:musafer/data/models/trip_result_model.dart';
-
-import '../../search_trip/controllers/search_controller.dart';
+import '../../../../data/models/trip_model.dart';
+import '../../../../data/repositories/trip_repository.dart';
+import 'package:intl/intl.dart';
 
 class TripResultsController extends GetxController {
-
-  final searchController = Get.find<TripSearchController>();
+  final TripRepository _tripRepository = TripRepository();
 
   var travelDate = "".obs;
-  var passengers = "".obs;
-  var selectedFilter = "Filters".obs;
+  var travelTime = "".obs;
+  var originName = "".obs;
+  var destinationName = "".obs;
 
-  var origin = "".obs;
-  var destination = "".obs;
+  String _originId = "";
+  String _destinationId = "";
 
-  var trips = <TripResultModel>[].obs;
+  var selectedFilter = "No Filter".obs;
+  var isLoading = false.obs;
 
-  TripResultModel? chosenTrip;
+  final _allTrips = <TripModel>[];
+  var trips = <TripModel>[].obs;
 
-  void selectTrip(TripResultModel trip) {
-    chosenTrip = trip;
-    Get.toNamed('/select_seat', id: 1);
-  }
+  TripModel? chosenTrip;
+
   @override
   void onInit() {
     super.onInit();
-    travelDate.value = searchController.departureDate.value;
-    passengers.value = searchController.passengers.value;
-    origin.value = searchController.origin.value;
-    destination.value = searchController.destination.value;
-    loadTrips();
   }
 
-  void loadTrips() {
-    trips.value = [
-      TripResultModel(
-        id: "1",
-        companyName: "TransLine Express",
-        logo: "bus_icon",
-        rating: 4.8,
-        reviewsCount: 1200,
-        price: 45.0,
-        departureTime: "08:30 AM",
-        arrivalTime: "02:15 PM",
-        departureTerminal: "SF Terminal",
-        arrivalTerminal: "LA Union",
-        duration: "5h 45m",
-        tripDate: travelDate.value,
 
-      ),
-      TripResultModel(
-        id: "2",
-        companyName: "Silver Bullet",
-        logo: "bus_icon",
-        rating: 4.5,
-        reviewsCount: 850,
-        price: 38.0,
-        departureTime: "09:15 AM",
-        arrivalTime: "03:30 PM",
-        departureTerminal: "Damascus",
-        arrivalTerminal: "Homs",
-        duration: "6h 15m",
-        isDirect: false,
-        tag: "NEXT DEPARTURE",
-        tripDate: travelDate.value,
+  void setSearchParams({
+    required String originId,
+    required String originName,
+    required String destinationId,
+    required String destinationName,
+    required String date,
+    required String time,
+  }) {
+    _originId = originId;
+    _destinationId = destinationId;
+    this.originName.value = originName;
+    this.destinationName.value = destinationName;
+    travelDate.value = date;
+    travelTime.value = time;
 
-      ),
-    ];
+    fetchTripsFromServer();
+  }
+
+  Future<void> fetchTripsFromServer() async {
+    try {
+      isLoading.value = true;
+      trips.clear();
+      _allTrips.clear();
+
+      final fetchedTrips = await _tripRepository.fetchSearchedTrips(
+        originId: _originId,
+        destinationId: _destinationId,
+        date: travelDate.value,
+        time: travelTime.value,
+      );
+
+      _allTrips.assignAll(fetchedTrips);
+      trips.assignAll(fetchedTrips);
+
+      applyFilter(selectedFilter.value);
+
+    } catch (e) {
+      trips.clear();
+      _allTrips.clear();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void applyFilter(String filterType) {
     selectedFilter.value = filterType;
+
+    if (filterType == "Highest Rated") {
+      final sorted = List<TripModel>.from(_allTrips)
+        ..sort((a, b) => b.rating.compareTo(a.rating));
+      trips.assignAll(sorted);
+    } else if (filterType == "Cheapest Price") {
+      final sorted = List<TripModel>.from(_allTrips)
+        ..sort((a, b) => a.price.compareTo(b.price));
+      trips.assignAll(sorted);
+    } else if (filterType == "Earliest Time") {
+      final sorted = List<TripModel>.from(_allTrips)
+        ..sort((a, b) {
+          try {
+            final aTime = a.departureTime.split('T')[1].split('+')[0];
+            final bTime = b.departureTime.split('T')[1].split('+')[0];
+            return aTime.compareTo(bTime);
+          } catch (e) {
+            return 0;
+          }
+        });
+      trips.assignAll(sorted);
+    } else {
+      trips.assignAll(_allTrips);
+    }
+  }
+
+  void refreshSearch() => fetchTripsFromServer();
+
+  void selectTrip(TripModel trip) {
+    chosenTrip = trip;
+    Get.toNamed('/select_seat', id: 1, arguments: {'trip': trip});
   }
 }

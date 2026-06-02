@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../core/constants/app_color.dart';
 import '../../../../core/shared/custom_button.dart';
 import '../../../main_layout/controller/main_layout_controller.dart';
 import '../../../ticket_details/controllers/ticket_controller.dart';
@@ -29,38 +30,33 @@ class BookingSummaryScreen extends GetView<BookingSummaryController> {
           children: [
             const SummaryHeader(),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    const PNRCardWidget(),
-                    SizedBox(height: 20.h),
-                    const TripDetailsSection(),
-                    SizedBox(height: 20.h),
-                    const PriceBreakdownSection(),
-                    SizedBox(height: 20.h),
-                    const CancellationSection(),
-                    SizedBox(height: 20.h),
-                    const PaymentMethodSection(),
-                    SizedBox(height: 30.h),
-                    // داخل BookingSummaryScreen
-                    CustomButton(
-                      text: "Confirm & Pay".tr,
-                      onPressed: () {
-                        // Get.offNamed('/ticket_details', id: MainLayoutController.exploreNavId);
-
-                        final currentBookingData = controller.bookingSummaryModel.value;
-                        if (currentBookingData != null) {
-                          final ticketCtrl = Get.put(TicketController());
-                          ticketCtrl.ticketData = currentBookingData;
-                          ticketCtrl.update();
-                          Get.find<MainLayoutController>().pushToExplore(const TicketDetailsScreen());
-                        }
+              child: RefreshIndicator(
+                color: AppColor.darkgreen,
+                onRefresh: () async {
+                  await controller.refreshBookingSummary();
+                },
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      const TripDetailsSection(),
+                      SizedBox(height: 20.h),
+                      const PriceBreakdownSection(),
+                      SizedBox(height: 20.h),
+                      const CancellationSection(),
+                      SizedBox(height: 20.h),
+                      const PaymentMethodSection(),
+                      SizedBox(height: 30.h),
+                      CustomButton(
+                        text: "Confirm & Pay".tr,
+                        onPressed: () async {
+                          await controller.confirmBooking();
                         },
-                    ),
-                    SizedBox(height: 50.h),
-                  ],
+                      ),
+                      SizedBox(height: 50.h),
+                    ],
+                  ),
                 ),
               ),
             ),

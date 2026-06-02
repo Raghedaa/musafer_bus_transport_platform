@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import '../../controllers/select_seat_controller.dart';
 
+
 class SeatLegendRow extends GetView<SelectSeatController> {
   const SeatLegendRow({super.key});
 
@@ -11,35 +12,59 @@ class SeatLegendRow extends GetView<SelectSeatController> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        child: Column(
           children: [
-            _legendItem("Available".tr, AppColor.white, isBorder: true),
-            _legendItem("Selected".tr, AppColor.primary),
-            _legendItem("Booked".tr, AppColor.primaryGrey.withOpacity(0.6)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _legendIconItem("Female".tr, Icons.person, const Color(0xFFD81B60)),
+                _legendIconItem("Male".tr, Icons.person, const Color(0xFF1E88E5)),
+                _legendIconItem("Blocked".tr, Icons.lock, const Color(0xFF9E9E9E)),
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+            Divider(color: AppColor.black12, thickness: 1, indent: 40.w, endIndent: 40.w),
+            SizedBox(height: 12.h),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _legendIconItem("Window".tr, Icons.grid_view_rounded, AppColor.grey),
+                _legendIconItem("Extra Space".tr, Icons.auto_awesome, AppColor.amber),
+              ],
+            ),
           ],
         ),
       );
     });
   }
 
-  Widget _legendItem(String text, Color color, {bool isBorder = false}) {
+  Widget _legendColorItem(String text, Color color, {bool isBorder = false}) {
     return Row(
       children: [
         Container(
-          width: 16.w,
-          height: 16.w,
+          width: 14.w,
+          height: 14.w,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(4.r),
-            border: isBorder
-                ? Border.all(color: AppColor.grey.withOpacity(0.6))
-                : null,
+            border: isBorder ? Border.all(color: Colors.grey.shade400, width: 1) : null,
           ),
         ),
-        SizedBox(width: 8.w),
-        Text(text, style: TextStyle(fontSize: 12.sp)),
+        SizedBox(width: 6.w),
+        Text(text, style: TextStyle(fontSize: 11.sp, color: AppColor.black87, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+
+  Widget _legendIconItem(String text, IconData icon, Color iconColor) {
+    return Row(
+      children: [
+        Icon(icon, size: 14.sp, color: iconColor),
+        SizedBox(width: 6.w),
+        Text(text, style: TextStyle(fontSize: 11.sp, color: AppColor.black87)),
       ],
     );
   }

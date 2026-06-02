@@ -26,7 +26,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
             () => _buildOption(
               title: "Digital Payment".tr,
               subtitle: "VISA, MASTERCARD, WALLET".tr,
-              value: 'digital'.tr,
+              value: 'digital',
               icon: Icons.account_balance_wallet_outlined,
             ),
           ),
@@ -37,7 +37,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
             () => _buildOption(
               title: "Cash / Other".tr,
               subtitle: "PAY AT BOARDING STATION".tr,
-              value: 'cash'.tr,
+              value: 'cash',
               icon: Icons.payments_outlined,
             ),
           ),

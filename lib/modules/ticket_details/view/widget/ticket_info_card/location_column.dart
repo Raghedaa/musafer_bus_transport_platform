@@ -8,62 +8,48 @@ class LocationColumn extends StatelessWidget {
   final String label;
   final bool isLeft;
 
-  const LocationColumn({
-    required this.city,
-    required this.label,
-    required this.isLeft,
-  });
+  const LocationColumn({required this.city, required this.label, required this.isLeft});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: isLeft
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.end,
+      crossAxisAlignment: isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
         Text(
-          city,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 19.sp,
-          ),
+          label.toUpperCase(),
+          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10.sp),
         ),
         Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
-            fontSize: 11.sp,
-          ),
+          city,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
         ),
       ],
     );
   }
 }
 
+
 class JourneyDividerWithIcon extends StatelessWidget {
-  const JourneyDividerWithIcon();
+  const JourneyDividerWithIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4.h),
+      child: Row(
         children: [
           const _DashedLine(),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Icon(
-              Icons.directions_bus,
-              color: Colors.white,
-              size: 24.sp,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: Icon(Icons.directions_bus, color: Colors.white, size: 20.sp),
           ),
           const _DashedLine(),
         ],
-      );
+      ),
+    );
   }
 }
 
-// رسم الخط المنقط
 class _DashedLine extends StatelessWidget {
   const _DashedLine();
 

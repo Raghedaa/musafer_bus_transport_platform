@@ -9,9 +9,9 @@ class AppThemes {
     primaryColor: AppColor.darkgreen,
 
     textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: AppColor.darkgreen, // لون الخط الواق واقف (المؤشر)
-      selectionColor: Color(0x4D3D4E3C), // لون التظليل عند تحديد النص (أخضر شفاف)
-      selectionHandleColor: AppColor.darkgreen, // لون النقطة اللي بتطلع تحت المؤشر
+      cursorColor: AppColor.darkgreen,
+      selectionColor: Color(0x4D3D4E3C),
+      selectionHandleColor: AppColor.darkgreen,
     ),
 
     appBarTheme: const AppBarTheme(

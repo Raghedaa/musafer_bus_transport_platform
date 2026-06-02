@@ -1,18 +1,60 @@
 import 'package:get/get.dart';
-import 'package:musafer/data/models/trip_result_model.dart';
-import '../../select_seat/controllers/select_seat_controller.dart';
+import 'package:hive/hive.dart';
+import 'package:musafer/data/models/trip_model.dart';
+import 'package:musafer/data/repositories/trip_repository.dart';
+
+import '../../../core/services/api_service.dart';
+
+
 
 class TripDetailsController extends GetxController {
-  late TripResultModel trip;
+
+
+  final TripRepository _tripRepository = Get.find<TripRepository>();
+  final Rxn<TripModel> trip = Rxn<TripModel>();
+
+  var isDataLoaded = false.obs;
+  var isLoadingError = false.obs;
+
+
 
   @override
   void onInit() {
     super.onInit();
-    // تأكد أنك تستخدم السطر الصحيح للوصول للبيانات الساكنة
-    if (SelectSeatController.staticTrip != null) {
-      trip = SelectSeatController.staticTrip!;
+    final int? tripId = Get.arguments?['tripId'];
+    print("🔁 onInit: tripId = $tripId");
+    if (tripId != null) {
+      loadTripDataById(tripId);
     } else {
-      print("Error: No trip data found in static memory!");
+      isLoadingError.value = true;
+      print("❌ لم يتم تمرير tripId إلى الشاشة");
     }
   }
+
+
+  Future<void> refreshTripDetails() async {
+    if (trip.value != null) {
+      await loadTripDataById(trip.value!.id, isRefresh: true);
+    }
+  }
+
+  Future<void> loadTripDataById(int id, {bool isRefresh = false}) async {
+    if (!isRefresh) {
+      isDataLoaded.value = false;
+      isLoadingError.value = false;
+    }
+    try {
+      final result = await _tripRepository.fetchTripDetails(id);
+      trip.value = result;
+      isDataLoaded.value = true;
+      print("✅ loadTripDataById: isDataLoaded = true");
+    } catch (e) {
+      print("❌ خطأ: $e");
+      if (trip.value == null) {
+        isLoadingError.value = true;
+        isDataLoaded.value = false;
+      }
+    }
+  }
+
 }

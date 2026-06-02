@@ -64,22 +64,43 @@ class VerificationController extends GetxController {
 
 
   void _handleAuthSuccess(Map<String, dynamic> data) {
-    String? token = data['access_token'];
+    // 1. طباعة كامل الرد الجاي من السيرفر للتأكد
+    print("--- Server Response Data ---");
+    print(data);
 
+    String? token = data['access_token'];
+    int? expiresInSeconds = data['expires_in'];
     var userData = data['user'];
+
+    // 2. طباعة التوكن بشكل منفصل
+    print("--- Access Token ---");
+    print(token);
+
+    // 3. طباعة مدة الصلاحية بالثواني وتحويلها لساعات/أيام لتفهميها
+    if (expiresInSeconds != null) {
+      double days = expiresInSeconds / (24 * 3600);
+      print("--- Token Expiry Info ---");
+      print("Duration in Seconds: $expiresInSeconds");
+      print("Duration in Days: ${days.toStringAsFixed(2)} days");
+    }
 
     if (token != null && token.isNotEmpty) {
       _storage.write("token", token);
       _storage.write("isLoggedIn", true);
 
+      if (expiresInSeconds != null) {
+        DateTime expiryDate = DateTime.now().add(Duration(seconds: expiresInSeconds));
+        _storage.write("expiry_date", expiryDate.toIso8601String());
+        print("Expiry Date Saved: ${expiryDate.toLocal()}");
+      }
+
       if (userData != null) {
         _storage.write("user_info", userData);
-        print("Login Success: Token and User Info saved.");
       }
 
       Get.offAllNamed(AppRoute.main_layout);
     } else {
-      print("Error: access_token missing in response");
+      print("Error: access_token is missing or empty!");
       CustomSnackBar.show(title: "Error", message: "Invalid session data");
     }
   }

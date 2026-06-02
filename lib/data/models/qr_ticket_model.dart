@@ -1,45 +1,26 @@
 import 'dart:convert';
 
 class QrTicketModel {
-  final String id;
+  final String pnr;
   final String name;
-  final String seatNumber;
-  final bool isPaid;
-  final String route;
-  final String? status; // اختياري للفلترة
-  final String? date;   // اختياري
+  final String phone;
+  final List<dynamic> seats;
+  final String status;
 
   QrTicketModel({
-    required this.id,
+    required this.pnr,
     required this.name,
-    required this.seatNumber,
-    required this.isPaid,
-    required this.route,
-    this.status,
-    this.date,
+    required this.phone,
+    required this.seats,
+    required this.status,
   });
 
-  // تحويل الكائن إلى نص JSON مشفر للـ QR Code
   String toQrString() {
     return jsonEncode({
-      "id": id,
-      "name": name,
-      "seatNumber": seatNumber,
-      "isPaid": isPaid,
-      "route": route,
+      "pnr": pnr,
+      "passenger": {"name": name, "phone": phone},
+      "seat_numbers": seats,
+      "status": status,
     });
-  }
-
-  // هذا المصنع (Factory) هو ما ستستخدمه غداً عند الربط مع الـ API
-  factory QrTicketModel.fromJson(Map<String, dynamic> json) {
-    return QrTicketModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      seatNumber: json['seatNumber'] ?? '',
-      isPaid: json['isPaid'] ?? false,
-      route: json['route'] ?? '',
-      status: json['status'],
-      date: json['date'],
-    );
   }
 }
