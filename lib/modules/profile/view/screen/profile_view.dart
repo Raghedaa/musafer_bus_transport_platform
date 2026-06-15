@@ -13,6 +13,9 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+
+    controller.fetchData();
+
     return Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
       body: SafeArea(

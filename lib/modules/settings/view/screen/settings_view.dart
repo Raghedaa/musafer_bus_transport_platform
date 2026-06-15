@@ -6,6 +6,7 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../../routes/app_routes/app_routes.dart';
 import '../../../main_layout/controller/main_layout_controller.dart';
+import '../../../send_complaints/views/screen/my_complaints_screen.dart';
 import '../../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -75,11 +76,11 @@ class SettingsView extends GetView<SettingsController> {
             Divider(color: AppColor.grey.withOpacity(0.2)),
 
             _buildSettingTile(
-              icon: Icons.report_problem_outlined,
-              title: "SendComplaint".tr,
+              icon: Icons.comment,
+              title: "my_complaints".tr,
               trailing: Icon(Icons.arrow_forward_ios, size: 16.sp, color: AppColor.black),
-              onTap: () => Get.toNamed(AppRoute.complaints),
-            ),
+              onTap: () => Get.toNamed(AppRoute.myComplaints),            ),
+            Divider(color: AppColor.grey.withOpacity(0.2)),
           ],
         ),
       ),

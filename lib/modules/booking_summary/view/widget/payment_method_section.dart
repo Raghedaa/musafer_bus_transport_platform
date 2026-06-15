@@ -41,6 +41,9 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
               icon: Icons.payments_outlined,
             ),
           ),
+          // SizedBox(height: 10.h),
+
+
         ],
       );
     });

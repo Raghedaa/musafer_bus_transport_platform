@@ -15,40 +15,16 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (controller.isMapReady.value &&
-              controller.busLocation.value != null) {
-            controller.mapController.move(controller.busLocation.value!, 15.0);
-          } else {
-            debugPrint("الموقع غير جاهز بعد");
-          }
-        },
-
+        onPressed: controller.centerOnBus,
         backgroundColor: AppColor.darkgreen,
-        child: Icon(Icons.my_location, color: AppColor.white),
+        child: const Icon(Icons.directions_bus, color: Colors.white),
       ),
-      body: Obx(() {
+
+      body:Stack(
+          children: [ Obx(() {
         final apiService = Get.find<ApiService>();
         if (!apiService.isConnected.value) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.wifi_off, size: 80, color: AppColor.darkgreen),
-                SizedBox(height: 16.h),
-                Text("No internet connection, please check your network and try again.".tr),
-                ElevatedButton(
-                  onPressed: () async {
-                    bool connected = await apiService.checkConnection();
-                    if (connected) {
-                      controller.fetchTripDetails();
-                    }
-                  },
-                  child: Text("إعادة المحاولة".tr),
-                ),
-              ],
-            ),
-          );
+          return const Center(child: Text("لا يوجد اتصال بالإنترنت"));
         }
 
         if (controller.isLoading.value) {
@@ -56,22 +32,31 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
             child: CircularProgressIndicator(color: AppColor.darkgreen),
           );
         }
+
         return FlutterMap(
           mapController: controller.mapController,
           options: MapOptions(
-            initialZoom: 7,
+            initialZoom: 15,
+            // مركز الخريطة الابتدائي هو موقع الباص أو نقطة افتراضية
+            initialCenter:
+                controller.busLocation.value ?? const LatLng(33.486, 36.339),
             onMapReady: () => controller.onMapReady(),
           ),
           children: [
-
             TileLayer(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              additionalOptions: {
-                'lang': 'ar',
-              },
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.musafer.app',
-              errorTileCallback: (tile, error, stackTrace) {},
+              tileBuilder: (context, child, tile) {
+                return Container(
+                  color: Colors.grey[200], // لون المربع الرمادي
+                  child: child,
+                );
+              },
+              errorTileCallback: (tile, error, stackTrace) {
+                debugPrint('❌ Tile Error: $error');
+              },
             ),
+            // 1. رسم المسار
             Obx(
               () => PolylineLayer(
                 polylines: [
@@ -83,36 +68,74 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
                 ],
               ),
             ),
-
             Obx(() => MarkerLayer(markers: controller.markers.toList())),
 
             Obx(
-              () => controller.busLocation.value != null
+                  () => controller.busLocation.value != null
                   ? MarkerLayer(
-                      markers: [
-                        Marker(
-                          point: controller.busLocation.value!,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColor.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.location_on,
-                                color: AppColor.darkgreen,
-                                size: 24,
-                              ),
-                            ),
-                          ),
+                markers: [
+                  Marker(
+                    width: 40,
+                    height: 40,
+                    point: controller.busLocation.value!,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: AppColor.darkgreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.directions_bus,
+                          color: Colors.white,
+                          size: 25,
                         ),
-                      ],
-                    )
+                      ),
+                    ),
+                  ),
+                ],
+              )
                   : const SizedBox.shrink(),
             ),
           ],
         );
       }),
-    );
+
+
+            Positioned(
+              top: 40,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLegendItem(Icons.location_on, Colors.green, "legend_start_point"),
+                    _buildLegendItem(Icons.coffee, Colors.orange, "legend_rest_area"),
+                    _buildLegendItem(Icons.flag, Colors.red, "legend_arrival"),
+                    _buildLegendItem(Icons.directions_bus, AppColor.darkgreen, "legend_bus_location"),
+                  ],
+                ),
+              ),
+            ),
+    ]));
   }
+}
+
+
+Widget _buildLegendItem(IconData icon, Color color, String text) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 8),
+        Text(text.tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+      ],
+    ),
+  );
 }

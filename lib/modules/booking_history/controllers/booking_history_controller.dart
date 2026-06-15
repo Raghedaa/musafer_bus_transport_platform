@@ -6,6 +6,7 @@ import '../../../core/services/api_service.dart';
 import '../../../core/shared/custom_snackbar.dart';
 import '../../../data/models/booking_history_model.dart';
 import '../../../data/repositories/booking_repository.dart';
+import '../../../routes/app_routes/app_routes.dart';
 import '../../main_layout/controller/main_layout_controller.dart';
 import '../../ticket_details/controllers/ticket_controller.dart';
 import '../../ticket_details/view/screen/ticket_details_screen.dart';
@@ -121,66 +122,53 @@ class BookingHistoryController extends GetxController with WidgetsBindingObserve
     }
 
     if (tripStatusLower == 'completed' || statusLower == 'completed') {
-      CustomSnackBar.showError("This trip has already ended.".tr);
+      Get.toNamed(
+        AppRoute.send_complaints,
+        arguments: {'tripId': booking.tripId, 'bookingId': booking.id},
+      );
       return;
     }
 
     if (tripStatusLower == 'in_progress') {
-
       if (Get.isRegistered<TripTrackingController>()) {
         await Get.delete<TripTrackingController>(force: true);
       }
 
       Get.put(TripTrackingController(tripId: booking.tripId));
 
-      Get.find<MainLayoutController>().pushToBookings(
-          const TripTrackingScreen()
-      );
+      Get.to(() => const TripTrackingScreen());
       return;
     }
 
     if (tripStatusLower == 'scheduled' || statusLower == 'confirmed') {
-
-      if (Get.isRegistered<TripTrackingController>()) {
-        await Get.delete<TripTrackingController>(force: true);
-      }
-
-      Get.put(TripTrackingController(tripId: booking.tripId));
-
-      Get.find<MainLayoutController>().pushToBookings(
-          const TripTrackingScreen()
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(
+          child: CircularProgressIndicator(color: AppColor.darkgreen),
+        ),
       );
-      return;
 
-      // عرض الـ Loading
-    //   showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (_) => const Center(
-    //       child: CircularProgressIndicator(color: AppColor.darkgreen),
-    //     ),
-    //   );
-    //
-    //   try {
-    //     final repo = Get.find<BookingRepository>();
-    //     final fullBookingData = await repo.fetchBookingDetails(booking.id);
-    //
-    //     Navigator.of(context).pop(); // إغلاق الـ Loading
-    //
-    //     if (Get.isRegistered<TicketController>()) {
-    //       Get.delete<TicketController>();
-    //     }
-    //     final ticketCtrl = Get.put(TicketController());
-    //     await ticketCtrl.setTripData(fullBookingData);
-    //
-    //     Get.find<MainLayoutController>().pushToBookings(const TicketDetailsScreen());
-    //   } catch (e) {
-    //     Navigator.of(context).pop();
-    //     CustomSnackBar.showError("Failed to load details: ".tr + e.toString());
-    //   }
-    //   return;
+      try {
+        final repo = Get.find<BookingRepository>();
+        final fullBookingData = await repo.fetchBookingDetails(booking.id);
+
+        Navigator.of(context).pop(); // إغلاق الـ Loading
+
+        if (Get.isRegistered<TicketController>()) {
+          Get.delete<TicketController>();
+        }
+        final ticketCtrl = Get.put(TicketController());
+        await ticketCtrl.setTripData(fullBookingData);
+
+        Get.to(() => const TicketDetailsScreen());
+
+      } catch (e) {
+        Navigator.of(context).pop();
+        CustomSnackBar.showError("Failed to load details: ".tr + e.toString());
+      }
+      return;
     }
   }
-
 
 }

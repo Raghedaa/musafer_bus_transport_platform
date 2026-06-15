@@ -56,6 +56,8 @@ void main() async {
   await Hive.openBox('subscription_box');
   await Hive.openBox('promo_box');
   await Hive.openBox('my_subs');
+  await Hive.openBox('complaints_box');
+
 
 // الآن يمكنك استخدام الصناديق بأمان
   final box = Hive.box('trip_details_box');

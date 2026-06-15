@@ -21,25 +21,24 @@ class SeatItem extends GetView<SelectSeatController> {
       bool isMale = seat.gender?.toLowerCase() == 'male';
 
       Color getBgColor() {
-        if (isSelected) return const Color(0xFF384D3B);
+        if (isSelected) return AppColor.darkgreen;
         if (isBooked) {
-          if (isFemale) return const Color(0xFFFCE4EC);
-          if (isMale) return const Color(0xFFE3F2FD);
-          return const Color(0xFFE0E0E0);
+          if (isFemale) return AppColor.femaleBookedBg;
+          if (isMale) return AppColor.maleBookedBg;
+          return AppColor.unavailableBg;
         }
-        return Colors.white;
+        return AppColor.white;
       }
 
       Color getBorderColor() {
-        if (isSelected) return const Color(0xFF384D3B);
+        if (isSelected) return AppColor.darkgreen;
         if (isBooked) {
-          if (isFemale) return const Color(0xFFF06292);
-          if (isMale) return const Color(0xFF64B5F6);
-          return const Color(0xFFBDBDBD);
+          if (isFemale) return AppColor.femaleBookedBorder;
+          if (isMale) return AppColor.maleBookedBorder;
+          return AppColor.unavailableBorder;
         }
-        return const Color(0xFFBDBDBD);
+        return AppColor.primaryGrey;
       }
-
       return GestureDetector(
         onTap: isBooked ? null : () => controller.toggleSeat(seatNumber),
         child: Container(

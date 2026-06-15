@@ -15,7 +15,6 @@ class BookingHistoryScreen extends StatelessWidget {
     final controller = Get.put(BookingHistoryController(), permanent: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         title: Text("Booking History".tr,
             style: TextStyle(color: AppColor.black, fontWeight: FontWeight.bold, fontSize: 18.sp)),

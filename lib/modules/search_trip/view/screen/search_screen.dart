@@ -20,9 +20,10 @@ class TripSearchScreen extends StatelessWidget {
         child: RefreshIndicator(
           color: AppColor.darkgreen,
           onRefresh: () async {
-            await controller.fetchPopularTrips();
-          },
+            await controller.fetchPopularTrips(isLoadMore: false);
+            },
           child: SingleChildScrollView(
+            controller: controller.scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
             child: Column(
@@ -34,6 +35,7 @@ class TripSearchScreen extends StatelessWidget {
                 const SearchCard(),
                 SizedBox(height: 25.h),
                 PopularRoutesSection(controller: controller),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

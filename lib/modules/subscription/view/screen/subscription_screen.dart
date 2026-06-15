@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
+import 'package:musafer/routes/app_routes/app_routes.dart';
 import '../../../main_layout/controller/main_layout_controller.dart';
 import '../../../subscription_details/controllers/subscription_details_controller.dart';
 import '../../../subscription_details/view/screen/subscription_details_screen.dart';
@@ -104,8 +105,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             onTap: () {
               controller.selectedPlan.value = plan.name;
 
-              Get.find<MainLayoutController>().pushToSubscription(
-                const SubscriptionDetailsScreen(),
+              Get.toNamed(
+                AppRoute.subscription_details,
+                arguments: plan,
               );
 
               final detailsController = Get.put(SubscriptionDetailsController());

@@ -26,21 +26,19 @@ class TripProvider {
   }
 
   // دالة إضافية لجلب الرحلات الشائعة لعرضها بالصفحة بالأساس
-  Future<Response<dynamic>> getPopularTrips() async {
+  Future<Response<dynamic>> getPopularTrips({int page = 1}) async {
     return await _apiService.get(
       endPoint: 'trips/search',
+      queryParameters: {'page': page},
     );
   }
 
-
-  // أضيفي هذه الدالة داخل كلاس TripProvider
   Future<Response<dynamic>> getCities() async {
     return await _apiService.get(
       endPoint: 'cities',
     );
   }
 
-  // أضيفي هذه الدالة داخل كلاس TripProvider
   Future<Response<dynamic>> getTripDetails(int tripId) async {
     return await _apiService.get(
       endPoint: 'passenger/trips/$tripId',

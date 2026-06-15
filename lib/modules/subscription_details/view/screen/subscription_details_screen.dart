@@ -21,8 +21,7 @@ class SubscriptionDetailsScreen extends StatelessWidget {
         leading: IconButton(
           icon:  Icon(Icons.arrow_back, color: AppColor.black),
           onPressed: () {
-            Get.find<MainLayoutController>().popSubscription();
-            Get.delete<SubscriptionDetailsController>();
+            Get.back();
           },
         ),
       ),
@@ -81,7 +80,7 @@ class SubscriptionDetailsScreen extends StatelessWidget {
         padding: EdgeInsets.only(top: 20.h, bottom: 10.h),
         child: Text(title, style: TextStyle(fontWeight: FontWeight.bold,
             fontSize: 16.sp,
-            color: AppColor.darkgreen)),
+            color:  AppColor.black)),
       );
 
   Widget _buildCard(List<Widget> children) =>

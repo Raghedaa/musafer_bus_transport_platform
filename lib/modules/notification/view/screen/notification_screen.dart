@@ -25,7 +25,6 @@ class NotificationScreen extends GetView<NotificationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         title: Row(
           children: [
@@ -50,7 +49,7 @@ class NotificationScreen extends GetView<NotificationController> {
         actions: [
           // زر تحديد الكل كمقروء (الصح)
           IconButton(
-            icon: const Icon(Icons.done_all, color: AppColor.darkgreen),
+            icon:  Icon(Icons.done_all, color: AppColor.black),
             onPressed: () => controller.markAllAsRead(),
             tooltip: "mark_all_read".tr,
           ),
@@ -64,15 +63,25 @@ class NotificationScreen extends GetView<NotificationController> {
 
 
       if (controller.notifications.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        return RefreshIndicator(
+          color: AppColor.darkgreen,
+          onRefresh: () => controller.fetchNotifications(),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(), // تجعل الـ ListView قابلاً للسحب حتى لو كان فارغاً
             children: [
-              Icon(Icons.notifications_off_outlined, size: 80.sp, color: Colors.grey),
-              SizedBox(height: 16.h),
-              Text(
-                "no_notifications".tr, // تأكد من إضافة هذا المفتاح في ملفات الترجمة
-                style: TextStyle(fontSize: 18.sp, color: Colors.grey, fontWeight: FontWeight.bold),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.4), // دفع المحتوى للمنتصف
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.notifications_off_outlined, size: 80.sp, color: Colors.grey),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "no_notifications".tr,
+                      style: TextStyle(fontSize: 18.sp, color: Colors.grey, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

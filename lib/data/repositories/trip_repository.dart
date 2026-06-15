@@ -43,32 +43,39 @@ class TripRepository {
     return [];
   }
 
-  Future<List<TripModel>> fetchPopularTrips({bool forceRefresh = false}) async {
-    final String lang = GetStorage().read('lang') ?? 'ar';
-    final String cacheKey = 'popular_list_$lang';
+  Future<({List<TripModel> data, int lastPage})> fetchPopularTrips({int page = 1}) async {
+    try {
+      final response = await _tripProvider.getPopularTrips(page: page);
 
-    if (forceRefresh || _popularTripsBox.get(cacheKey) == null) {
-      try {
-        final response = await _tripProvider.getPopularTrips();
-        if (response.statusCode == 200 && response.data != null) {
-          final List<dynamic> data = response.data['data'] ?? response.data;
-          _popularTripsBox.put(cacheKey, data); // تخزين حسب اللغة
-          return data.map((json) => TripModel.fromJson(json)).toList();
+      if (response.statusCode == 200 && response.data != null) {
+        final List<dynamic> rawData = (response.data['data'] as List<dynamic>?) ?? [];
+
+        if (page == 1) {
+          await _popularTripsBox.put('popular_list', rawData);
         }
-      } catch (e) {
-        /*...*/
+
+        final List<TripModel> trips = rawData.map((json) => TripModel.fromJson(json)).toList();
+        final meta = response.data['meta'];
+        final int lastPage = (meta != null && meta['last_page'] != null) ? meta['last_page'] : 1;
+
+        return (data: trips, lastPage: lastPage);
+      }
+    } catch (e) {
+      // ← هون المشكلة، كان فاضي — أضف الكاش هون
+      if (page == 1) {
+        final cached = _popularTripsBox.get('popular_list');
+        if (cached != null && cached is List) {
+          final trips = cached
+              .map((item) => TripModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .toList();
+          return (data: trips, lastPage: 1);
+        }
       }
     }
-
-    final cached = _popularTripsBox.get(cacheKey);
-
-    if (cached != null) {
-      return (cached as List)
-          .map((json) => TripModel.fromJson(Map<String, dynamic>.from(json)))
-          .toList();
-    }
-    return [];
+    return (data: <TripModel>[], lastPage: 1);
   }
+
+
 
   void _prefetchTripDetailsInBackground(List<int> tripIds) {
     for (var id in tripIds) {

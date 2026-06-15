@@ -43,6 +43,17 @@ class AppColor{
   static Color get lightGrey => _isDark ? const Color(0xFF3C3C3C) : const Color(0xFFE9ECEF);
   static Color get creamLight => _isDark ? const Color(0xFF2C2C2C) : const Color(0xFFFFEBD2);
 
+
+  static Color get femaleBookedBg => _isDark ? const Color(0xFF4A148C).withOpacity(0.3) : const Color(0xFFFCE4EC);
+  static Color get femaleBookedBorder => _isDark ? const Color(0xFFCE93D8) : const Color(0xFFF06292);
+
+  static Color get maleBookedBg => _isDark ? const Color(0xFF0D47A1).withOpacity(0.3) : const Color(0xFFE3F2FD);
+  static Color get maleBookedBorder => _isDark ? const Color(0xFF90CAF9) : const Color(0xFF64B5F6);
+
+  static Color get unavailableBg => _isDark ? const Color(0xFF333333) : const Color(0xFFE0E0E0);
+  static Color get unavailableBorder => _isDark ? const Color(0xFF555555) : const Color(0xFFBDBDBD);
+
+
   static Color get primary => _isDark
       ? const Color(0xFF5F7F5C)
       : const Color(0xFF3d4e3c);

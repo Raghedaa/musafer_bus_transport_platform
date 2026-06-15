@@ -28,6 +28,25 @@ class MainLayoutController extends GetxController {
   RxList<Widget> notificationStack = <Widget>[const SettingsView()].obs;
   RxList<Widget> profileStack = <Widget>[const ProfileView()].obs;
 
+
+
+
+  void resetStack(int index) {
+    switch (index) {
+      case 0: // Bookings
+        bookingStack.assignAll([const BookingHistoryScreen()]);
+        break;
+      case 1: // Subscriptions
+        subscriptionStack.clear();
+        break;
+      case 4: // Profile
+        profileStack.assignAll([const ProfileView()]);
+        break;
+    }
+    update();
+  }
+
+
   void pushToProfileStack(Widget page) {
     profileStack.add(page);
     update();
@@ -55,13 +74,19 @@ class MainLayoutController extends GetxController {
     return false;
   }
 
-
   void changePage(int index) {
-    if (currentIndex.value == 4) {
-      notificationStack.assignAll([const SettingsView()]);
+    if (currentIndex.value == index) {
+      resetStack(index);
+    } else {
+      currentIndex.value = index;
     }
-    currentIndex.value = index;
-  }
+    }
+  // void changePage(int index) {
+  //   if (currentIndex.value == 4) {
+  //     notificationStack.assignAll([const SettingsView()]);
+  //   }
+  //   currentIndex.value = index;
+  // }
 
 
   void resetAndGoToBookings() {

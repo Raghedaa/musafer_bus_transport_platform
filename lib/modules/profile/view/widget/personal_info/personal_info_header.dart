@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../controller/personal_info_controller.dart';
 
-
 class PersonalInfoHeader extends GetView<PersonalInfoController> {
   const PersonalInfoHeader({super.key});
 

@@ -23,7 +23,7 @@ class TicketJourneyDetails extends StatelessWidget {
             Text(
               trip['origin_city']['name'],
               style: TextStyle(
-                color: AppColor.white,
+                color: Colors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -31,20 +31,20 @@ class TicketJourneyDetails extends StatelessWidget {
             Text(
               depTime,
               style: TextStyle(
-                color: AppColor.white,
+                color: Colors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        Icon(Icons.directions_bus, color: AppColor.white),
+        Icon(Icons.directions_bus, color: Colors.white),
         Column(
           children: [
             Text(
               trip['destination_city']['name'],
               style: TextStyle(
-                color: AppColor.white,
+                color: Colors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -52,7 +52,7 @@ class TicketJourneyDetails extends StatelessWidget {
             Text(
               arrTime,
               style: TextStyle(
-                color: AppColor.white,
+                color: Colors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),

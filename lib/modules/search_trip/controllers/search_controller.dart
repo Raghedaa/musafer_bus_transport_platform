@@ -28,6 +28,10 @@ class TripSearchController extends GetxController {
   var popularTrips = <TripModel>[].obs;
   var cities = <CityModel>[].obs;
 
+  var currentPage = 1.obs;
+  var lastPage = 1.obs;
+  var isLoadingMore = false.obs;
+  final ScrollController scrollController = ScrollController();
 
   @override
   void onClose() {
@@ -38,12 +42,21 @@ class TripSearchController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await Hive.box('popular_trips_box').clear();
+    // await Hive.box('popular_trips_box').clear();
     departureDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    fetchCities();
     loadOfflineData();
+    fetchCities();
     fetchPopularTrips();
+    scrollController.addListener(_onScroll);
     super.onInit();
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+      if (!isLoadingMore.value && currentPage.value < lastPage.value) {
+        fetchPopularTrips(isLoadMore: true);
+      }
+    }
   }
 
   void loadOfflineCities() {
@@ -73,21 +86,39 @@ class TripSearchController extends GetxController {
   void loadOfflineData() {
     try {
       final box = Hive.box('popular_trips_box');
-
       final dynamic cached = box.get('popular_list');
 
       if (cached != null && cached is List) {
         popularTrips.assignAll(
-            cached.map((item) {
-              final Map<String, dynamic> map = Map<String, dynamic>.from(item as Map);
-              return TripModel.fromJson(map);
-            }).toList()
+          cached.map((item) {
+            // ← هاد هو الحل: cast بشكل recursive
+            final Map<String, dynamic> map = _deepCast(item);
+            return TripModel.fromJson(map);
+          }).toList(),
         );
         print("✅ تم تحميل ${popularTrips.length} رحلة من الكاش");
       }
     } catch (e) {
       print("❌ خطأ في تحميل البيانات من الكاش: $e");
     }
+  }
+
+  Map<String, dynamic> _deepCast(dynamic item) {
+    if (item is Map) {
+      return item.map((k, v) {
+        if (v is Map) return MapEntry(k.toString(), _deepCast(v));
+        if (v is List) return MapEntry(k.toString(), _deepCastList(v));
+        return MapEntry(k.toString(), v);
+      });
+    }
+    return {};
+  }
+
+  List _deepCastList(List list) {
+    return list.map((item) {
+      if (item is Map) return _deepCast(item);
+      return item;
+    }).toList();
   }
 
   void toggleSearchCard() => isCardExpanded.value = !isCardExpanded.value;
@@ -118,16 +149,47 @@ class TripSearchController extends GetxController {
     }
   }
 
-  Future<void> fetchPopularTrips() async {
-    try {
+  Future<void> fetchPopularTrips({bool isLoadMore = false}) async {
+    if (isLoadMore) {
+      if (currentPage.value >= lastPage.value) return;
+      isLoadingMore.value = true;
+      currentPage.value++;
+    } else {
       isPopularLoading.value = true;
-      var trips = await _tripRepository.fetchPopularTrips();
-      popularTrips.assignAll(trips);
+      currentPage.value = 1;
+    }
+
+    try {
+      var response = await _tripRepository.fetchPopularTrips(page: currentPage.value);
+
+      if (isLoadMore) {
+        popularTrips.addAll(response.data);
+      } else {
+        // ← فقط حدّث لو في بيانات فعلية
+        if (response.data.isNotEmpty) {
+          popularTrips.assignAll(response.data);
+        }
+      }
+      lastPage.value = response.lastPage;
     } catch (e) {
+      if (isLoadMore) currentPage.value--;
     } finally {
       isPopularLoading.value = false;
+      isLoadingMore.value = false;
     }
   }
+
+
+  // Future<void> fetchPopularTrips() async {
+  //   try {
+  //     isPopularLoading.value = true;
+  //     var trips = await _tripRepository.fetchPopularTrips();
+  //     popularTrips.assignAll(trips);
+  //   } catch (e) {
+  //   } finally {
+  //     isPopularLoading.value = false;
+  //   }
+  // }
 
   Map<String, dynamic> prepareSearchArguments() {
     return {

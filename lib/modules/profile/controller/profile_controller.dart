@@ -16,10 +16,17 @@ class ProfileController extends GetxController {
     fetchData();
   }
 
-  void fetchData() async {
+  Future<void> fetchData() async {
     isLoading.value = true;
     var data = await _repo.getProfile();
     if (data != null) userData.value = data;
     isLoading.value = false;
   }
+
+  // void fetchData() async {
+  //   isLoading.value = true;
+  //   var data = await _repo.getProfile();
+  //   if (data != null) userData.value = data;
+  //   isLoading.value = false;
+  // }
 }

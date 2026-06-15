@@ -53,7 +53,7 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.chevron_left, color: AppColor.darkgreen, size: 28.sp),
+                          icon: Icon(Icons.chevron_left, color: AppColor.black, size: 28.sp),
                           onPressed: () {
                             setState(() {
                               currentDisplayMonth = DateTime(
@@ -70,11 +70,11 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.darkgreen,
+                            color: AppColor.black,
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.chevron_right, color: AppColor.darkgreen, size: 28.sp),
+                          icon: Icon(Icons.chevron_right, color: AppColor.black, size: 28.sp),
                           onPressed: () {
                             setState(() {
                               currentDisplayMonth = DateTime(
@@ -102,7 +102,7 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
                               style: TextStyle(
                                 fontSize: isArabic ? 12.sp : 10.sp,
                                 fontWeight: FontWeight.bold,
-                                color: AppColor.darkgreen,
+                                color: AppColor.black,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.visible,
@@ -132,12 +132,12 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(null),
                   child: Text(isArabic ? "إلغاء" : "Cancel",
-                      style: TextStyle(color: AppColor.darkgreen, fontSize: 14.sp)),
+                      style: TextStyle(color: AppColor.black, fontSize: 14.sp)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(selectedDate),
                   child: Text(isArabic ? "تأكيد" : "Confirm",
-                      style: TextStyle(color: AppColor.darkgreen, fontSize: 14.sp)),
+                      style: TextStyle(color: AppColor.black, fontSize: 14.sp)),
                 ),
               ],
             );
@@ -249,31 +249,30 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
         Expanded(
           child: InkWell(
             onTap: () async {
+              final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               TimeOfDay? pickedTime = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.light(
-                        primary: AppColor.darkgreen,
-                        onPrimary: Colors.white,
-                        primaryContainer: AppColor.darkgreen,
-                        onPrimaryContainer: Colors.white,
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: AppColor.black,
+                        brightness: isDarkMode ? Brightness.dark : Brightness.light,
                       ),
                       timePickerTheme: TimePickerThemeData(
-                        backgroundColor: Colors.white,
-                        hourMinuteTextColor: AppColor.darkgreen,
-                        dialHandColor: AppColor.darkgreen,
-                        dialBackgroundColor: AppColor.darkgreen.withOpacity(0.1),
-                        hourMinuteColor: AppColor.darkgreen.withOpacity(0.1),
-                        dayPeriodColor: AppColor.darkgreen.withOpacity(0.1),
-                        dayPeriodTextColor: AppColor.darkgreen,
-                        entryModeIconColor: AppColor.darkgreen,
+                        backgroundColor: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+                        hourMinuteTextColor: AppColor.black,
+                        dialHandColor: AppColor.black,
+                        dialBackgroundColor: AppColor.black.withOpacity(0.1),
+                        hourMinuteColor: AppColor.black.withOpacity(0.1),
+                        dayPeriodColor: AppColor.black.withOpacity(0.1),
+                        dayPeriodTextColor: AppColor.black,
+                        entryModeIconColor: AppColor.black,
                       ),
                       textButtonTheme: TextButtonThemeData(
                         style: TextButton.styleFrom(
-                          foregroundColor: AppColor.darkgreen,
+                          foregroundColor: AppColor.black,
                         ),
                       ),
                     ),
@@ -325,7 +324,7 @@ class DateAndPassengersRow extends GetView<TripSearchController> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, color: AppColor.grey, size: 18.sp),
+        // Icon(icon, color: AppColor.grey, size: 18.sp),
         SizedBox(width: 8.w),
         Expanded(
           child: Column(

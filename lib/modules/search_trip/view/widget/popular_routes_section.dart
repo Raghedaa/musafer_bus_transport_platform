@@ -3,9 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/shared/trip_card/trip_card_main.dart';
-import '../../../../data/models/trip_model.dart';
 import '../../controllers/search_controller.dart';
-
 
 class PopularRoutesSection extends StatelessWidget {
   final TripSearchController controller;
@@ -29,7 +27,8 @@ class PopularRoutesSection extends StatelessWidget {
         SizedBox(height: 15.h),
 
         Obx(() {
-          if (controller.isPopularLoading.value) {
+          // حالة التحميل الأولية (لأول 15 عنصر)
+          if (controller.isPopularLoading.value && controller.popularTrips.isEmpty) {
             return Center(child: CircularProgressIndicator(color: AppColor.darkgreen));
           }
 
@@ -37,14 +36,30 @@ class PopularRoutesSection extends StatelessWidget {
             return Center(child: Text("No popular routes found".tr));
           }
 
+          return ListView.builder(
+            shrinkWrap: true,
+            // نستخدم NeverScrollableScrollPhysics لأن الـ ListView داخل SingleChildScrollView
+            physics: const NeverScrollableScrollPhysics(),
+            // نزيد 1 لخانة الـ ProgressIndicator في الأسفل
+            itemCount: controller.popularTrips.length + 1,
+            itemBuilder: (context, index) {
+              // إذا وصلنا لآخر عنصر، نعرض الـ Loader الخاص بالتحميل الإضافي
+              if (index == controller.popularTrips.length) {
+                return Obx(() => controller.isLoadingMore.value
+                    ? Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: Center(
+                    child: CircularProgressIndicator(color: AppColor.darkgreen),
+                  ),
+                )
+                    : const SizedBox.shrink());
+              }
 
-          return Column(
-            children: controller.popularTrips.map((trip) {
               return Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
-                child: TripCardMain(tripmodel: trip),
+                child: TripCardMain(tripmodel: controller.popularTrips[index]),
               );
-            }).toList(),
+            },
           );
         }),
       ],

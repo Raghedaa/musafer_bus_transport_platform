@@ -15,35 +15,34 @@ class PersonalInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // يفضل ربط الـ Controller عبر Binding، لكن هذا يعمل أيضاً
     final controller = Get.put(PersonalInfoController());
 
-
-    if (controller.isLoading.value) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppColor.darkgreen),
-      );
-    }
     return Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
       appBar: AppBar(title: Text("Personal Information".tr), centerTitle: true),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom:70.h,left: 40.w,right: 40.w,top: 20.h),
-        child: CustomButton(
-          text: "Save".tr,
-          onPressed: () => controller.saveChanges(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.w),
-        child: Column(
-          children: [
-            const Center(child: PersonalInfoHeader()),
-            SizedBox(height: 25.h),
-            const PersonalInfoForm(),
-            SizedBox(height: 20.h),
-          ],
-        ),
-      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator(color: AppColor.darkgreen));
+        }
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            children: [
+              const Center(child: PersonalInfoHeader()),
+              SizedBox(height: 25.h),
+              const PersonalInfoForm(),
+              SizedBox(height: 20.h),
+              CustomButton(
+                text: "Save".tr,
+                onPressed: () => controller.saveChanges(),
+              ),
+              SizedBox(height: 25.h),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

@@ -32,6 +32,10 @@ class TripModel {
   final double destLat;
   final double destLng;
 
+
+  final double? currentLat;
+  final double? currentLng;
+
   TripModel({
     required this.id,
     required this.price,
@@ -61,6 +65,9 @@ class TripModel {
     required this.originLng,
     required this.destLat,
     required this.destLng,
+
+    this.currentLat,
+    this.currentLng,
   });
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
@@ -81,6 +88,16 @@ class TripModel {
     DateTime depDt = DateTime.parse(json['departure_time'] ?? DateTime.now().toString());
     DateTime arrDt = DateTime.parse(json['estimated_arrival_time'] ?? DateTime.now().toString());
 
+
+    final currentLoc = json['current_location'];
+    final double? curLat = currentLoc != null
+        ? double.tryParse(currentLoc['latitude']?.toString() ?? '')
+        : null;
+    final double? curLng = currentLoc != null
+        ? double.tryParse(currentLoc['longitude']?.toString() ?? '')
+        : null;
+
+
     return TripModel(
       id: json['id'] ?? 0,
       price: (json['base_fare'] ?? 0).toDouble(),
@@ -96,15 +113,17 @@ class TripModel {
           ? StationModel.fromJson(json['destination_station'])
           : null,
       companyName: json['company']?['name'] ?? '',
-// في factory TripModel.fromJson
-      rating: _parseDynamicDouble(json['company']?['rating']),      reviewsCount: 120,
+      rating: _parseDynamicDouble(json['company']?['rating']),
+      reviewsCount: 120,
       isDirect: true,
       tripDate: DateFormat('yyyy-MM-dd').format(depDt),
-      duration: json['estimated_duration_hhmm'] ?? '00:00',      driverName: json['driver']?['name'] ?? 'Capt. Driver',
-      driverRating: double.tryParse(json['driver']?['rating']?.toString() ?? '0.0') ?? 0.0,      vehiclePlate: json['vehicle']?['plate_number'] ?? 'N/A',
+      duration: json['estimated_duration_hhmm'] ?? '00:00',
+      driverName: json['driver']?['name'] ?? 'Capt. Driver',
+      driverRating: double.tryParse(json['driver']?['rating']?.toString() ?? '0.0') ?? 0.0,
+      vehiclePlate: json['vehicle']?['plate_number'] ?? 'N/A',
       rawVehicle: json['vehicle'] ?? {},
       rawSeatMap: json['seat_map'] ?? [],
-      // restAreas: json['rest_areas'] ?? [],
+
       restAreas: (json['rest_areas'] as List? ?? [])
           .map((e) => RestAreaModel.fromJson(e))
           .toList()
@@ -114,6 +133,10 @@ class TripModel {
       originLng: oLng,
       destLat: dLat,
       destLng: dLng,
+
+      currentLat: curLat,
+      currentLng: curLng,
+
     );
   }
   Map<String, dynamic> toJson() {
@@ -130,12 +153,10 @@ class TripModel {
       'destination_station': destinationStation?.toJson(),
       'company': {'name': companyName, 'rating': rating},
       'estimated_duration_hhmm': duration,
-      // ✅ هون المشكلة - لازم يحفظ plate_number
       'driver': {
         'name': driverName,
         'rating': driverRating.toString(),
       },
-      // ✅ rawVehicle لازم يكون محفوظ كامل من الـ API
       'vehicle': rawVehicle,
       'seat_map': rawSeatMap,
       'rest_areas': restAreas.map((e) => e.toJson()).toList(),

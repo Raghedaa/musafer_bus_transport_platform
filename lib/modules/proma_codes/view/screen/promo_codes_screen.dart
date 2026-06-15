@@ -11,13 +11,27 @@ class PromoCodesScreen extends GetView<PromoController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Promo Codes".tr)),
-      body: Obx(() => controller.isLoading.value
-          ? Center(child: CircularProgressIndicator(color: AppColor.darkgreen,))
-          : ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: controller.promoList.length,
-        itemBuilder: (context, index) => PromoCard(promo: controller.promoList[index]),
-      )),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(
+              child: CircularProgressIndicator(color: AppColor.darkgreen));
+        }
+        if (controller.promoList.isEmpty) {
+          return Center(
+            child: Text(
+              "no_promo_codes_available".tr,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: controller.promoList.length,
+          itemBuilder: (context, index) =>
+              PromoCard(promo: controller.promoList[index]),
+        );
+      }),
     );
   }
 }

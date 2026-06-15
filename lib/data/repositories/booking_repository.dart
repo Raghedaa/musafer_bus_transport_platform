@@ -19,23 +19,60 @@ class BookingRepository {
     return data;
   }
 
+
+
+
+
+  Future<Map<String, dynamic>> validateBooking({
+    required int tripId,
+    required List<int> seatNumbers,
+    required String paymentMethod,
+    int? subscriptionId,
+  }) async {
+    final response = await _provider.calculateBooking({
+      "trip_id": tripId,
+      "seat_numbers": seatNumbers,
+      "payment_method": paymentMethod,
+      "payment_currency": "SYP",
+      if (subscriptionId != null) "user_subscription_id": subscriptionId,
+    });
+
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      final message = response.data is Map
+          ? response.data['message'] ?? "فشل التحقق من الحجز"
+          : "فشل التحقق من الحجز";
+      throw Exception(message);
+    }
+  }
+
+
   Future<Map<String, dynamic>> createBooking({
     required int tripId,
     required List<int> seatNumbers,
     required String paymentMethod,
+    int? subscriptionId,
   }) async {
-    final response = await _provider.bookTrip({
+    final Map<String, dynamic> data = {
       "trip_id": tripId,
-      "seats": seatNumbers,
+      "seat_numbers": seatNumbers,
       "payment_method": paymentMethod,
-    });
+      "payment_currency": "SYP",
+    };
+
+    if (subscriptionId != null) {
+      data["user_subscription_id"] = subscriptionId;
+    }
+
+    final response = await _provider.bookTrip(data);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.data['data'];
     } else {
-      throw Exception("فشل الحجز: ${response.statusMessage}");
+      throw Exception(response.data['message'] ?? "فشل الحجز");
     }
   }
-
 
   Future<List<BookingHistoryModel>> fetchBookingHistory() async {
     final box = Hive.box('bookings_box');

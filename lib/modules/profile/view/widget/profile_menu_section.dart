@@ -63,14 +63,8 @@ class ProfileMenuSection extends StatelessWidget {
           iconColor: AppColor.orange,
           iconBgColor: Colors.orange.withOpacity(0.1),
           onTap: () {
-            final MainLayoutController mainController = Get.find<MainLayoutController>();
+            Get.toNamed(AppRoute.notification);
 
-            if (!Get.isRegistered<NotificationController>()) {
-              Get.put(NotificationController());
-            }
-
-            mainController.changePage(4);
-            mainController.pushToProfileStack(NotificationScreen());
           },
         ),
 
