@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../../core/constants/app_color.dart';
+import '../../../../../data/models/booking_history_model.dart';
 
 class HeaderWidget extends StatelessWidget {
-  final String status;
-  final String tripStatus;
-  final String pnr;
-  const HeaderWidget({super.key, required this.status,required this.tripStatus, required this.pnr});
+  final BookingHistoryModel booking;
+  const HeaderWidget({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +15,12 @@ class HeaderWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            _buildBadge(status, _getBookingStatusColor(status)),
+            _buildBadge(booking.status, _getBookingStatusColor(booking.status)),
             SizedBox(width: 6.w),
-            _buildBadge(tripStatus, _getTripStatusColor(tripStatus)),
+            _buildBadge(booking.tripStatus, _getTripStatusColor(booking.tripStatus)),
           ],
         ),
-
-        Text(
-            "${'PNR'.tr}: $pnr",
-            style: TextStyle(fontSize: 12.sp)
-        ),
+        Text("${'PNR'.tr}: ${booking.pnr}", style: TextStyle(fontSize: 12.sp)),
       ],
     );
   }
@@ -66,5 +61,4 @@ class HeaderWidget extends StatelessWidget {
       default: return AppColor.grey;
     }
   }
-
 }

@@ -9,10 +9,14 @@ class DateTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = AppFormatter.formatDate(dateTime);
-    final formattedTime = AppFormatter.formatTime(dateTime);
+    // final formattedDate = AppFormatter.formatDate(dateTime);
+    // final formattedTime = AppFormatter.formatTime(dateTime);
 
+    final dt = DateTime.parse(dateTime);
+    final formattedDate = "${dt.day}/${dt.month}/${dt.year}";
+    final formattedTime = AppFormatter.formatTime(dateTime);
     return Row(
+
       children: [
         Text(
           formattedDate,

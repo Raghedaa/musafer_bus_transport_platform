@@ -1,7 +1,7 @@
 class BookingHistoryModel {
   final int id;
-  final String status;
-  final String tripStatus;
+   String status;
+   String tripStatus;
   final String pnr;
   final String fromCity;
   final String toCity;
@@ -44,5 +44,22 @@ class BookingHistoryModel {
         "destination_city": {"name": toCity},
       },
     };
+  }
+
+
+  BookingHistoryModel copyWith({
+    String? tripStatus,
+    String? status,
+  }) {
+    return BookingHistoryModel(
+      id: this.id,
+      tripId: this.tripId,
+      pnr: this.pnr,
+      fromCity: this.fromCity,
+      toCity: this.toCity,
+      dateTime: this.dateTime,
+      status: status ?? this.status,
+      tripStatus: tripStatus ?? this.tripStatus,
+    );
   }
 }

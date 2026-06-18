@@ -9,6 +9,17 @@ plugins {
 }
 
 android {
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("key.jks")
+            storePassword = "raghedazedan1234"
+            keyAlias = "key"
+            keyPassword = "raghedazedan1234"
+        }
+    }
+
+
     namespace = "com.example.musafer"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -35,12 +46,19 @@ android {
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+        getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")
         }
+
+        getByName("release") {
+            // هنا نربط التوقيع الذي قمت بإنشائه
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
+
 }
 
 flutter {

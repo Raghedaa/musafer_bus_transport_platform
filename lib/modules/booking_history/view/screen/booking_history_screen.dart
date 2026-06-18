@@ -12,8 +12,8 @@ class BookingHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(BookingHistoryController(), permanent: false);
 
+    final BookingHistoryController controller = Get.put(BookingHistoryController());
     return Scaffold(
       appBar: AppBar(
         title: Text("Booking History".tr,
@@ -47,22 +47,15 @@ class BookingHistoryScreen extends StatelessWidget {
                 }
 
                 return RefreshIndicator(
-                  color: AppColor.darkgreen,
+                  color:AppColor.darkgreen,
                   onRefresh: () => controller.fetchBookings(),
                   child: controller.filteredBookings.isEmpty
-                      ? ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
-                      SizedBox(height: 100.h),
-                      Center(child: Text("no_bookings".tr)),
-                    ],
-                  )
+                      ? Center(child: Text("no_bookings".tr))
                       : ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: controller.filteredBookings.length,
                     itemBuilder: (context, index) {
                       final item = controller.filteredBookings[index];
-                      return BookingCard(booking: item);
+                      return BookingCard(bookingId: item.id);
                     },
                   ),
                 );

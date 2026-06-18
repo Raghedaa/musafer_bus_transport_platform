@@ -763,7 +763,7 @@ class MyTranslation extends Translations {
       "PNR": "PNR",
       "from":"from",
       "to":"to",
-      "InProgress": "رحلة جارية",
+      "InProgress": "InProgress",
       "This booking has been cancelled.": "This booking has been cancelled.",
       "This trip has already ended.": "This trip has already ended.",
 
@@ -841,7 +841,6 @@ class MyTranslation extends Translations {
       "legend_rest_area": "Rest Area",
       "legend_arrival": "Arrival",
       "legend_bus_location": "Bus Location",
-
     }
   };
 }

@@ -43,7 +43,10 @@ class SubscriptionItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("${"Remaining Trips".tr}: ${sub.remainingTrips}", style: TextStyle(fontWeight: FontWeight.bold)),
-              Text("${"Price".tr}: ${sub.plan.price} ل.س", style: TextStyle(color: AppColor.primary)),
+              Text(
+                "${"Price".tr}: ${sub.plan.price} ${"SP".tr}",
+                style: TextStyle(color: AppColor.primary),
+              ),
             ],
           ),
           SizedBox(height: 5.h),

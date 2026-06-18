@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/shared/custom_snackbar.dart';
 import '../../../core/shared/custom_text_form_field.dart';
+import '../../../data/models/booking_history_model.dart';
 import '../../../data/models/booking_summary_model.dart';
 import '../../../data/models/my_subscription_model.dart';
 import '../../../data/repositories/booking_repository.dart';
 import '../../../data/repositories/promo_repository.dart';
 import '../../../data/repositories/trip_repository.dart';
+import '../../booking_history/controllers/booking_history_controller.dart';
 import '../../main_layout/controller/main_layout_controller.dart';
 import '../../my_subscriptions/controllers/my_subscriptions_controller.dart';
 import '../../profile/controller/profile_controller.dart';
@@ -110,28 +112,22 @@ class BookingSummaryController extends GetxController {
 
       int? subscriptionIdToSend;
 
-      // المنطق: إذا كان الدفع رقمياً فقط، نحاول البحث عن اشتراك
       if (paymentMethod.value == 'digital') {
         final subCtrl = Get.isRegistered<MySubscriptionsController>()
             ? Get.find<MySubscriptionsController>()
             : Get.put(MySubscriptionsController());
 
-        // لا ننتظر طويلاً إذا كان التحميل معلقاً
         final activeSub = subCtrl.subscriptions.firstWhereOrNull((s) => s.status == 'active');
 
-        // هنا نحدد: إذا وجدنا اشتراك نرسله، إذا لم نجد لا نرسل شيئاً (اختياري)
         if (activeSub != null) {
           subscriptionIdToSend = activeSub.id;
         }
       }
-      // إذا كان 'wallet' أو 'cash' لا نرسل اشتراك نهائياً
       else {
         subscriptionIdToSend = null;
       }
 
-      // أولاً: نقوم بالتحقق (Validate)
-      // ملاحظة: إذا فشل الـ Validate بسبب الاشتراك، يمكنك إعادة المحاولة بدونه
-      try {
+     try {
         await _repository.validateBooking(
           tripId: model.tripDetails.id,
           seatNumbers: seats,
@@ -139,7 +135,6 @@ class BookingSummaryController extends GetxController {
           subscriptionId: subscriptionIdToSend,
         );
       } catch (e) {
-        // إذا فشل بسبب الاشتراك، جرب الإرسال بدون اشتراك
         if (subscriptionIdToSend != null) {
           subscriptionIdToSend = null;
           await _repository.validateBooking(
@@ -149,11 +144,10 @@ class BookingSummaryController extends GetxController {
             subscriptionId: null,
           );
         } else {
-          rethrow; // خطأ حقيقي آخر
+          rethrow;
         }
       }
 
-      // ثانياً: الحجز الفعلي
       final result = await _repository.createBooking(
         tripId: model.tripDetails.id,
         seatNumbers: seats,
@@ -164,9 +158,14 @@ class BookingSummaryController extends GetxController {
       pnrNumber.value = result['pnr_code'] ?? '';
       CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
 
-      // تحديث بيانات البروفايل والرصيد
-      if (Get.isRegistered<ProfileController>()) {
-        Get.find<ProfileController>().fetchData();
+
+      final newBooking = BookingHistoryModel.fromJson(result);
+
+      if (Get.isRegistered<BookingHistoryController>()) {
+        final historyCtrl = Get.find<BookingHistoryController>();
+        historyCtrl.allBookings.insert(0, newBooking);
+        historyCtrl.changeFilter(historyCtrl.selectedFilter.value);
+        historyCtrl.setHighlightedId(newBooking.id);
       }
 
       final ticketCtrl = Get.isRegistered<TicketController>()
@@ -179,20 +178,16 @@ class BookingSummaryController extends GetxController {
     } catch (e) {
       print("Booking error: $e");
 
-      // --- هُنا يتم وضع الكود الذي سألت عنه ---
       if (e is DioException && e.response != null) {
         final responseData = e.response!.data;
 
-        // التحقق من كود الحالة 402 الخاص بالرصيد
         if (e.response!.statusCode == 402) {
           CustomSnackBar.showError("insufficient_funds_error".tr);
         } else {
-          // التعامل مع أي أخطاء أخرى من السيرفر
           String errorMessage = responseData['message']?.toString() ?? "unexpected_error";
           CustomSnackBar.showError(errorMessage.tr);
         }
       } else {
-        // خطأ غير متوقع (ليس له علاقة بالسيرفر مباشرة)
         CustomSnackBar.showError("unexpected_error".tr);
       }
     }finally {
@@ -200,6 +195,20 @@ class BookingSummaryController extends GetxController {
     }
   }
 
+
+  void updateHistoryLocally(dynamic result) {
+    if (Get.isRegistered<BookingHistoryController>()) {
+      final historyCtrl = Get.find<BookingHistoryController>();
+
+      final newBooking = BookingHistoryModel.fromJson(result);
+
+      historyCtrl.allBookings.insert(0, newBooking);
+
+      historyCtrl.changeFilter(historyCtrl.selectedFilter.value);
+
+      historyCtrl.setHighlightedId(newBooking.id);
+    }
+  }
 
   void showCouponDialog() {
     couponCode.text = "";

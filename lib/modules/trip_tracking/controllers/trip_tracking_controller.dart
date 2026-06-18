@@ -41,7 +41,6 @@ class TripTrackingController extends GetxController with GetTickerProviderStateM
 
   static const String _reverbAppKey = 'e9a5f51fc0b862fce239d3a58fa02adc';
   static const String _reverbHost = 'syria-travel.app';
-  static const int _reverbPort = 8080;
   static const String _authEndpoint =
       'https://syria-travel.app/api/broadcasting/auth';
 
@@ -55,28 +54,8 @@ class TripTrackingController extends GetxController with GetTickerProviderStateM
     );
     fetchTripDetails().then((_) => _connectWebSocket());
 
-
-    Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (isLoading.value == false) {
-        _fetchBusLocationOnly();
-      }
-    });
-
   }
 
-
-  Future<void> _fetchBusLocationOnly() async {
-    try {
-      final repo = Get.find<TripRepository>();
-      final updatedTrip = await repo.fetchTripDetails(tripId);
-      if (updatedTrip.currentLat != null) {
-        _animateBusTo(LatLng(updatedTrip.currentLat!, updatedTrip.currentLng!));
-        debugPrint("🚌 Location updated via API polling");
-      }
-    } catch (e) {
-      debugPrint("Error updating location: $e");
-    }
-  }
 
   @override
   void onClose() {
@@ -87,60 +66,49 @@ class TripTrackingController extends GetxController with GetTickerProviderStateM
   }
 
 
+
   void _connectWebSocket() {
     try {
       final String token = GetStorage().read('token') ?? '';
+      if (token.isEmpty) return;
 
       _pusher = PusherClient(
         options: PusherOptions(
           key: _reverbAppKey,
           host: _reverbHost,
-          wsPort: _reverbPort,
-          encrypted: false,
+          wsPort: 443,
+          encrypted: true,
           authOptions: PusherAuthOptions(
             _authEndpoint,
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Accept': 'application/json',
-            },
+            headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
           ),
           autoConnect: false,
         ),
       );
 
-      _pusher!.onConnectionStateChange((state) {
-        String stateString = state.toString();
-        debugPrint('🌐 WS State: $stateString');
-
-        _isConnected = stateString.contains('CONNECTED');
-      });
-      _pusher!.onConnectionError((error) {
-        debugPrint('❌ WS Error: $error');
-      });
-
-      _channel = _pusher!.subscribe(
-        'private-trip.$tripId.tracking',
-      ) as PrivateChannel;
-
-
-      _channel!.bind(
-        'Modules\\Operations\\Events\\TripLocationUpdated',
-            (dynamic event) {
-          final data = (event is Map) ? event : (event != null ? event.data : null);
-          if (data != null) {
-            debugPrint('📡 Event received: $data');
-            _handleLocationEvent(data);
-          }
-        },
-      );
-
       _pusher!.connect();
-      debugPrint('✅ WebSocket connecting...');
+
+      final channel = _pusher!.subscribe('private-trip.$tripId.tracking');
+
+      if (channel is PrivateChannel) {
+        _channel = channel;
+
+        _channel!.bind('Modules\\Operations\\Events\\TripLocationUpdated', (dynamic event) {
+          debugPrint('📡 [الحدث الأساسي] تم الاستلام: $event');
+          _handleLocationEvent(event);
+        });
+
+        _channel!.bind('TripLocationUpdated', (dynamic event) {
+          debugPrint('📡 [حدث بديل] تم الاستلام: $event');
+          _handleLocationEvent(event);
+        });
+
+        debugPrint('✅ تم الاشتراك والربط بنجاح');
+      }
     } catch (e) {
       debugPrint('❌ WebSocket init failed: $e');
     }
   }
-
 
 
   void _disconnectWebSocket() {
@@ -154,22 +122,24 @@ class TripTrackingController extends GetxController with GetTickerProviderStateM
       debugPrint('Error disconnecting: $e');
     }
   }
-
-  void _handleLocationEvent(dynamic rawData) {
+  void _handleLocationEvent(dynamic eventData) {
     try {
-      final Map<String, dynamic> data = rawData is String
-          ? jsonDecode(rawData)
-          : Map<String, dynamic>.from(rawData as Map);
+      final Map<String, dynamic> locationData = (eventData is Map)
+          ? Map<String, dynamic>.from(eventData)
+          : jsonDecode(eventData.toString());
 
-      final double lat = double.parse(data['lat'].toString());
-      final double lng = double.parse(data['lng'].toString());
+      final double lat = double.parse(locationData['lat'].toString());
+      final double lng = double.parse(locationData['lng'].toString());
 
-      debugPrint('🚌 Bus update → lat: $lat, lng: $lng');
+      debugPrint('🚌 تحديث الموقع من الـ Socket: lat=$lat, lng=$lng');
+
       _animateBusTo(LatLng(lat, lng));
+
     } catch (e) {
-      debugPrint('❌ Parse Error: $e | raw: $rawData');
+      debugPrint('❌ خطأ في معالجة بيانات الـ Socket: $e');
     }
   }
+
 
   void _animateBusTo(LatLng newPosition) {
     if (_previousBusLocation == null) {

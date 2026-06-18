@@ -85,7 +85,7 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
                       ),
                       child: const Center(
                         child: Icon(
-                          Icons.directions_bus,
+                          Icons.location_searching,
                           color: Colors.white,
                           size: 25,
                         ),

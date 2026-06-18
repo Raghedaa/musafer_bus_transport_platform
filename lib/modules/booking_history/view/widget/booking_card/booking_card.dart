@@ -9,21 +9,27 @@ import 'route_widget.dart';
 import 'date_time_widget.dart';
 
 class BookingCard extends StatelessWidget {
-  final BookingHistoryModel booking;
 
-  const BookingCard({super.key, required this.booking});
+  final int bookingId;
+
+  const BookingCard({super.key, required this.bookingId});
 
   @override
   Widget build(BuildContext context) {
     final BookingHistoryController controller = Get.find<BookingHistoryController>();
 
     return Obx(() {
-      bool isHighlighted = controller.highlightedBookingId.value == booking.id;
+
+      final bool isHighlighted = controller.highlightedBookingId.value == bookingId;
+
+      final index = controller.allBookings.indexWhere((b) => b.id == bookingId);
+      if (index == -1) return const SizedBox.shrink();
+      final currentBooking = controller.allBookings[index];
 
       return GestureDetector(
         onTap: () {
           controller.clearHighlight();
-          controller.handleBookingTap(context, booking);
+          controller.handleBookingTap(context, currentBooking);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
@@ -59,16 +65,15 @@ class BookingCard extends StatelessWidget {
             padding: EdgeInsets.all(16.w),
             child: Column(
               children: [
-
-                HeaderWidget(
-                    status: booking.status,
-                    tripStatus: booking.tripStatus,
-                    pnr: booking.pnr
-                ),
+                // ⭐ نمرر currentBooking مو booking الأصلي
+                HeaderWidget(booking: currentBooking),
                 SizedBox(height: 16.h),
-                RouteWidget(fromCity: booking.fromCity, toCity: booking.toCity),
+                RouteWidget(
+                  fromCity: currentBooking.fromCity,
+                  toCity: currentBooking.toCity,
+                ),
                 Divider(height: 32.h, color: Colors.grey.withOpacity(0.4)),
-                DateTimeWidget(dateTime: booking.dateTime),
+                DateTimeWidget(dateTime: currentBooking.dateTime),
               ],
             ),
           ),
