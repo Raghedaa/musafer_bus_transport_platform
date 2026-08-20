@@ -4,13 +4,20 @@ import 'package:get/get.dart';
 import 'package:musafer/core/constants/app_color.dart';
 import 'package:musafer/core/shared/custom_button.dart';
 import '../../controllers/select_seat_controller.dart';
-
 class PaymentContainer extends GetView<SelectSeatController> {
   const PaymentContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      final displayPrice = controller.isModifyMode
+          ? controller.extraPrice.value
+          : controller.totalPrice.value;
+
+      final priceLabel = controller.isModifyMode
+          ? "EXTRA AMOUNT".tr
+          : "TOTAL PRICE".tr;
+
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         decoration: BoxDecoration(
@@ -32,9 +39,9 @@ class PaymentContainer extends GetView<SelectSeatController> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("TOTAL PRICE".tr, style: TextStyle(color: AppColor.black, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                    Text(priceLabel, style: TextStyle(color: AppColor.black, fontSize: 12.sp, fontWeight: FontWeight.bold)),
                     Text(
-                      "${controller.totalPrice.value.toStringAsFixed(2)}",
+                      "${displayPrice.toStringAsFixed(2)}",
                       style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: AppColor.primary),
                     ),
                   ],
@@ -43,9 +50,13 @@ class PaymentContainer extends GetView<SelectSeatController> {
               ],
             ),
             SizedBox(height: 15.h),
-            CustomButton(
-              text: "Proceed to Payment".tr,
-              onPressed: () => controller.goToPayment(),
+            controller.isSubmitting.value
+                ? const Center(child: CircularProgressIndicator(color: AppColor.darkgreen))
+                : CustomButton(
+              text: controller.isModifyMode
+                  ? "confirm_changes".tr
+                  : "Proceed to Payment".tr,
+              onPressed: () => controller.handleAction(),
             ),
           ],
         ),

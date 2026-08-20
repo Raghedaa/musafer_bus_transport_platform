@@ -27,7 +27,6 @@ class PopularRoutesSection extends StatelessWidget {
         SizedBox(height: 15.h),
 
         Obx(() {
-          // حالة التحميل الأولية (لأول 15 عنصر)
           if (controller.isPopularLoading.value && controller.popularTrips.isEmpty) {
             return Center(child: CircularProgressIndicator(color: AppColor.darkgreen));
           }
@@ -37,13 +36,10 @@ class PopularRoutesSection extends StatelessWidget {
           }
 
           return ListView.builder(
-            shrinkWrap: true,
-            // نستخدم NeverScrollableScrollPhysics لأن الـ ListView داخل SingleChildScrollView
+           shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            // نزيد 1 لخانة الـ ProgressIndicator في الأسفل
             itemCount: controller.popularTrips.length + 1,
             itemBuilder: (context, index) {
-              // إذا وصلنا لآخر عنصر، نعرض الـ Loader الخاص بالتحميل الإضافي
               if (index == controller.popularTrips.length) {
                 return Obx(() => controller.isLoadingMore.value
                     ? Padding(

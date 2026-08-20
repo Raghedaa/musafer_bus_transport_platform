@@ -6,6 +6,8 @@ import '../../../data/models/complaint_category_model.dart';
 import '../../../data/repositories/complaint_repository.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../views/screen/my_complaints_screen.dart';
+
 
 class ComplaintsController extends GetxController {
   final ComplaintsRepository _repo = ComplaintsRepository();
@@ -79,7 +81,10 @@ class ComplaintsController extends GetxController {
       );
 
       if (success) {
-        Get.back();
+        // Get.back();
+        Get.off(() => const MyComplaintsScreen(),
+            arguments: {'refresh': true}
+        );
         CustomSnackBar.showSuccess('complaintSentSuccess'.tr);      }
     } catch (e) {
       if (e.toString().contains('SocketException') || e.toString().contains('No internet')) {

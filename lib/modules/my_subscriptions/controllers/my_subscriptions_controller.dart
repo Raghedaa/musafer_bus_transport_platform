@@ -8,6 +8,8 @@ class MySubscriptionsController extends GetxController {
   var subscriptions = <MySubscriptionModel>[].obs;
   var isLoading = true.obs;
 
+  var highlightedSubscriptionId = RxnInt();
+
   @override
   void onInit() {
     fetchMySubscriptions();
@@ -18,5 +20,14 @@ class MySubscriptionsController extends GetxController {
     isLoading.value = true;
     subscriptions.value = await _repo.fetchMySubscriptions();
     isLoading.value = false;
+  }
+
+  void setHighlightedId(int id) {
+    highlightedSubscriptionId.value = id;
+    Future.delayed(const Duration(seconds: 4), () {
+      if (highlightedSubscriptionId.value == id) {
+        highlightedSubscriptionId.value = null;
+      }
+    });
   }
 }

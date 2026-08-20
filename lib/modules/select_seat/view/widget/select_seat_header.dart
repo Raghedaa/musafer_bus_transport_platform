@@ -24,19 +24,14 @@ class SelectSeatHeader extends GetView<SelectSeatController> {
               left: isArabic ? null : 0,
               right: isArabic ? 0 : null,
               child: IconButton(
-                onPressed: () {
-                  bool popped = Get.find<MainLayoutController>().popExplore();
-                  if (!popped) {
-                    Get.find<MainLayoutController>().changePage(2);
-                  }
-                },                icon: Icon(
+                onPressed: () => _handleBack(),
+                icon: Icon(
                   Icons.adaptive.arrow_back_rounded,
                   size: 20.sp,
                   color: AppColor.black,
                 ),
               ),
             ),
-
             Text(
               "Select Seat".tr,
               style: TextStyle(
@@ -49,5 +44,26 @@ class SelectSeatHeader extends GetView<SelectSeatController> {
         ),
       ),
     );
+  }
+
+  void _handleBack() {
+    // ✅ منع الضغط المتكرر السريع اللي بيسبب حذف الكنترولر وهو لسا مستخدم
+    if (SelectSeatController.isNavigating) return;
+    SelectSeatController.isNavigating = true;
+
+    final layoutController = Get.find<MainLayoutController>();
+
+    // ✅ شاشة التعديل موجودة بـ bookingStack، وشاشة الحجز الجديد بـ exploreStack
+    final popped = controller.isModifyMode
+        ? layoutController.popBookings()
+        : layoutController.popExplore();
+
+    if (!popped) {
+      layoutController.changePage(controller.isModifyMode ? 0 : 2);
+    }
+
+    Future.delayed(const Duration(milliseconds: 600), () {
+      SelectSeatController.isNavigating = false;
+    });
   }
 }

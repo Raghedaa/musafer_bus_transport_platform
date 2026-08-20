@@ -7,18 +7,40 @@ import '../../../../../data/models/complaint_model.dart';
 class ComplaintCard extends StatelessWidget {
   final ComplaintModel complaint;
   final VoidCallback? onTap;
+  final bool isHighlighted;
 
-  const ComplaintCard({super.key, required this.complaint, this.onTap});
+  const ComplaintCard({
+    super.key,
+    required this.complaint,
+    this.onTap,
+    this.isHighlighted = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 30),
+      curve: Curves.easeOutCubic,
       margin: EdgeInsets.only(bottom: 14.h),
       decoration: BoxDecoration(
-        color: AppColor.cardColor,
+        color: isHighlighted
+            ? AppColor.darkgreen.withOpacity(0.05)
+            : AppColor.cardColor,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColor.black12),
-        boxShadow: [
+        border: Border.all(
+          color: isHighlighted ? AppColor.darkgreen : AppColor.black12,
+          width: isHighlighted ? 2.0 : 1.0,
+        ),
+        boxShadow: isHighlighted
+            ? [
+          BoxShadow(
+            color: AppColor.darkgreen.withOpacity(0.25),
+            blurRadius: 15,
+            spreadRadius: 1,
+            offset: const Offset(0, 4),
+          ),
+        ]
+            : [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
@@ -36,7 +58,6 @@ class ComplaintCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Row: Category & Status ──
                 Row(
                   children: [
                     if (complaint.categoryName != null)
@@ -116,23 +137,19 @@ class ComplaintCard extends StatelessWidget {
     }
   }
 }
+
 class _StatusBadge extends StatelessWidget {
   final String? status;
   const _StatusBadge({super.key, this.status});
 
-
   @override
   Widget build(BuildContext context) {
-
-    // نقوم بتنظيف الحالة (trim) وتوحيدها (toLowerCase) لضمان المطابقة
     final String cleanStatus = (status ?? 'pending').trim().toLowerCase();
     final Color color = _getColor(cleanStatus);
 
-    debugPrint("Status is: $status, Color is: $color");
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
-        // تأكدنا أن اللون هنا هو لون صريح
         color: color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: color.withOpacity(0.5)),
@@ -141,7 +158,7 @@ class _StatusBadge extends StatelessWidget {
         cleanStatus.tr.toUpperCase(),
         style: TextStyle(
           fontSize: 9.sp,
-          color: color, // لون النص
+          color: color,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -149,7 +166,7 @@ class _StatusBadge extends StatelessWidget {
   }
 
   Color _getColor(String status) {
-    switch (status?.toLowerCase()) {
+    switch (status) {
       case 'resolved':
         return AppColor.green;
       case 'rejected':
@@ -163,4 +180,3 @@ class _StatusBadge extends StatelessWidget {
     }
   }
 }
-

@@ -5,7 +5,6 @@ import '../../../../core/constants/app_color.dart';
 import '../../controller/profile_controller.dart';
 import '../widget/profile_header.dart';
 import '../widget/profile_menu_section.dart';
-import '../widget/stats_section.dart';
 import '../widget/wallet_section.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -14,9 +13,9 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
 
-    controller.fetchData();
+    // controller.fetchData();
 
-    return Scaffold(
+    return  Obx(() => Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
       body: SafeArea(
         child: Obx(() {
@@ -41,6 +40,6 @@ class ProfileView extends GetView<ProfileController> {
           );
         }),
       ),
-    );
+    )  );
   }
 }

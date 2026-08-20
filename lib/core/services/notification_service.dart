@@ -7,6 +7,8 @@ import '../../core/services/api_service.dart';
 import '../../modules/notification/controller/notification_controller.dart';
 import '../../modules/notification/view/screen/notification_screen.dart';
 
+
+
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _localNotifications =
   FlutterLocalNotificationsPlugin();
@@ -33,30 +35,33 @@ class NotificationService {
     await _localNotifications.initialize(
       settings: const InitializationSettings(android: androidSettings),
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        _navigateToNotifications();
+        // تمرير true لأن التطبيق مفتوح ومضغوط من الداخل أو الخلفية
+        _navigateToNotifications(isFromTerminated: false);
       },
     );
 
     String? token = await messaging.getToken();
     debugPrint("Firebase Token: $token");
     if (token != null) {
-      await _sendTokenToServer(token);
+      await sendTokenToServer(token);
     }
 
     messaging.onTokenRefresh.listen((newToken) {
-      _sendTokenToServer(newToken);
+      sendTokenToServer(newToken);
     });
 
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
       if (message != null) {
-        _navigateToNotifications();
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          _navigateToNotifications(isFromTerminated: true);
+        });
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _navigateToNotifications();
+      _navigateToNotifications(isFromTerminated: false);
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -87,21 +92,42 @@ class NotificationService {
     });
   }
 
-  static void _navigateToNotifications() {
-    if (Get.currentRoute != '/NotificationScreen') {
-      if (!Get.isRegistered<NotificationController>()) {
-        Get.put(NotificationController());
-      }
+  static void _navigateToNotifications({required bool isFromTerminated}) {
+    if (!Get.isRegistered<NotificationController>()) {
+      Get.put(NotificationController());
+    }
+
+    if (isFromTerminated) {
       Get.to(() => NotificationScreen());
+    } else {
+      if (Get.currentRoute != '/main-layout' &&
+          Get.currentRoute != '/MainLayoutScreen') {
+        Get.offAllNamed('/main-layout');
+        Future.delayed(const Duration(milliseconds: 300), () {
+          Get.to(() => NotificationScreen());
+        });
+      } else {
+        if (Get.currentRoute != '/NotificationScreen') {
+          Get.to(() => NotificationScreen());
+        }
+      }
     }
   }
 
-  static Future<void> _sendTokenToServer(String token) async {
+
+  static Future<void> sendTokenToServer(String token) async {
     try {
       final api = Get.find<ApiService>();
+      final box = GetStorage();
+      String currentLang = box.read('lang') ?? 'ar';
+
       await api.post(
         endPoint: 'auth/fcm-token',
-        data: {"token": token, "platform": "android"},
+        data: {
+          "token": token,
+          "platform": "android",
+          "lang": currentLang,
+        },
       );
     } catch (e) {
       debugPrint("❌ FCM Token send failed: $e");

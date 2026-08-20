@@ -8,8 +8,8 @@ import 'header_widget.dart';
 import 'route_widget.dart';
 import 'date_time_widget.dart';
 
-class BookingCard extends StatelessWidget {
 
+class BookingCard extends StatelessWidget {
   final int bookingId;
 
   const BookingCard({super.key, required this.bookingId});
@@ -19,7 +19,6 @@ class BookingCard extends StatelessWidget {
     final BookingHistoryController controller = Get.find<BookingHistoryController>();
 
     return Obx(() {
-
       final bool isHighlighted = controller.highlightedBookingId.value == bookingId;
 
       final index = controller.allBookings.indexWhere((b) => b.id == bookingId);
@@ -36,20 +35,17 @@ class BookingCard extends StatelessWidget {
           curve: Curves.easeOutCubic,
           margin: EdgeInsets.only(bottom: 16.h),
           decoration: BoxDecoration(
-            color: isHighlighted
-                ? AppColor.darkgreen.withOpacity(0.8)
-                : AppColor.white,
             borderRadius: BorderRadius.circular(15.r),
             border: Border.all(
               color: isHighlighted ? AppColor.darkgreen : Colors.grey.withOpacity(0.2),
-              width: 1.0,
+              width: isHighlighted ? 2.0 : 1.0,
             ),
             boxShadow: isHighlighted
                 ? [
               BoxShadow(
-                color: AppColor.darkgreen.withOpacity(0.5),
-                blurRadius: 20,
-                spreadRadius: 4,
+                color: AppColor.darkgreen.withOpacity(0.3),
+                blurRadius: 15,
+                spreadRadius: 2,
                 offset: const Offset(0, 4),
               ),
             ]
@@ -65,7 +61,6 @@ class BookingCard extends StatelessWidget {
             padding: EdgeInsets.all(16.w),
             child: Column(
               children: [
-                // ⭐ نمرر currentBooking مو booking الأصلي
                 HeaderWidget(booking: currentBooking),
                 SizedBox(height: 16.h),
                 RouteWidget(
@@ -74,6 +69,30 @@ class BookingCard extends StatelessWidget {
                 ),
                 Divider(height: 32.h, color: Colors.grey.withOpacity(0.4)),
                 DateTimeWidget(dateTime: currentBooking.dateTime),
+
+                if (currentBooking.seatNumbers != null && currentBooking.seatNumbers!.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Seats".tr,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          currentBooking.seatNumbers!.join(', '),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

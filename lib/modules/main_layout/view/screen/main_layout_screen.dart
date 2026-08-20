@@ -23,117 +23,31 @@ class MainLayoutScreen extends GetView<MainLayoutController> {
           SystemNavigator.pop();
         }
       },
-      // child: Scaffold(
-      //   body: Obx(() {
-      //     return IndexedStack(
-      //       key: ValueKey(controller.currentIndex.value),
-      //       index: controller.currentIndex.value,
-      //       children: [
-      //         Obx(() {
-      //           final stack = controller.bookingStack;
-      //           return Stack(
-      //             children: stack.asMap().entries.map((entry) {
-      //               final index = entry.key;
-      //               final page = entry.value;
-      //               return Offstage(
-      //                 offstage: index != stack.length - 1,
-      //                 child: page,
-      //               );
-      //             }).toList(),
-      //           );
-      //         }),
-      //
-      //
-      //         Obx(() {
-      //           final stack = controller.subscriptionStack;
-      //           return Stack(
-      //             children: [
-      //               const SubscriptionScreen(),
-      //               ...stack.map((page) => page).toList(),
-      //             ],
-      //           );
-      //         }),
-      //         Obx(() {
-      //           final stack = controller.exploreStack;
-      //           return Stack(
-      //             children: stack.asMap().entries.map((entry) {
-      //               final index = entry.key;
-      //               final page = entry.value;
-      //               return Offstage(
-      //                 offstage: index != stack.length - 1,
-      //                 child: page,
-      //               );
-      //             }).toList(),
-      //           );
-      //         }),
-      //
-      //         Obx(() {
-      //           final stack = controller.notificationStack;
-      //           return Stack(
-      //             children: stack.asMap().entries.map((entry) {
-      //               final index = entry.key;
-      //               final page = entry.value;
-      //               return Offstage(
-      //                 offstage: index != stack.length - 1,
-      //                 child: page,
-      //               );
-      //             }).toList(),
-      //           );
-      //         }),
-      //         Obx(() {
-      //           final stack = controller.profileStack;
-      //           return Stack(
-      //             children: stack.asMap().entries.map((entry) {
-      //               final index = entry.key;
-      //               final page = entry.value;
-      //               return Offstage(
-      //                 offstage: index != stack.length - 1,
-      //                 child: page,
-      //               );
-      //             }).toList(),
-      //           );
-      //         }),            ],
-      //     );
-      //   }),
+
       child: Scaffold(
         body: Obx(() {
+          print('🟢 [MainLayoutScreen] Rendering index: ${controller.currentIndex.value}');
+
           return IndexedStack(
-            key: ValueKey(controller.currentIndex.value),
+            // key: ValueKey(controller.currentIndex.value),
             index: controller.currentIndex.value,
             children: [
-              // 1. قسم الحجوزات (كما هو)
-              // Obx(() {
-              //   final stack = controller.bookingStack;
-              //   return Stack(
-              //     children: stack.asMap().entries.map((entry) {
-              //       final index = entry.key;
-              //       final page = entry.value;
-              //       return Offstage(
-              //         offstage: index != stack.length - 1,
-              //         child: page,
-              //       );
-              //     }).toList(),
-              //   );
-              // }),
+              Obx(() {
+                print('🟢 [Booking Stack] Length: ${controller.bookingStack.length}');
 
-              const BookingHistoryScreen(),
-              // 2. قسم الباقات (تم تحديثه ليعمل مثل البقية)
-              // Obx(() {
-              //   final stack = controller.subscriptionStack;
-              //   // ندمج الشاشة الرئيسية مع مصفوفة الـ stack
-              //   final allPages = [const SubscriptionScreen(), ...stack];
-              //
-              //   return Stack(
-              //     children: allPages.asMap().entries.map((entry) {
-              //       final index = entry.key;
-              //       final page = entry.value;
-              //       return Offstage(
-              //         offstage: index != allPages.length - 1,
-              //         child: page,
-              //       );
-              //     }).toList(),
-              //   );
-              // }),
+                final stack = controller.bookingStack;
+                return Stack(
+                  children: stack.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final page = entry.value;
+                    return Offstage(
+                      offstage: index != stack.length - 1,
+                      child: page,
+                    );
+                  }).toList(),
+                );
+              }),
+
 
               const SubscriptionScreen(),
               // 3. قسم الاستكشاف (Explore)
@@ -151,7 +65,6 @@ class MainLayoutScreen extends GetView<MainLayoutController> {
                 );
               }),
 
-              // 4. قسم الإشعارات
               Obx(() {
                 final stack = controller.notificationStack;
                 return Stack(
@@ -169,20 +82,6 @@ class MainLayoutScreen extends GetView<MainLayoutController> {
 
               const ProfileView(),
 
-              // 5. قسم البروفايل
-              // Obx(() {
-              //   final stack = controller.profileStack;
-              //   return Stack(
-              //     children: stack.asMap().entries.map((entry) {
-              //       final index = entry.key;
-              //       final page = entry.value;
-              //       return Offstage(
-              //         offstage: index != stack.length - 1,
-              //         child: page,
-              //       );
-              //     }).toList(),
-              //   );
-              // }),
             ],
           );
         }),

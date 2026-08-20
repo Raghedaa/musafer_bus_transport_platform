@@ -15,7 +15,6 @@ class PersonalInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // يفضل ربط الـ Controller عبر Binding، لكن هذا يعمل أيضاً
     final controller = Get.put(PersonalInfoController());
 
     return Scaffold(

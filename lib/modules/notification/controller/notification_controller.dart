@@ -8,7 +8,12 @@ import '../../../data/repositories/notification_repository.dart';
 import '../../../routes/app_routes/app_routes.dart';
 import '../../booking_history/controllers/booking_history_controller.dart';
 import '../../booking_history/view/screen/booking_history_screen.dart';
+import '../../complaints/controllers/my_complaints_controller.dart';
+import '../../complaints/views/screen/my_complaints_screen.dart';
 import '../../main_layout/controller/main_layout_controller.dart';
+import '../../my_subscriptions/binding/my_subscriptions_binding.dart';
+import '../../my_subscriptions/controllers/my_subscriptions_controller.dart';
+import '../../my_subscriptions/view/screen/my_subscriptions_screen.dart';
 import '../../profile/view/screen/profile_view.dart';
 import '../../settings/view/screen/settings_view.dart';
 import '../../ticket_details/controllers/ticket_controller.dart';
@@ -39,63 +44,126 @@ class NotificationController extends GetxController {
 
 
   Future<void> handleNotificationTap(NotificationModel notification) async {
-    // 1. لا ننتظر الـ API ليخلص، نقوم بعمل التعديل محلياً فوراً للتسريع
+    // 1. التحديث المحلي السريع
     markAsRead(notification);
 
-    final mainLayoutController = Get.find<MainLayoutController>();
-
     String action = notification.actionType.trim();
-
     debugPrint("🟢 Tapped Notification Action: $action");
 
     switch (action) {
-      case 'trip_assigned':
-      // ... كود الرحلة
-        break;
+   case 'view_booking':
+        print('🔵 [view_booking] START');
 
-      case 'booking_confirmed':
-      // ... كود الحجز
-        break;
+        final bodyParams = notification.data['body_params'];
+        if (bodyParams != null && bodyParams['trip_id'] != null) {
+          final int tripId = int.parse(bodyParams['trip_id'].toString());
 
-      case 'trip_status_changed':
-        final tripIdData = notification.data['trip_id'];
-        if (tripIdData != null) {
-          final int tripId = int.parse(tripIdData.toString());
-          final mainLayout = Get.find<MainLayoutController>();
+          // ✅ إغلاق صفحة الإشعارات بالقوة
+          print('🔵 [view_booking] Closing notification page...');
+          try {
+            Get.close(1); // إغلاق الصفحة الحالية
+          } catch (e) {
+            print('🔵 [view_booking] Error closing page: $e');
+          }
 
-          mainLayout.currentIndex.value = 0;
+          // ✅ إضافة تأخير صغير للتأكد من إغلاق الصفحة
+          Future.delayed(const Duration(milliseconds: 100), () {
+            print('🔵 [view_booking] Navigating to bookings...');
+            final mainLayout = Get.find<MainLayoutController>();
+            mainLayout.resetAndGoToBookings();
 
-          mainLayout.notificationStack.clear();
-          mainLayout.notificationStack.add(const SettingsView());
+            // ✅ التأكد من التغيير
+            mainLayout.currentIndex.value = 0;
+            mainLayout.update();
 
-          mainLayout.resetAndGoToBookings();
+            print('🔵 [view_booking] Current index: ${mainLayout.currentIndex.value}');
 
-          mainLayout.notificationStack.assignAll([const ProfileView()]);
-          mainLayout.profileStack.assignAll([const ProfileView()]);
-          // 4. تفعيل الهايلايت
-          Future.delayed(const Duration(milliseconds: 800), () {
-            if (Get.isRegistered<BookingHistoryController>()) {
-              final bookingCtrl = Get.find<BookingHistoryController>();
-              final matchingBooking = bookingCtrl.allBookings.firstWhereOrNull((b) => b.tripId == tripId);
+            // ✅ جلب البيانات وتحديد الـ Highlight
+            Future.delayed(const Duration(milliseconds: 300), () async {
+              print('🔵 [view_booking] Fetching bookings for highlight...');
+              final bookingCtrl = Get.isRegistered<BookingHistoryController>()
+                  ? Get.find<BookingHistoryController>()
+                  : Get.put(BookingHistoryController());
+
+              bookingCtrl.changeFilter("All");
+              await bookingCtrl.fetchBookings();
+
+              var matchingBooking = bookingCtrl.allBookings.firstWhereOrNull(
+                      (b) => b.tripId == tripId);
 
               if (matchingBooking != null) {
+                print('🔵 [view_booking] Found booking ID: ${matchingBooking.id}');
                 bookingCtrl.setHighlightedId(matchingBooking.id);
               } else {
-                bookingCtrl.fetchBookings().then((_) {
-                  final reCheck = bookingCtrl.allBookings.firstWhereOrNull((b) => b.tripId == tripId);
-                  if (reCheck != null) bookingCtrl.setHighlightedId(reCheck.id);
-                });
+                print('🔵 [view_booking] No matching booking found for tripId: $tripId');
               }
+            });
+          });
+        }
+        break;
+
+      case 'view_complaint':
+        if (Get.isOverlaysOpen) Get.back();
+        Get.back();
+
+        final mainLayout = Get.find<MainLayoutController>();
+        final complaintIdData = notification.data['complaint_id'];
+
+        final complaintsCtrl = Get.isRegistered<MyComplaintsController>()
+            ? Get.find<MyComplaintsController>()
+            : Get.put(MyComplaintsController());
+
+        Get.to(() => const MyComplaintsScreen());
+
+        mainLayout.currentIndex.value = 4;
+        mainLayout.resetStack(4);
+
+        if (complaintsCtrl.complaints.isEmpty) {
+          complaintsCtrl.fetchComplaints().then((_) {
+            if (complaintIdData != null) {
+              final int complaintId = int.parse(complaintIdData.toString());
+              complaintsCtrl.setHighlightedId(complaintId);
             }
           });
+        } else {
+          if (complaintIdData != null) {
+            final int complaintId = int.parse(complaintIdData.toString());
+            complaintsCtrl.setHighlightedId(complaintId);
+          }
+        }
+        break;
+      case 'view_subscription':
+        if (Get.isOverlaysOpen) Get.back();
+        Get.back();
+
+        final mainLayout = Get.find<MainLayoutController>();
+        final subIdData = notification.data['subscription_id'];
+
+        final subCtrl = Get.isRegistered<MySubscriptionsController>()
+            ? Get.find<MySubscriptionsController>()
+            : Get.put(MySubscriptionsController());
+
+        Get.to(() => const MySubscriptionsScreen());
+
+        mainLayout.currentIndex.value = 1;
+        mainLayout.resetStack(1);
+
+        if (subCtrl.subscriptions.isEmpty) {
+          subCtrl.fetchMySubscriptions().then((_) {
+            if (subIdData != null) {
+              final int subId = int.parse(subIdData.toString());
+              subCtrl.setHighlightedId(subId);
+            }
+          });
+        } else {
+          if (subIdData != null) {
+            final int subId = int.parse(subIdData.toString());
+            subCtrl.setHighlightedId(subId);
+          }
         }
         break;
     }
   }
-
-
-
-
   Future<void> fetchNotifications({bool isLoadMore = false}) async {
     if (isLoadMore) {
       if (currentPage >= lastPage) return;

@@ -5,7 +5,6 @@ class AppFormatter {
 
   static String formatTime(String input) {
     try {
-      // parse بدون toLocal() — نعرض الوقت كما أرسله السيرفر
       final dt = DateTime.parse(input);
 
       String formatted = DateFormat('h:mm a', 'en_US').format(dt);

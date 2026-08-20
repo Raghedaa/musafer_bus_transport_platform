@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-
 import '../providers/profile_provider.dart';
 
 class ProfileRepository {
@@ -34,6 +33,27 @@ class ProfileRepository {
       return null;
     } catch (e) {
       print("Error in Repository: $e");
+      return null;
+    }
+  }
+
+  // أضف هذه الدالة هنا لمعالجة الشحن وتحديث الـ Hive داخلياً
+  Future<Map<String, dynamic>?> topUpWallet(String currency, String amount) async {
+    try {
+      final response = await _provider.topUpWallet({
+        "currency": currency,
+        "amount": amount,
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = response.data;
+        if (responseData['data'] != null) {
+          return Map<String, dynamic>.from(responseData['data']);
+        }
+      }
+      return null;
+    } catch (e) {
+      print("Error in Repository topUpWallet: $e");
       return null;
     }
   }

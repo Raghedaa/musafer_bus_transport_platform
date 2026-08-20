@@ -6,7 +6,7 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../../routes/app_routes/app_routes.dart';
 import '../../../main_layout/controller/main_layout_controller.dart';
-import '../../../send_complaints/views/screen/my_complaints_screen.dart';
+import '../../../complaints/views/screen/my_complaints_screen.dart';
 import '../../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {

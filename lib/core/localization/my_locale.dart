@@ -96,6 +96,7 @@ class MyTranslation extends Translations {
       "Alert": "تنبيه",
       "Please select an origin city": "الرجاء اختيار مدينة الانطلاق",
       "No popular routes found": "لم يتم العثور على رحلات شائعة",
+      "Please select cities":"الرجاء تحديد المدن اولاً",
 
 
       // --- Trip Results ---
@@ -128,6 +129,17 @@ class MyTranslation extends Translations {
 
 
       // --- Select Seat ---
+
+      'your_seat': 'مقعدك',
+      'your_seats_purple_hint': 'مقاعدك الحالية بالبنفسجي. اضغطي عليها لإلغاء تحديدها أو اختاري مقاعد بديلة.',
+      'no_changes_made': 'لم تقومي بأي تغيير',
+      'confirm_modification': 'تأكيد التعديل',
+      'modification_requires_extra_payment': 'التعديل يتطلب دفع مبلغ إضافي',
+      'amount_due': 'المبلغ المطلوب',
+      'pay_from_wallet_confirm': 'سيتم الخصم من محفظتك',
+      'pay_now': 'ادفع الآن',
+      'seatsupdated_successfully': 'تم تحديث المقاعد بنجاح',
+      'seats_updated_and_paid_successfully': 'تم تحديث المقاعد والدفع بنجاح',
       "Select Seat": "اختر المقعد",
       "Route 402 • Executive": "الخط 402 • درجة ممتازة",
       "Available": "متاح",
@@ -142,7 +154,20 @@ class MyTranslation extends Translations {
       "Please select at least one seat": "يرجى اختيار مقعد واحد على الأقل",
       'Window': 'بجانب النافذة',
       'Extra Space': 'مساحة إضافية',
-
+// تعديل الحجز
+      "confirm_changes": "تأكيد التغييرات",
+      "seat_modified_success": "تم تعديل المقاعد بنجاح!",
+      "failed_modify_seats": "فشل تعديل المقاعد، يرجى المحاولة مرة أخرى.",
+      "select_at_least_one": "يرجى اختيار مقعد واحد على الأقل.",
+      "warning": "تنبيه",
+      "incomplete_trip_data": "بيانات الرحلة غير مكتملة بعد، يرجى المحاولة لاحقاً.",
+      "confirm_modification": "تأكيد تعديل الحجز",
+      "modification_requires_extra_payment": "تعديلك الحالي يتطلب دفع فرق مقاعد إضافية.",
+      "amount_due": "المبلغ المطلوب",
+      "pay_from_wallet_confirm": "هل تود دفع هذا المبلغ من محفظتك الإلكترونية الآن؟",
+      "pay_now": "ادفع الآن",
+      "seats_updated_and_paid_successfully": "تم تعديل المقاعد ودفع الفرق بنجاح!",
+      "cancel": "إلغاء",
 
       // --- Booking Summary ---
       "Booking Summary": "ملخص الحجز",
@@ -173,6 +198,16 @@ class MyTranslation extends Translations {
       "error_applying_coupon": "حدث خطأ أثناء تطبيق الكوبون.",
       "insufficient_funds_error": "عذراً، الرصيد غير كافي لإتمام عملية الحجز",
       "unexpected_error": "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً",
+      "select_payment_method": "اختر طريقة الدفع",
+      "digital_payment": "دفع الكترني",
+      "visa_mastercard_wallet": "فيزا، ماستركارد",
+      "wallet_payment": "المحفظة ",
+      "pay_from_your_wallet": "الدفع مباشرة من رصيد المحفظة",
+      "cash_other": "نقدي / أخرى",
+      "pay_at_boarding_station": "الدفع عند صعود الحافلة",
+      "booking_confirmed_successfully": "تم تأكيد الحجز بنجاح",
+      "insufficient_funds_error": "رصيد المحفظة غير كافٍ",
+      "unexpected_error": "حدث خطأ غير متوقع",
 
       // --- Ticket Details ---
       "Your Ticket": "تذكرتك",
@@ -191,7 +226,11 @@ class MyTranslation extends Translations {
       "Cancel Booking": "إلغاء الحجز",
       "10% penalty fee applies": "تطبق رسوم إلغاء 10%",
       "Could not generate PDF: ": "فشل إنشاء ملف PDF: ",
-
+      "cancel_booking": "إلغاء الحجز",
+      "cancel_booking_confirmation": "هل أنت متأكد من أنك تريد إلغاء هذا الحجز؟ ",
+      "confirm": "تأكيد",
+      "booking_cancelled_successfully": "تم إلغاء الحجز بنجاح",
+      "failed_cancel_booking": "فشل إلغاء الحجز",
 
       // --- Subscription Module ---
 
@@ -297,6 +336,8 @@ class MyTranslation extends Translations {
       "address":"العنوان",
       "username":"اسم المستخدم",
       "no_attachments":"لا توجد مرفقات",
+      "Booking Number":"رقم الحجز",
+      "Complaint Category":"نوع الشكوى",
 
       "complaintSentSuccess":"تم إرسال الشكوى بنجاح",
       "noInternetError":"لا يوجد اتصال بالإنترنت، يرجى التحقق من الشبكة",
@@ -336,7 +377,16 @@ class MyTranslation extends Translations {
       "Profile Updated Successfully": "تم تحديث الملف الشخصي بنجاح",
       "Failed to update profile.": "فشل تحديث الملف الشخصي",
       "Your Wallet": "محفظتك",
-
+      "top_up": "شحن",
+      "top_up_wallet": "شحن المحفظة",
+      "select_currency": "اختر العملة",
+      "enter_amount": "أدخل المبلغ",
+      "cancel": "إلغاء",
+      "attention": "تنبيه",
+      "please_select_currency_and_amount": "الرجاء اختيار العملة وإدخال المبلغ",
+      "wallet_topped_up_success": "تم شحن المحفظة بنجاح",
+      "wallet_top_up_failed": "فشل عملية شحن المحفظة",
+      "something_went_wrong": "حدث خطأ ما",
 
       // --- Booking History ---
       "booking_history": "سجل الحجوزات",
@@ -373,7 +423,14 @@ class MyTranslation extends Translations {
       "Submit Review": "إرسال التقييم",
       "thanks for your rating!": "شكراً لتقييمك!",
 
-
+      "rating_dialog_title": "انتهت رحلتك! قيّم تجربتك",
+      "company_rating_label": "تقييم الشركة",
+      "driver_rating_label": "تقييم السائق",
+      "add_comment_hint": "أضف تعليقاً (اختياري)",
+      "submit_rating_button": "إرسال التقييم",
+      "rating_min_error": "يرجى اختيار تقييم نجمة واحدة على الأقل لكل عنصر",
+      "company": "الشركة",
+      "driver": "السائق",
 
       //------ promo_codes -----------//
 
@@ -424,6 +481,43 @@ class MyTranslation extends Translations {
       "legend_rest_area": "استراحة",
       "legend_arrival": "الوصول",
       "legend_bus_location": "موقع الباص",
+
+      "EXTRA AMOUNT":"مبلغ إضافي",
+
+      "scheduled": "مجدولة",
+      "in_progress": "قيد التنفيذ",
+      "inprogress": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "cancelled": "ملغية",
+      "confirmed": "مؤكد",
+      "pending": "قيد الانتظار",
+      "all": "الكل",
+      "upcoming": "القادمة",
+      "insufficient_funds_subscription": "ليس لديك رصيد كافٍ لشراء هذا الاشتراك.",
+      "failed_to_subscribe": "فشل الاشتراك، يرجى المحاولة مرة أخرى.",
+
+
+
+
+      'failed_to_create_payment_intent': 'فشل في إنشاء طلب الدفع',
+      'payment_config_error': 'خطأ في تكوين الدفع، يرجى المحاولة مرة أخرى',
+      'payment_successful': 'تم الدفع بنجاح ',
+      'payment_cancelled': 'تم إلغاء عملية الدفع',
+      'payment_failed': 'فشل الدفع، يرجى المحاولة مرة أخرى',
+      'No Internet Connection':'لا يوجد اتصال بالإنترنت',
+      'Retry':'إعادة المحاولة',
+
+
+
+        "reliability_restriction": "درجة موثوقيتك تحدّك بحجز نشط واحد في كل مرة.",
+        "insufficient_funds_error": "رصيدك غير كافٍ لإتمام هذه العملية.",
+        "booking_confirmed_successfully": "تم تأكيد الحجز بنجاح ",
+        "booking_cancelled_seats_released": "تم إلغاء الحجز وتم تحرير المقاعد",
+        "booking_confirmation_timeout": "انتهت مهلة تأكيد الحجز، يرجى المحاولة مرة أخرى",
+        "failed_to_create_booking": "فشل إنشاء الحجز، يرجى المحاولة مرة أخرى"
+
+
+
     },
 
 
@@ -514,7 +608,7 @@ class MyTranslation extends Translations {
       "Alert": "Alert",
       "Please select an origin city": "Please select an origin city",
       "No popular routes found": "No popular routes found",
-
+      "Please select cities":"Please select cities",
 
       // --- Trip Results ---
       "No trips found matching your search criteria.": "No trips found matching your search criteria.",
@@ -545,6 +639,16 @@ class MyTranslation extends Translations {
       "error_loading": "Error loading trip details, please try again later.",
 
       // --- Select Seat ---
+      'your_seat': 'Your Seat',
+      'your_seats_purple_hint': 'Your current seats are in purple. Tap to deselect or choose alternatives.',
+      'no_changes_made': 'No changes made',
+      'confirm_modification': 'Confirm Modification',
+      'modification_requires_extra_payment': 'This modification requires an extra payment',
+      'amount_due': 'Amount Due',
+      'pay_from_wallet_confirm': 'Will be deducted from your wallet',
+      'pay_now': 'Pay Now',
+      'seatsupdated_successfully': 'Seats updated successfully',
+      'seats_updated_and_paid_successfully': 'Seats updated and paid successfully',
       "Select Seat": "Select Seat",
       "Route 402 • Executive": "Route 402 • Executive",
       "Available": "Available",
@@ -559,6 +663,20 @@ class MyTranslation extends Translations {
       "Please select at least one seat": "Please select at least one seat",
       'Window': 'Window',
       'Extra pace': 'Extra Space',
+      "confirm_changes": "Confirm Changes",
+      "seat_modified_success": "Seats updated successfully!",
+      "failed_modify_seats": "Failed to update seats, please try again.",
+      "select_at_least_one": "Please select at least one seat.",
+      "warning": "Warning",
+      "incomplete_trip_data": "Incomplete trip data, please try again later.",
+      "seats_updated_successfully": "Seats updated successfully",
+      "confirm_modification": "Confirm Booking Modification",
+      "modification_requires_extra_payment": "Your current modification requires an extra payment for the additional seats.",
+      "amount_due": "Amount Due",
+      "pay_from_wallet_confirm": "Would you like to pay this amount from your e-wallet now?",
+      "pay_now": "Pay Now",
+      "seats_updated_and_paid_successfully": "Seats updated and extra amount paid successfully!",
+      "cancel": "Cancel",
 
       // --- Booking Summary ---
       "Booking Summary": "Booking Summary",
@@ -589,6 +707,16 @@ class MyTranslation extends Translations {
       "error_applying_coupon": "An error occurred while applying the coupon.",
       "insufficient_funds_error": "Sorry, your balance is insufficient to complete the booking.",
       "unexpected_error": "An unexpected error occurred, please try again later.",
+      "select_payment_method": "SELECT PAYMENT METHOD",
+      "digital_payment": "Digital Payment",
+      "visa_mastercard_wallet": "VISA, MASTERCARD",
+      "wallet_payment": "Wallet",
+      "pay_from_your_wallet": "PAY FROM YOUR APP WALLET",
+      "cash_other": "Cash / Other",
+      "pay_at_boarding_station": "PAY AT BOARDING STATION",
+      "booking_confirmed_successfully": "Booking confirmed successfully",
+      "insufficient_funds_error": "Insufficient funds in your wallet",
+      "unexpected_error": "An unexpected error occurred",
 
 
       // --- Ticket Details ---
@@ -608,6 +736,11 @@ class MyTranslation extends Translations {
       "Cancel Booking": "Cancel Booking",
       "10% penalty fee applies": "10% penalty fee applies",
       "Could not generate PDF: ": "Could not generate PDF: ",
+      "cancel_booking": "Cancel Booking",
+      "cancel_booking_confirmation": "Are you sure you want to cancel this booking? ",
+      "confirm": "Confirm",
+      "booking_cancelled_successfully": "Booking cancelled successfully",
+      "failed_cancel_booking": "Failed to cancel booking",
 
       // --- Subscription Module ---
       "Subscription Module": "Subscription Module",
@@ -712,6 +845,8 @@ class MyTranslation extends Translations {
       "username":"Username",
       "no_attachments":"There are no attachments",
 
+      "Booking Number":"Booking Number",
+      "Complaint Category":"Complaint Category",
       "complaintSentSuccess":"Complaint sent successfully",
       "noInternetError":"No internet connection, please check your network",
       "sendComplaintError":"An error occurred while sending the complaint",
@@ -750,6 +885,17 @@ class MyTranslation extends Translations {
       "Profile Updated Successfully": "Profile Updated Successfully",
       "Failed to update profile.": "Failed to update profile.",
       "Your Wallet": "Your Wallet",
+      "top_up": "Top Up",
+      "top_up_wallet": "Top Up Wallet",
+      "select_currency": "Select Currency",
+      "enter_amount": "Enter Amount",
+      "cancel": "Cancel",
+      "attention": "Attention",
+      "please_select_currency_and_amount": "Please select currency and enter amount",
+      "wallet_topped_up_success": "Wallet topped up successfully",
+      "wallet_top_up_failed": "Failed to top up wallet",
+      "something_went_wrong": "Something went wrong",
+
 
 // --- Booking History ---
 
@@ -788,6 +934,15 @@ class MyTranslation extends Translations {
         "Submit Review": "Submit Review",
       "thanks for your rating!": "Thanks for your rating!",
 
+      // أضف هذه المفاتيح في نهاية قسم "en"
+      "rating_dialog_title": "Your trip has ended! Rate your experience",
+      "company_rating_label": "Rate Company",
+      "driver_rating_label": "Rate Driver",
+      "add_comment_hint": "Add a comment (optional)",
+      "submit_rating_button": "Submit Rating",
+      "rating_min_error": "Please select at least 1 star rating for each item",
+      "company": "Company",
+      "driver": "Driver",
 
 
       //------ promo_codes -----------//
@@ -841,6 +996,41 @@ class MyTranslation extends Translations {
       "legend_rest_area": "Rest Area",
       "legend_arrival": "Arrival",
       "legend_bus_location": "Bus Location",
+
+      "EXTRA AMOUNT":"EXTRA AMOUNT",
+      "scheduled": "Scheduled",
+      "in_progress": "In Progress",
+      "inprogress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "all": "All",
+      "upcoming": "Upcoming",
+      "insufficient_funds_subscription": "Insufficient funds to purchase this subscription.",
+      "failed_to_subscribe": "Failed to subscribe, please try again.",
+
+
+
+      'failed_to_create_payment_intent': 'Failed to create payment intent',
+      'payment_config_error': 'Payment configuration error, please try again',
+      'payment_successful': 'Payment successful ',
+      'payment_cancelled': 'Payment cancelled',
+      'payment_failed': 'Payment failed, please try again',
+
+      'No Internet Connection':'No Internet Connection',
+      'Retry':'Retry',
+
+
+
+
+        "reliability_restriction": "Your reliability score limits you to one active booking at a time.",
+        "insufficient_funds_error": "Your balance is insufficient to complete this transaction.",
+        "booking_confirmed_successfully": "Booking confirmed successfully ✅",
+        "booking_cancelled_seats_released": "Booking cancelled and seats have been released",
+        "booking_confirmation_timeout": "Booking confirmation timed out, please try again",
+        "failed_to_create_booking": "Failed to create booking, please try again"
+
     }
   };
 }

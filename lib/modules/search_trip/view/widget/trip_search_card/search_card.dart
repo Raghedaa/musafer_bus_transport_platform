@@ -79,7 +79,7 @@ class SearchCard extends GetView<TripSearchController> {
                         text: "Find Trips".tr,
                         onPressed: () async {
                           if (controller.selectedOriginCity.value == null || controller.selectedDestinationCity.value == null) {
-                            CustomSnackBar.showError("Please select cities");
+                            CustomSnackBar.showError("Please select cities".tr);
                             return;
                           }
 

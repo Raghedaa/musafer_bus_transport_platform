@@ -10,17 +10,17 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String statusText = _getTranslatedStatus(booking.tripStatus);
+    final Color statusColor = _getTripStatusColor(booking.tripStatus);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            _buildBadge(booking.status, _getBookingStatusColor(booking.status)),
-            SizedBox(width: 6.w),
-            _buildBadge(booking.tripStatus, _getTripStatusColor(booking.tripStatus)),
-          ],
+        _buildBadge(statusText, statusColor),
+        Text(
+          "${'PNR'.tr}: ${booking.pnr}",
+          style: TextStyle(fontSize: 12.sp),
         ),
-        Text("${'PNR'.tr}: ${booking.pnr}", style: TextStyle(fontSize: 12.sp)),
       ],
     );
   }
@@ -33,7 +33,7 @@ class HeaderWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Text(
-        label.toUpperCase().tr,
+        label,
         style: TextStyle(
           color: color,
           fontSize: 10.sp,
@@ -43,22 +43,44 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
-  Color _getBookingStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case "confirmed": return AppColor.green;
-      case "completed": return AppColor.blue;
-      case "cancelled": return AppColor.red;
-      default: return AppColor.grey;
+  String _getTranslatedStatus(String status) {
+    final String lowerStatus = status.toLowerCase();
+    switch (lowerStatus) {
+      case "scheduled":
+        return 'scheduled'.tr;
+      case "in_progress":
+      case "inprogress":
+        return 'in_progress'.tr;
+      case "completed":
+        return 'completed'.tr;
+      case "cancelled":
+        return 'cancelled'.tr;
+      case "confirmed":
+        return 'confirmed'.tr;
+      case "pending":
+        return 'pending'.tr;
+      default:
+        return status.toUpperCase().tr;
     }
   }
 
   Color _getTripStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case "scheduled": return Colors.blue;
-      case "in_progress": return Colors.orange;
-      case "completed": return AppColor.green;
-      case "cancelled": return AppColor.red;
-      default: return AppColor.grey;
+      case "scheduled":
+        return Colors.blue;
+      case "in_progress":
+      case "inprogress":
+        return Colors.orange;
+      case "completed":
+        return AppColor.green;
+      case "cancelled":
+        return AppColor.red;
+      case "confirmed":
+        return Colors.green;
+      case "pending":
+        return Colors.grey;
+      default:
+        return AppColor.grey;
     }
   }
 }

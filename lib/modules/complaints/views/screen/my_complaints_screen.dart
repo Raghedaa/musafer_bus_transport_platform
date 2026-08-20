@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:musafer/modules/send_complaints/views/screen/complaint_details_screen.dart';
+import 'package:musafer/modules/complaints/views/screen/complaint_details_screen.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../controllers/my_complaints_controller.dart';
 import '../widgets/my_complaints/complaint_card.dart';
@@ -11,6 +11,14 @@ class MyComplaintsScreen extends GetView<MyComplaintsController> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    Get.put(MyComplaintsController());
+
+    final args = Get.arguments;
+    if (args != null && args is Map && args.containsKey('refresh')) {
+    }
+
     return Scaffold(
       backgroundColor: AppColor.scaffoldBackground,
       appBar: AppBar(
@@ -19,7 +27,6 @@ class MyComplaintsScreen extends GetView<MyComplaintsController> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
-
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -47,7 +54,6 @@ class MyComplaintsScreen extends GetView<MyComplaintsController> {
           );
         }
 
-        // في حال كانت القائمة فارغة (ولا يوجد خطأ)
         if (controller.complaints.isEmpty) {
           return Center(child: Text("لا توجد شكاوى حالياً".tr));
         }
@@ -62,15 +68,18 @@ class MyComplaintsScreen extends GetView<MyComplaintsController> {
                   itemCount: controller.complaints.length,
                   itemBuilder: (_, i) {
                     final complaint = controller.complaints[i];
-                    return ComplaintCard(
-                      complaint: complaint,
-                      onTap: () => Get.to(() => ComplaintDetailsScreen(complaintId: complaint.id)),
-                    );
+                    return Obx(() {
+                      final isHighlighted = controller.highlightedComplaintId.value == complaint.id;
+                      return ComplaintCard(
+                        complaint: complaint,
+                        isHighlighted: isHighlighted,
+                        onTap: () => Get.to(() => ComplaintDetailsScreen(complaintId: complaint.id)),
+                      );
+                    });
                   },
                 ),
               ),
             ),
-
             SizedBox(height: 20.h,)
           ],
         );

@@ -51,7 +51,7 @@ class SubscriptionRepository {
       final res = await _provider.purchaseSubscription(planId);
       return res.statusCode == 200 || res.statusCode == 201;
     } catch (e) {
-      return false;
+      rethrow;
     }
   }
 

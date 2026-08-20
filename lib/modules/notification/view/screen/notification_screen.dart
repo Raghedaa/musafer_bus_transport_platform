@@ -11,10 +11,8 @@ class NotificationScreen extends GetView<NotificationController> {
   final ScrollController _scrollController = ScrollController();
 
   NotificationScreen({super.key}) {
-    // مراقبة مكان السكرول
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-        // إذا اقتربنا من النهاية (أقل من 200 بكسل) نقوم بالتحميل
         if (!controller.isMoreLoading.value && controller.currentPage < controller.lastPage) {
           controller.fetchNotifications(isLoadMore: true);
         }

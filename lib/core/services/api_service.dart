@@ -18,21 +18,30 @@ class ApiService {
       baseUrl: "https://syria-travel.app/api/",
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Accept-Language': GetStorage().read('lang') ?? 'ar',      },
+      // headers: {
+      //   'Accept': 'application/json',
+      //   'Content-Type': 'application/json',
+      //   'Accept-Language': GetStorage().read('lang') ?? 'ar',      },
     ),
   ) {
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         final box = GetStorage();
-        String? token = box.read('token');
 
+        // 1. تحديث التوكين
+        String? token = box.read('token');
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+
+        // 2. السطر الأهم: قراءة اللغة في كل مرة يتم فيها عمل Request
+        // هكذا سيقرأ دائماً آخر قيمة مخزنة في الـ Storage
+        String lang = box.read('lang') ?? 'ar';
+        options.headers['Accept-Language'] = lang;
+        options.headers['Accept'] = 'application/json';
+        options.headers['Content-Type'] = 'application/json';
+
         return handler.next(options);
       },
       onError: (DioException e, handler) {

@@ -50,6 +50,7 @@ class BookingSummaryScreen extends GetView<BookingSummaryController> {
                       SizedBox(height: 30.h),
                       CustomButton(
                         text: "Confirm & Pay".tr,
+                        isLoading: controller.isLoading.value,
                         onPressed: () async {
                           await controller.confirmBooking();
                         },

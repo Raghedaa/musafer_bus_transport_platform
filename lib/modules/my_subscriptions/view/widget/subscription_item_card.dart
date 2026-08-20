@@ -4,17 +4,43 @@ import 'package:get/get.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../data/models/my_subscription_model.dart';
 
-
 class SubscriptionItemCard extends StatelessWidget {
   final MySubscriptionModel sub;
-  const SubscriptionItemCard({super.key, required this.sub});
+  final bool isHighlighted;
+
+  const SubscriptionItemCard({
+    super.key,
+    required this.sub,
+    this.isHighlighted = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(color: AppColor.cardColor, borderRadius: BorderRadius.circular(15.r), border: Border.all(color: AppColor.lightGrey)),
+      decoration: BoxDecoration(
+        color: isHighlighted
+            ? AppColor.primary.withOpacity(0.05)
+            : AppColor.cardColor,
+        borderRadius: BorderRadius.circular(15.r),
+        border: Border.all(
+          color: isHighlighted ? AppColor.primary : AppColor.lightGrey,
+          width: isHighlighted ? 2.0 : 1.0,
+        ),
+        boxShadow: isHighlighted
+            ? [
+          BoxShadow(
+            color: AppColor.primary.withOpacity(0.25),
+            blurRadius: 15,
+            spreadRadius: 1,
+            offset: const Offset(0, 4),
+          ),
+        ]
+            : [],
+      ),
       child: Column(
         children: [
           Row(

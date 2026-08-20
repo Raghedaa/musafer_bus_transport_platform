@@ -43,7 +43,7 @@ class TripRepository {
     return [];
   }
 
-  Future<({List<TripModel> data, int lastPage})> fetchPopularTrips({int page = 1}) async {
+  Future<({List<TripModel> data, int lastPage, bool hasMore})> fetchPopularTrips({int page = 1}) async {
     try {
       final response = await _tripProvider.getPopularTrips(page: page);
 
@@ -55,28 +55,25 @@ class TripRepository {
         }
 
         final List<TripModel> trips = rawData.map((json) => TripModel.fromJson(json)).toList();
-        final meta = response.data['meta'];
-        final int lastPage = (meta != null && meta['last_page'] != null) ? meta['last_page'] : 1;
 
-        return (data: trips, lastPage: lastPage);
+        final links = response.data['links'];
+        final bool hasMore = links != null && links['next'] != null;
+
+        return (data: trips, lastPage: hasMore ? page + 1 : page, hasMore: hasMore);
       }
     } catch (e) {
-      // ← هون المشكلة، كان فاضي — أضف الكاش هون
       if (page == 1) {
         final cached = _popularTripsBox.get('popular_list');
         if (cached != null && cached is List) {
           final trips = cached
               .map((item) => TripModel.fromJson(Map<String, dynamic>.from(item as Map)))
               .toList();
-          return (data: trips, lastPage: 1);
+          return (data: trips, lastPage: 1, hasMore: false);
         }
       }
     }
-    return (data: <TripModel>[], lastPage: 1);
+    return (data: <TripModel>[], lastPage: 1, hasMore: false);
   }
-
-
-
   void _prefetchTripDetailsInBackground(List<int> tripIds) {
     for (var id in tripIds) {
       _tripProvider.getTripDetails(id).then((response) {
@@ -88,6 +85,7 @@ class TripRepository {
     }
   }
 
+
   Future<List<TripModel>> fetchSearchedTrips({
     required String originId,
     required String destinationId,
@@ -97,32 +95,44 @@ class TripRepository {
   }) async {
     final cacheKey = 'searched_${originId}_${destinationId}_${date}_$time';
 
-    if (forceRefresh || _popularTripsBox.get(cacheKey) == null) {
-      try {
-        final response = await _tripProvider.searchTrips(
-          originId: originId,
-          destinationId: destinationId,
-          date: date,
-          time: time,
-        );
-        if (response.statusCode == 200 && response.data != null) {
-          final List<dynamic> data = response.data['data'] ?? response.data;
-          _popularTripsBox.put(cacheKey, data);
+    print("🔍 البحث عن رحلات: $originId → $destinationId, التاريخ: $date, الوقت: $time");
 
-          final ids = data.map((e) => e['id'] as int).toList();
-          _prefetchTripDetailsInBackground(ids);
+    try {
+      final response = await _tripProvider.searchTrips(
+        originId: originId,
+        destinationId: destinationId,
+        date: date,
+        time: time,
+      );
 
-          return data.map((json) => TripModel.fromJson(json)).toList();
-        }
-      } catch (e) {
+      print("📡 استجابة API: StatusCode = ${response.statusCode}");
+
+      if (response.statusCode == 200 && response.data != null) {
+        final List<dynamic> data = response.data['data'] ?? response.data;
+
+        print("📊 عدد الرحلات المستلمة من API: ${data.length}");
+
+        await _popularTripsBox.put(cacheKey, data);
+        print("💾 تم تحديث الكاش بنجاح");
+
+        final ids = data.map((e) => e['id'] as int).toList();
+        _prefetchTripDetailsInBackground(ids);
+
+        return data.map((json) => TripModel.fromJson(json)).toList();
       }
+    } catch (e) {
+      print("❌ خطأ في جلب البيانات من API: $e");
+
+      final cached = _popularTripsBox.get(cacheKey);
+      if (cached != null) {
+        print("💾 تم تحميل ${cached.length} رحلة من الكاش");
+        return (cached as List)
+            .map((json) => TripModel.fromJson(Map<String, dynamic>.from(json)))
+            .toList();
+      }
+      rethrow;
     }
-    final cached = _popularTripsBox.get(cacheKey);
-    if (cached != null) {
-      return (cached as List)
-          .map((json) => TripModel.fromJson(Map<String, dynamic>.from(json)))
-          .toList();
-    }
+
     return [];
   }
 
@@ -131,20 +141,36 @@ class TripRepository {
     try {
       final response = await _tripProvider.getTripDetails(tripId);
       if (response.statusCode == 200 && response.data != null) {
-        final Map<String, dynamic> data = response.data['data'];
-        await _detailsBox.put(tripId, jsonEncode(data));
+        final data = response.data['data'];
+        await _detailsBox.put(tripId, data);
         return TripModel.fromJson(data);
       }
     } catch (e) {
       final cachedData = _detailsBox.get(tripId);
       if (cachedData != null) {
-        final Map<String, dynamic> decoded = jsonDecode(cachedData);
-        print("✅ تم تحميل الرحلة $tripId من الكاش");
-        return TripModel.fromJson(decoded);
+        Map<String, dynamic> data;
+
+        if (cachedData is Map) {
+          data = Map<String, dynamic>.from(cachedData);
+        } else if (cachedData is String) {
+          data = jsonDecode(cachedData);
+        } else {
+          rethrow;
+        }
+
+        if (data.containsKey('vehicle') && data['vehicle'] != null) {
+          print("✅ تم تحميل الرحلة $tripId من الكاش (بيانات كاملة)");
+          return TripModel.fromJson(data);
+        } else {
+          print("⚠️ بيانات الكاش للرحلة $tripId ناقصة (بدون vehicle)، يتم حذفها...");
+          await _detailsBox.delete(tripId);
+          rethrow;
+        }
       }
       rethrow;
     }
-    throw Exception("No data");
+
+    throw Exception("Failed to fetch trip details for ID: $tripId");
   }
 
 

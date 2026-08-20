@@ -14,7 +14,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "SELECT PAYMENT METHOD".tr,
+            "select_payment_method".tr,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColor.black,
@@ -22,28 +22,30 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
           ),
           SizedBox(height: 12.h),
 
-          Obx(
-            () => _buildOption(
-              title: "Digital Payment".tr,
-              subtitle: "VISA, MASTERCARD, WALLET".tr,
-              value: 'digital',
-              icon: Icons.account_balance_wallet_outlined,
-            ),
+          _buildOption(
+            title: "digital_payment".tr,
+            subtitle: "visa_mastercard_wallet".tr,
+            value: 'credit_card',
+            icon: Icons.account_balance_wallet_outlined,
           ),
 
           SizedBox(height: 10.h),
 
-          Obx(
-            () => _buildOption(
-              title: "Cash / Other".tr,
-              subtitle: "PAY AT BOARDING STATION".tr,
-              value: 'cash',
-              icon: Icons.payments_outlined,
-            ),
+          _buildOption(
+            title: "wallet_payment".tr,
+            subtitle: "pay_from_your_wallet".tr,
+            value: 'wallet',
+            icon: Icons.wallet,
           ),
-          // SizedBox(height: 10.h),
 
+          SizedBox(height: 10.h),
 
+          _buildOption(
+            title: "cash_other".tr,
+            subtitle: "pay_at_boarding_station".tr,
+            value: 'cash',
+            icon: Icons.payments_outlined,
+          ),
         ],
       );
     });
@@ -62,7 +64,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColor.white : AppColor.white,
+          color: AppColor.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected
@@ -81,10 +83,7 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
               ),
               child: Icon(icon, color: AppColor.primary),
             ),
-
             SizedBox(width: 12.w),
-
-            // Texts
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +94,6 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
                       fontWeight: FontWeight.w600,
                       fontSize: 14.sp,
                       color: AppColor.black,
-
                     ),
                   ),
                   SizedBox(height: 4.h),
@@ -106,8 +104,6 @@ class PaymentMethodSection extends GetView<BookingSummaryController> {
                 ],
               ),
             ),
-
-            // Radio / Check
             Container(
               width: 20.w,
               height: 20.w,

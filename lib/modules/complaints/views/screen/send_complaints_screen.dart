@@ -29,13 +29,11 @@ class SendComplaintsScreen extends GetView<ComplaintsController> {
                 const ComplaintsHeader(),
                 SizedBox(height: 16.h),
 
-                // عرض معلومات الرحلة والحجز (للعلم فقط)
                 _InfoRow(label: 'Trip Number'.tr, value: '${controller.tripId}'),
                 SizedBox(height: 12.h),
                 _InfoRow(label: 'Booking Number'.tr, value: '${controller.bookingId}'),
                 SizedBox(height: 24.h),
 
-                // اختيار التصنيف
                 const CategorySelector(),
                 SizedBox(height: 20.h),
 

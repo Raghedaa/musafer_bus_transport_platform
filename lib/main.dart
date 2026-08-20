@@ -20,12 +20,14 @@ import 'core/constants/app_theme.dart';
 import 'core/localization/locale_controller.dart';
 import 'core/theme/theme_controller.dart';
 
-
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
+
+  Stripe.publishableKey = 'pk_test_51U4d3gQqcNIUg5ceBDMSxsPCdJPt9x1AmzbL5jLVLg4ghc9j9Bs1hdkWPGmNNGeQJqFDMG5kHxFQSFlE12x5P1g5006H0mHCvB';
 
   await initializeDateFormatting('ar_SA', null);
   timeago.setLocaleMessages('ar', timeago.ArMessages());
@@ -85,6 +87,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find<ThemeController>();
@@ -94,51 +97,48 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       builder: (context, child) {
-        return Obx(() {
-          final box = GetStorage();
-          final bool savedTheme = box.read('isDarkMode') ?? false;
-          final String? token = box.read('token');
-          final String? expiryStr = box.read('expiry_date');
-          final bool isFirstTime = box.read('isFirstTime') ?? true;
+        // إزالة الـ Obx الخارجي تماماً
+        final box = GetStorage();
+        final String? token = box.read('token');
+        final String? expiryStr = box.read('expiry_date');
+        final bool isFirstTime = box.read('isFirstTime') ?? true;
 
-          String initialRoute;
+        String initialRoute;
 
-          if (token != null && token.isNotEmpty && expiryStr != null) {
-            DateTime expiryDate = DateTime.parse(expiryStr);
-            if (DateTime.now().isBefore(expiryDate)) {
-              initialRoute = AppRoute.main_layout;
-            } else {
-              box.remove('token');
-              initialRoute = AppRoute.login;
-            }
+        if (token != null && token.isNotEmpty && expiryStr != null) {
+          DateTime expiryDate = DateTime.parse(expiryStr);
+          if (DateTime.now().isBefore(expiryDate)) {
+            initialRoute = AppRoute.main_layout;
           } else {
-            initialRoute = isFirstTime ? AppRoute.onboarding : AppRoute.login;
+            box.remove('token');
+            initialRoute = AppRoute.login;
           }
+        } else {
+          initialRoute = isFirstTime ? AppRoute.onboarding : AppRoute.login;
+        }
 
-          return GetMaterialApp(
-            title: 'Musafer',
-            translations: MyTranslation(),
-            locale: localeController.initialLocale.value,
+        // الاحتفاظ بـ Obx واحد فقط يراقب المتغيرات المتغيرة (السمة واللغة)
+        return Obx(() => GetMaterialApp(
+          title: 'Musafer',
+          translations: MyTranslation(),
+          locale: localeController.initialLocale.value, // مراقب (Observable)
+          fallbackLocale: const Locale('ar'),
 
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('ar'),
-              Locale('en'),
-            ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('ar'), Locale('en')],
 
-            theme: AppThemes.light,
-            darkTheme: AppThemes.dark,
-            themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+          theme: AppThemes.light,
+          darkTheme: AppThemes.dark,
+          themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light, // مراقب (Observable)
 
-            initialRoute: initialRoute,
-            getPages: AppPages.pages,
-            debugShowCheckedModeBanner: false,
-          );
-        });
+          initialRoute: initialRoute,
+          getPages: AppPages.pages,
+          debugShowCheckedModeBanner: false,
+        ));
       },
     );
   }

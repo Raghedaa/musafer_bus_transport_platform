@@ -10,11 +10,21 @@ class MyComplaintsController extends GetxController {
   var isLoading = false.obs;
   var hasError = false.obs;
 
+  var highlightedComplaintId = RxnInt();
+
   @override
   void onInit() {
     fetchComplaints();
     super.onInit();
   }
+
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchComplaints();
+  }
+
 
   Future<void> fetchComplaints() async {
     isLoading.value = true;
@@ -28,5 +38,15 @@ class MyComplaintsController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+
+  void setHighlightedId(int id) {
+    highlightedComplaintId.value = id;
+    Future.delayed(const Duration(seconds: 4), () {
+      if (highlightedComplaintId.value == id) {
+        highlightedComplaintId.value = null;
+      }
+    });
   }
 }

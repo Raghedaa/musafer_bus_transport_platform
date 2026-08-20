@@ -60,14 +60,27 @@ class SubscriptionDetailsScreen extends StatelessWidget {
             ]),
 
             SizedBox(height: 20.h),
-            // زر الاشتراك
+
             ElevatedButton(
-              onPressed: () => controller.subscribe(),
+              onPressed: controller.isSubscribing.value
+                  ? null
+                  : () => controller.subscribe(),
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.darkgreen,
                   padding: EdgeInsets.symmetric(vertical: 15.h)),
-              child: Text("Subscribe Now".tr,
-                  style: const TextStyle(color: Colors.white)),
+              child: controller.isSubscribing.value
+                  ? SizedBox(
+                height: 20.h,
+                width: 20.h,
+                child: const CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+                  : Text(
+                "Subscribe Now".tr,
+                style: const TextStyle(color: Colors.white),
+              ),
             )
           ],
         );

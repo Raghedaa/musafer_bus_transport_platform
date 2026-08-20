@@ -13,31 +13,53 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
 
   @override
   Widget build(BuildContext context) {
+
+    controller.screenContext = context;
+
+
     return Scaffold(
+
       floatingActionButton: FloatingActionButton(
         onPressed: controller.centerOnBus,
         backgroundColor: AppColor.darkgreen,
         child: const Icon(Icons.directions_bus, color: Colors.white),
       ),
 
+
       body:Stack(
-          children: [ Obx(() {
-        final apiService = Get.find<ApiService>();
-        if (!apiService.isConnected.value) {
-          return const Center(child: Text("لا يوجد اتصال بالإنترنت"));
-        }
+          children: [
+            Obx(() {
+            final apiService = Get.find<ApiService>();
+            if (controller.hasError.value) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+                    const SizedBox(height: 12),
+                    Text("No Internet Connection".tr),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: controller.retryLoading,
+                      icon: const Icon(Icons.refresh),
+                      label: Text("Retry".tr),
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColor.darkgreen),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColor.darkgreen),
-          );
-        }
+            if (controller.isLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(color: AppColor.darkgreen),
+              );
+            }
 
-        return FlutterMap(
+            return FlutterMap(
           mapController: controller.mapController,
           options: MapOptions(
             initialZoom: 15,
-            // مركز الخريطة الابتدائي هو موقع الباص أو نقطة افتراضية
             initialCenter:
                 controller.busLocation.value ?? const LatLng(33.486, 36.339),
             onMapReady: () => controller.onMapReady(),
@@ -48,7 +70,7 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
               userAgentPackageName: 'com.musafer.app',
               tileBuilder: (context, child, tile) {
                 return Container(
-                  color: Colors.grey[200], // لون المربع الرمادي
+                  color: Colors.grey[200],
                   child: child,
                 );
               },
@@ -56,7 +78,6 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
                 debugPrint('❌ Tile Error: $error');
               },
             ),
-            // 1. رسم المسار
             Obx(
               () => PolylineLayer(
                 polylines: [
@@ -83,13 +104,16 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
                         color: AppColor.darkgreen,
                         shape: BoxShape.circle,
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.location_searching,
-                          color: Colors.white,
-                          size: 25,
+                      child: Obx(() => Container(
+                        decoration: BoxDecoration(
+                          color: controller.isBusOffline.value ? Colors.grey : AppColor.darkgreen,
+                          shape: BoxShape.circle,
                         ),
-                      ),
+                        child: const Center(
+                          child: Icon(Icons.location_searching, color: Colors.white, size: 25),
+                        ),
+                      ))
+
                     ),
                   ),
                 ],
@@ -117,7 +141,7 @@ class TripTrackingScreen extends GetView<TripTrackingController> {
                     _buildLegendItem(Icons.location_on, Colors.green, "legend_start_point"),
                     _buildLegendItem(Icons.coffee, Colors.orange, "legend_rest_area"),
                     _buildLegendItem(Icons.flag, Colors.red, "legend_arrival"),
-                    _buildLegendItem(Icons.directions_bus, AppColor.darkgreen, "legend_bus_location"),
+                    _buildLegendItem(Icons.location_searching, AppColor.darkgreen, "legend_bus_location"),
                   ],
                 ),
               ),

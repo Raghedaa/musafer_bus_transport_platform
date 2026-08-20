@@ -13,7 +13,6 @@ class NotificationItem extends GetView<NotificationController> {
 
   @override
   Widget build(BuildContext context) {
-    // جلب الوقت من الريسبونس وتحويله لصيغة (منذ 40 دقيقة)
     final String timeAgo = timeago.format(notification.createdAt, locale: Get.locale?.languageCode ?? 'ar');
 
     return Container(
@@ -25,7 +24,6 @@ class NotificationItem extends GetView<NotificationController> {
         iconColor: AppColor.darkgreen,
         iconBgColor: AppColor.darkgreen.withOpacity(0.1),
 
-        // النقطة الخضراء في جهة اليمين (trailing) إذا كان غير مقروء
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -43,14 +41,10 @@ class NotificationItem extends GetView<NotificationController> {
           ],
         ),
 
-        // تمييز الكارد غير المقروء بحدود خضراء خفيفة وخلفية زرقاء خفيفة جداً
         borderColor: notification.isRead ? Colors.transparent : AppColor.darkgreen.withOpacity(0.3),
         bgColor: notification.isRead ? Colors.white : AppColor.darkgreen.withOpacity(0.02),
 
-        // onTap: () => controller.markAsRead(notification), // الربط مع API
-// في ملف NotificationItem.dart
-
-        onTap: () => controller.handleNotificationTap(notification),
+     onTap: () => controller.handleNotificationTap(notification),
       ),
     );
   }

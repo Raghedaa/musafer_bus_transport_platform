@@ -29,7 +29,8 @@ class TripSearchController extends GetxController {
   var cities = <CityModel>[].obs;
 
   var currentPage = 1.obs;
-  var lastPage = 1.obs;
+  var hasMorePages = true.obs;
+  // var lastPage = 1.obs;
   var isLoadingMore = false.obs;
   final ScrollController scrollController = ScrollController();
 
@@ -42,20 +43,21 @@ class TripSearchController extends GetxController {
 
   @override
   Future<void> onInit() async {
+    super.onInit();
+
     // await Hive.box('popular_trips_box').clear();
     departureDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
     loadOfflineData();
     fetchCities();
     fetchPopularTrips();
     scrollController.addListener(_onScroll);
-    super.onInit();
   }
 
   void _onScroll() {
-    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
-      if (!isLoadingMore.value && currentPage.value < lastPage.value) {
-        fetchPopularTrips(isLoadMore: true);
-      }
+    if (isLoadingMore.isFalse &&
+        hasMorePages.value &&
+        scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+      fetchPopularTrips(isLoadMore: true);
     }
   }
 
@@ -91,7 +93,6 @@ class TripSearchController extends GetxController {
       if (cached != null && cached is List) {
         popularTrips.assignAll(
           cached.map((item) {
-            // ← هاد هو الحل: cast بشكل recursive
             final Map<String, dynamic> map = _deepCast(item);
             return TripModel.fromJson(map);
           }).toList(),
@@ -151,12 +152,13 @@ class TripSearchController extends GetxController {
 
   Future<void> fetchPopularTrips({bool isLoadMore = false}) async {
     if (isLoadMore) {
-      if (currentPage.value >= lastPage.value) return;
+      if (!hasMorePages.value) return;
       isLoadingMore.value = true;
       currentPage.value++;
     } else {
       isPopularLoading.value = true;
       currentPage.value = 1;
+      hasMorePages.value = true;
     }
 
     try {
@@ -165,12 +167,11 @@ class TripSearchController extends GetxController {
       if (isLoadMore) {
         popularTrips.addAll(response.data);
       } else {
-        // ← فقط حدّث لو في بيانات فعلية
         if (response.data.isNotEmpty) {
           popularTrips.assignAll(response.data);
         }
       }
-      lastPage.value = response.lastPage;
+      hasMorePages.value = response.hasMore;
     } catch (e) {
       if (isLoadMore) currentPage.value--;
     } finally {
@@ -179,17 +180,6 @@ class TripSearchController extends GetxController {
     }
   }
 
-
-  // Future<void> fetchPopularTrips() async {
-  //   try {
-  //     isPopularLoading.value = true;
-  //     var trips = await _tripRepository.fetchPopularTrips();
-  //     popularTrips.assignAll(trips);
-  //   } catch (e) {
-  //   } finally {
-  //     isPopularLoading.value = false;
-  //   }
-  // }
 
   Map<String, dynamic> prepareSearchArguments() {
     return {

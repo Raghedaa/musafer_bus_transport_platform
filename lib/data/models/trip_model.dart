@@ -1,3 +1,4 @@
+
 import 'package:intl/intl.dart';
 import 'package:musafer/data/models/rest_area_model.dart';
 import 'package:musafer/data/models/station_model.dart';
@@ -19,7 +20,7 @@ class TripModel {
   final bool isDirect;
   final String tripDate;
   final String duration;
-
+  final String? routePolyline;
   final String driverName;
   final double driverRating;
   final String vehiclePlate;
@@ -32,9 +33,12 @@ class TripModel {
   final double destLat;
   final double destLng;
 
-
   final double? currentLat;
   final double? currentLng;
+
+  final int? companyId;
+  final int? driverId;
+  final int? bookingId;
 
   TripModel({
     required this.id,
@@ -53,92 +57,127 @@ class TripModel {
     required this.isDirect,
     required this.tripDate,
     required this.duration,
-
+    this.routePolyline,
     required this.driverName,
     required this.driverRating,
     required this.vehiclePlate,
     required this.rawVehicle,
     required this.rawSeatMap,
     required this.restAreas,
-
     required this.originLat,
     required this.originLng,
     required this.destLat,
     required this.destLng,
-
     this.currentLat,
     this.currentLng,
+    this.companyId,
+    this.driverId,
+    this.bookingId,
   });
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
-
     final companyObj = json['company'] ?? {};
+    final driverObj = json['driver'] ?? {};
 
-    double oLat = double.tryParse(json['origin_city']?['latitude']?.toString() ?? '0.0') ?? 0.0;
-    double oLng = double.tryParse(json['origin_city']?['longitude']?.toString() ?? '0.0') ?? 0.0;
-    double dLat = double.tryParse(json['destination_city']?['latitude']?.toString() ?? '0.0') ?? 0.0;
-    double dLng = double.tryParse(json['destination_city']?['longitude']?.toString() ?? '0.0') ?? 0.0;
-
-    double _parseDynamicDouble(dynamic value) {
-      if (value == null) return 0.0;
-      if (value is num) return value.toDouble(); // إذا كان int أو double
-      if (value is String) return double.tryParse(value) ?? 0.0; // إذا كان "2.00"
-      return 0.0;
+    String _safeString(dynamic value, {String defaultValue = ''}) {
+      if (value == null) return defaultValue;
+      return value.toString();
     }
-    DateTime depDt = DateTime.parse(json['departure_time'] ?? DateTime.now().toString());
-    DateTime arrDt = DateTime.parse(json['estimated_arrival_time'] ?? DateTime.now().toString());
 
+    double _safeDouble(dynamic value, {double defaultValue = 0.0}) {
+      if (value == null) return defaultValue;
+      if (value is num) return value.toDouble();
+      if (value is String) return double.tryParse(value) ?? defaultValue;
+      return defaultValue;
+    }
+
+    int _safeInt(dynamic value, {int defaultValue = 0}) {
+      if (value == null) return defaultValue;
+      if (value is num) return value.toInt();
+      if (value is String) return int.tryParse(value) ?? defaultValue;
+      return defaultValue;
+    }
+
+    int? _safeIntNullable(dynamic value) {
+      if (value == null) return null;
+      if (value is int) return value;
+      if (value is num) return value.toInt();
+      if (value is String) return int.tryParse(value);
+      return null;
+    }
+
+    // تحويل التواريخ بأمان
+    DateTime _parseDateSafe(dynamic value) {
+      if (value == null) return DateTime.now();
+      try {
+        return DateTime.parse(value.toString());
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
+    double oLat = _safeDouble(json['origin_city']?['latitude']);
+    double oLng = _safeDouble(json['origin_city']?['longitude']);
+    double dLat = _safeDouble(json['destination_city']?['latitude']);
+    double dLng = _safeDouble(json['destination_city']?['longitude']);
+
+    DateTime depDt = _parseDateSafe(json['departure_time']);
+    DateTime arrDt = _parseDateSafe(json['estimated_arrival_time']);
+
+    String polylineStr = _safeString(json['route_polyline'], defaultValue: '');
+    String? finalPolyline = polylineStr.isEmpty ? null : polylineStr;
 
     final currentLoc = json['current_location'];
     final double? curLat = currentLoc != null
-        ? double.tryParse(currentLoc['latitude']?.toString() ?? '')
+        ? _safeDouble(currentLoc['latitude'], defaultValue: 0.0)
         : null;
     final double? curLng = currentLoc != null
-        ? double.tryParse(currentLoc['longitude']?.toString() ?? '')
+        ? _safeDouble(currentLoc['longitude'], defaultValue: 0.0)
         : null;
 
-
     return TripModel(
-      id: json['id'] ?? 0,
-      price: (json['base_fare'] ?? 0).toDouble(),
-      departureTime: json['departure_time'],
-      arrivalTime: json['estimated_arrival_time'],
-      availableSeats: json['available_seats'] ?? 0,
-      status: json['status'] ?? 'scheduled',
-      originCity: json['origin_city']?['name'] ?? '',
-      destinationCity: json['destination_city']?['name'] ?? '',originStation: json['origin_station'] != null
-        ? StationModel.fromJson(json['origin_station'])
-        : null,
+      id: _safeInt(json['id']),
+      price: _safeDouble(json['base_fare']),
+      departureTime: _safeString(json['departure_time']),
+      arrivalTime: _safeString(json['estimated_arrival_time']),
+      availableSeats: _safeInt(json['available_seats']),
+      status: _safeString(json['status'], defaultValue: 'scheduled'),
+      originCity: _safeString(json['origin_city']?['name']),
+      destinationCity: _safeString(json['destination_city']?['name']),
+      originStation: json['origin_station'] != null
+          ? StationModel.fromJson(json['origin_station'])
+          : null,
       destinationStation: json['destination_station'] != null
           ? StationModel.fromJson(json['destination_station'])
           : null,
-      companyName: json['company']?['name'] ?? '',
-      rating: _parseDynamicDouble(json['company']?['rating']),
+      companyName: _safeString(companyObj['name']),
+      rating: _safeDouble(companyObj['rating']),
       reviewsCount: 120,
       isDirect: true,
       tripDate: DateFormat('yyyy-MM-dd').format(depDt),
-      duration: json['estimated_duration_hhmm'] ?? '00:00',
-      driverName: json['driver']?['name'] ?? 'Capt. Driver',
-      driverRating: double.tryParse(json['driver']?['rating']?.toString() ?? '0.0') ?? 0.0,
-      vehiclePlate: json['vehicle']?['plate_number'] ?? 'N/A',
+      duration: _safeString(json['estimated_duration_hhmm'], defaultValue: '00:00'),
+      routePolyline: finalPolyline,
+      driverName: _safeString(driverObj['name'], defaultValue: 'Capt. Driver'),
+      driverRating: _safeDouble(driverObj['rating']),
+      vehiclePlate: _safeString(json['vehicle']?['plate_number'], defaultValue: 'N/A'),
       rawVehicle: json['vehicle'] ?? {},
       rawSeatMap: json['seat_map'] ?? [],
-
       restAreas: (json['rest_areas'] as List? ?? [])
           .map((e) => RestAreaModel.fromJson(e))
           .toList()
         ..sort((a, b) => (a.stopOrder ?? 0).compareTo(b.stopOrder ?? 0)),
-
       originLat: oLat,
       originLng: oLng,
       destLat: dLat,
       destLng: dLng,
-
       currentLat: curLat,
       currentLng: curLng,
-
+      companyId: _safeIntNullable(companyObj['id']),
+      driverId: _safeIntNullable(driverObj['id']),
+      bookingId: _safeIntNullable(json['booking_id'] ?? json['booking']?['id']),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -151,16 +190,21 @@ class TripModel {
       'destination_city': {'name': destinationCity},
       'origin_station': originStation?.toJson(),
       'destination_station': destinationStation?.toJson(),
-      'company': {'name': companyName, 'rating': rating},
+      'company': {'id': companyId, 'name': companyName, 'rating': rating},
       'estimated_duration_hhmm': duration,
+      'route_polyline': routePolyline,
       'driver': {
+        'id': driverId,
         'name': driverName,
         'rating': driverRating.toString(),
       },
       'vehicle': rawVehicle,
       'seat_map': rawSeatMap,
       'rest_areas': restAreas.map((e) => e.toJson()).toList(),
+      'booking_id': bookingId,
     };
   }
-
 }
+
+
+

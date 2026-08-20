@@ -1,5 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/shared/custom_snackbar.dart';
 import '../../../core/shared/custom_text_form_field.dart';
@@ -8,26 +10,28 @@ import '../../../data/models/booking_summary_model.dart';
 import '../../../data/models/my_subscription_model.dart';
 import '../../../data/repositories/booking_repository.dart';
 import '../../../data/repositories/promo_repository.dart';
+import '../../../data/repositories/stripe_repositotrie.dart';
 import '../../../data/repositories/trip_repository.dart';
 import '../../booking_history/controllers/booking_history_controller.dart';
+import '../../booking_history/view/screen/booking_history_screen.dart';
 import '../../main_layout/controller/main_layout_controller.dart';
 import '../../my_subscriptions/controllers/my_subscriptions_controller.dart';
 import '../../profile/controller/profile_controller.dart';
+import '../../search_trip/view/screen/search_screen.dart';
 import '../../subscription/controllers/subscription_controller.dart';
 import '../../ticket_details/controllers/ticket_controller.dart';
 import '../../ticket_details/view/screen/ticket_details_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+
 
 class BookingSummaryController extends GetxController {
-
-
   final BookingRepository _repository = BookingRepository();
   final TripRepository _tripRepository = TripRepository();
   final PromoRepository _promoRepo = PromoRepository();
+  final StripeRepository _stripeRepo = StripeRepository();
+
 
   var bookingSummaryModel = Rxn<BookingSummaryModel>();
-  var paymentMethod = 'digital'.obs;
+  var paymentMethod = 'credit_card'.obs;
   var isLoading = false.obs;
   var pnrNumber = "".obs;
 
@@ -41,8 +45,8 @@ class BookingSummaryController extends GetxController {
     couponCode.dispose();
     super.onClose();
   }
-  void changePaymentMethod(String method) => paymentMethod.value = method;
 
+  void changePaymentMethod(String method) => paymentMethod.value = method;
 
   Future<void> refreshBookingSummary() async {
     if (bookingSummaryModel.value == null) return;
@@ -60,46 +64,10 @@ class BookingSummaryController extends GetxController {
         totalPrice: oldModel.totalPrice,
         bookingDate: oldModel.bookingDate,
       );
-
     } catch (e) {
       print("Refresh Error: $e");
-      // CustomSnackBar.showError("failed_refresh_booking".tr);
-      }
+    }
   }
-
-
-  // Future<void> confirmBooking() async {
-  //   if (bookingSummaryModel.value == null) return;
-  //
-  //   try {
-  //     isLoading.value = true;
-  //     final model = bookingSummaryModel.value!;
-  //
-  //     final result = await _repository.createBooking(
-  //       tripId: model.tripDetails.id,
-  //       seatNumbers: model.selectedSeats.map((e) => int.parse(e)).toList(),
-  //       paymentMethod: paymentMethod.value,
-  //     );
-  //
-  //
-  //     pnrNumber.value = result['pnr_code'] ?? '';
-  //     CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
-  //     final ticketCtrl = Get.isRegistered<TicketController>()
-  //         ? Get.find<TicketController>()
-  //         : Get.put(TicketController());
-  //
-  //     await ticketCtrl.setTripData(result);
-  //
-  //     Get.find<MainLayoutController>().pushToExplore(const TicketDetailsScreen());
-
-  //   } catch (e) {
-  //     print("Booking error: $e");
-  //     CustomSnackBar.showError("something_went_wrong".tr);    } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
-
-
 
 
   Future<void> confirmBooking() async {
@@ -111,101 +79,297 @@ class BookingSummaryController extends GetxController {
       final seats = model.selectedSeats.map((e) => int.parse(e)).toList();
 
       int? subscriptionIdToSend;
-
-      if (paymentMethod.value == 'digital') {
-        final subCtrl = Get.isRegistered<MySubscriptionsController>()
-            ? Get.find<MySubscriptionsController>()
-            : Get.put(MySubscriptionsController());
-
+      if (Get.isRegistered<MySubscriptionsController>()) {
+        final subCtrl = Get.find<MySubscriptionsController>();
         final activeSub = subCtrl.subscriptions.firstWhereOrNull((s) => s.status == 'active');
-
         if (activeSub != null) {
           subscriptionIdToSend = activeSub.id;
         }
       }
-      else {
-        subscriptionIdToSend = null;
+
+      if (paymentMethod.value == 'credit_card') {
+        try {
+          final bookingIntent = await _stripeRepo.createBookingPaymentIntent(
+            tripId: model.tripDetails.id,
+            seatNumbers: seats,
+            paymentMethod: 'credit_card',
+            subscriptionId: subscriptionIdToSend?.toString(),
+          );
+
+          if (bookingIntent == null) {
+            CustomSnackBar.showError("failed_to_create_booking".tr);
+            isLoading.value = false;
+            return;
+          }
+
+          if (bookingIntent['requires_payment'] == false) {
+            pnrNumber.value = bookingIntent['pnr_code'] ?? '';
+            CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
+            await _navigateToTicket(bookingIntent);
+            isLoading.value = false;
+            return;
+          }
+
+
+          final paymentSuccess = await _stripeRepo.confirmPayment(
+            clientSecret: bookingIntent['client_secret'],
+            publishableKey: bookingIntent['publishable_key'],
+          );
+
+          if (!paymentSuccess) {
+            isLoading.value = false;
+            return;
+          }
+
+          final bookingId = bookingIntent['booking_id'];
+          bool confirmed = false;
+          int attempts = 0;
+          const maxAttempts = 15;
+
+          while (attempts < maxAttempts && !confirmed) {
+            await Future.delayed(const Duration(seconds: 1));
+            attempts++;
+
+            final statusData = await _stripeRepo.getBookingStatus(bookingId);
+            if (statusData != null) {
+              final status = statusData['status'] as String?;
+
+              if (status == 'confirmed') {
+                confirmed = true;
+                pnrNumber.value = statusData['pnr_code'] ?? '';
+                CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
+
+                await _navigateToTicket(statusData);
+
+                if (Get.isRegistered<ProfileController>()) {
+                  await Get.find<ProfileController>().fetchData();
+                }
+                break;
+              } else if (status == 'cancelled') {
+                CustomSnackBar.showError("booking_cancelled_seats_released".tr);
+                isLoading.value = false;
+                return;
+              }
+            }
+          }
+
+          if (!confirmed) {
+            CustomSnackBar.showError("booking_confirmation_timeout".tr);
+            isLoading.value = false;
+            return;
+          }
+
+          isLoading.value = false;
+          return;
+
+        } on DioException catch (e) {
+          print("❌ Credit Card Booking Error: $e");
+          print("❌ Response data: ${e.response?.data}");
+
+          final errorMessage = _extractErrorMessage(e.response?.data);
+
+          if (errorMessage.isNotEmpty) {
+            CustomSnackBar.showError(errorMessage);
+          } else {
+            CustomSnackBar.showError("unexpected_error".tr);
+          }
+
+          isLoading.value = false;
+          return;
+        }
       }
 
-     try {
-        await _repository.validateBooking(
-          tripId: model.tripDetails.id,
-          seatNumbers: seats,
-          paymentMethod: paymentMethod.value,
-          subscriptionId: subscriptionIdToSend,
-        );
-      } catch (e) {
-        if (subscriptionIdToSend != null) {
-          subscriptionIdToSend = null;
+     if (paymentMethod.value == 'wallet') {
+        try {
           await _repository.validateBooking(
             tripId: model.tripDetails.id,
             seatNumbers: seats,
-            paymentMethod: paymentMethod.value,
-            subscriptionId: null,
+            paymentMethod: 'wallet',
+            subscriptionId: subscriptionIdToSend,
           );
-        } else {
-          rethrow;
+        } catch (e) {
+          if (subscriptionIdToSend != null) {
+            subscriptionIdToSend = null;
+            await _repository.validateBooking(
+              tripId: model.tripDetails.id,
+              seatNumbers: seats,
+              paymentMethod: 'wallet',
+              subscriptionId: null,
+            );
+          } else {
+            rethrow;
+          }
         }
+
+        final result = await _repository.createBooking(
+          tripId: model.tripDetails.id,
+          seatNumbers: seats,
+          paymentMethod: 'wallet',
+          subscriptionId: subscriptionIdToSend,
+        );
+
+        pnrNumber.value = result['pnr_code'] ?? '';
+        CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
+
+        if (Get.isRegistered<ProfileController>()) {
+          await Get.find<ProfileController>().fetchData();
+        }
+
+        await _navigateToTicket(result);
+        isLoading.value = false;
+        return;
       }
 
-      final result = await _repository.createBooking(
-        tripId: model.tripDetails.id,
-        seatNumbers: seats,
-        paymentMethod: paymentMethod.value,
-        subscriptionId: subscriptionIdToSend,
-      );
+     if (paymentMethod.value == 'cash') {
+        try {
+          await _repository.validateBooking(
+            tripId: model.tripDetails.id,
+            seatNumbers: seats,
+            paymentMethod: 'cash',
+            subscriptionId: subscriptionIdToSend,
+          );
+        } catch (e) {
+          if (subscriptionIdToSend != null) {
+            subscriptionIdToSend = null;
+            await _repository.validateBooking(
+              tripId: model.tripDetails.id,
+              seatNumbers: seats,
+              paymentMethod: 'cash',
+              subscriptionId: null,
+            );
+          } else {
+            rethrow;
+          }
+        }
 
-      pnrNumber.value = result['pnr_code'] ?? '';
-      CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
+        final result = await _repository.createBooking(
+          tripId: model.tripDetails.id,
+          seatNumbers: seats,
+          paymentMethod: 'cash',
+          subscriptionId: subscriptionIdToSend,
+        );
 
+        pnrNumber.value = result['pnr_code'] ?? '';
+        CustomSnackBar.showSuccess("booking_confirmed_successfully".tr);
 
-      final newBooking = BookingHistoryModel.fromJson(result);
+        if (Get.isRegistered<ProfileController>()) {
+          await Get.find<ProfileController>().fetchData();
+        }
 
-      if (Get.isRegistered<BookingHistoryController>()) {
-        final historyCtrl = Get.find<BookingHistoryController>();
-        historyCtrl.allBookings.insert(0, newBooking);
-        historyCtrl.changeFilter(historyCtrl.selectedFilter.value);
-        historyCtrl.setHighlightedId(newBooking.id);
+        await _navigateToTicket(result);
+        isLoading.value = false;
+        return;
       }
 
-      final ticketCtrl = Get.isRegistered<TicketController>()
-          ? Get.find<TicketController>()
-          : Get.put(TicketController());
+    } on DioException catch (e) {
+      print("❌ Booking Error: $e");
 
-      await ticketCtrl.setTripData(result);
-      Get.find<MainLayoutController>().pushToExplore(const TicketDetailsScreen());
+      final errorMessage = _extractErrorMessage(e.response?.data);
 
-    } catch (e) {
-      print("Booking error: $e");
-
-      if (e is DioException && e.response != null) {
-        final responseData = e.response!.data;
-
-        if (e.response!.statusCode == 402) {
-          CustomSnackBar.showError("insufficient_funds_error".tr);
-        } else {
-          String errorMessage = responseData['message']?.toString() ?? "unexpected_error";
-          CustomSnackBar.showError(errorMessage.tr);
-        }
+      if (errorMessage.isNotEmpty) {
+        CustomSnackBar.showError(errorMessage);
       } else {
         CustomSnackBar.showError("unexpected_error".tr);
       }
-    }finally {
+
+      isLoading.value = false;
+
+    } catch (e) {
+      print("❌ Unexpected error: $e");
+      CustomSnackBar.showError("unexpected_error".tr);
+      isLoading.value = false;
+    } finally {
       isLoading.value = false;
     }
+  }
+
+
+
+  String _extractErrorMessage(dynamic errorData) {
+    if (errorData == null) return '';
+
+    try {
+      if (errorData is Map) {
+        if (errorData['message'] != null) {
+          return errorData['message'].toString();
+        }
+
+        if (errorData['errors'] != null) {
+          final errors = errorData['errors'];
+          if (errors is Map) {
+            for (var key in errors.keys) {
+              final value = errors[key];
+              if (value is List && value.isNotEmpty) {
+                return value.first.toString();
+              } else if (value is String) {
+                return value;
+              }
+            }
+          }
+        }
+
+        if (errorData['data'] != null && errorData['data'] is Map) {
+          return _extractErrorMessage(errorData['data']);
+        }
+      }
+
+      if (errorData is List && errorData.isNotEmpty) {
+        return errorData.first.toString();
+      }
+
+      if (errorData is String) {
+        return errorData;
+      }
+
+    } catch (e) {
+      print('❌ Error extracting message: $e');
+    }
+
+    return '';
+  }
+
+  Future<void> _navigateToTicket(Map<String, dynamic> result) async {
+    if (result.containsKey('subscription_id') && result['subscription_id'] != null) {
+      result['subscription_id'] = result['subscription_id'].toString();
+    }
+
+    final newBooking = BookingHistoryModel.fromJson(result);
+
+    if (Get.isRegistered<BookingHistoryController>()) {
+      final historyCtrl = Get.find<BookingHistoryController>();
+      historyCtrl.allBookings.insert(0, newBooking);
+      historyCtrl.changeFilter(historyCtrl.selectedFilter.value);
+      historyCtrl.setHighlightedId(newBooking.id);
+    }
+
+    final ticketCtrl = Get.isRegistered<TicketController>()
+        ? Get.find<TicketController>()
+        : Get.put(TicketController());
+
+    await ticketCtrl.setTripData(result);
+
+    final layoutController = Get.find<MainLayoutController>();
+
+    layoutController.bookingStack.assignAll([
+      const BookingHistoryScreen(),
+      const TicketDetailsScreen(),
+    ]);
+
+    layoutController.currentIndex.value = 0;
+    layoutController.update();
+    layoutController.bookingStack.refresh();
+
+    layoutController.exploreStack.assignAll([const TripSearchScreen()]);
+    layoutController.exploreStack.refresh();
   }
 
 
   void updateHistoryLocally(dynamic result) {
     if (Get.isRegistered<BookingHistoryController>()) {
       final historyCtrl = Get.find<BookingHistoryController>();
-
       final newBooking = BookingHistoryModel.fromJson(result);
-
       historyCtrl.allBookings.insert(0, newBooking);
-
       historyCtrl.changeFilter(historyCtrl.selectedFilter.value);
-
       historyCtrl.setHighlightedId(newBooking.id);
     }
   }
@@ -227,7 +391,6 @@ class BookingSummaryController extends GetxController {
               : ElevatedButton(
             onPressed: () async {
               await applyCoupon(couponCode.text);
-
               if (discountAmount.value > 0) {
                 Get.back();
               }
@@ -258,7 +421,6 @@ class BookingSummaryController extends GetxController {
       }
     } catch (e) {
       String error = e.toString().replaceAll("Exception: ", "");
-
       if (error.contains("not valid")) {
         CustomSnackBar.showError("coupon_not_valid_for_trip".tr);
       } else {

@@ -6,11 +6,14 @@ import '../../booking_history/controllers/booking_history_controller.dart';
 import '../../booking_history/view/screen/booking_history_screen.dart';
 import '../../booking_summary/controllers/booking_summary_controller.dart';
 import '../../booking_summary/view/screen/booking_summary_screen.dart';
+import '../../profile/controller/profile_controller.dart';
 import '../../profile/view/screen/profile_view.dart';
+import '../../search_trip/controllers/search_controller.dart';
 import '../../search_trip/view/screen/search_screen.dart';
 import '../../select_seat/controllers/select_seat_controller.dart';
 import '../../select_seat/view/screen/select_seat_screen.dart';
 import '../../settings/view/screen/settings_view.dart';
+import '../../subscription/controllers/subscription_controller.dart';
 import '../../subscription_details/controllers/subscription_details_controller.dart';
 import '../../ticket_details/controllers/ticket_controller.dart';
 import '../../ticket_details/view/screen/ticket_details_screen.dart';
@@ -28,22 +31,51 @@ class MainLayoutController extends GetxController {
   RxList<Widget> notificationStack = <Widget>[const SettingsView()].obs;
   RxList<Widget> profileStack = <Widget>[const ProfileView()].obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    _verifyUserStatusWithServer();
+
+    if (Get.arguments != null) {
+      currentIndex.value = Get.arguments;
+    }
+
+    ever(currentIndex, (index) {
+      if (index == 0 && Get.isRegistered<BookingHistoryController>()) {
+        Get.find<BookingHistoryController>().fetchBookings();
+      }
+      if (index == 1 && Get.isRegistered<SubscriptionController>()) {
+        Get.find<SubscriptionController>().loadPlans();
+      }
+      if (index == 2 && Get.isRegistered<TripSearchController>()) {
+        Get.find<TripSearchController>().fetchCities();
+        Get.find<TripSearchController>().fetchPopularTrips();
+      }
+      if (index == 4 && Get.isRegistered<ProfileController>()) {
+        Get.find<ProfileController>().fetchData();
+      }
+    });
+  }
 
 
 
   void resetStack(int index) {
     switch (index) {
-      case 0: // Bookings
+      case 0:
+        if (Get.isRegistered<TicketController>()) {
+          Get.delete<TicketController>();
+        }
         bookingStack.assignAll([const BookingHistoryScreen()]);
         break;
-      case 1: // Subscriptions
+      case 1:
         subscriptionStack.clear();
         break;
-      case 4: // Profile
+      case 4:
         profileStack.assignAll([const ProfileView()]);
         break;
     }
     update();
+    bookingStack.refresh();
   }
 
 
@@ -77,37 +109,50 @@ class MainLayoutController extends GetxController {
   void changePage(int index) {
     if (currentIndex.value == index) {
       resetStack(index);
+      if (index == 2) {
+        exploreStack.assignAll([const TripSearchScreen()]);
+      }
     } else {
+      if (index == 0) {
+        resetStack(0);
+      }
       currentIndex.value = index;
     }
-    }
-  // void changePage(int index) {
-  //   if (currentIndex.value == 4) {
-  //     notificationStack.assignAll([const SettingsView()]);
-  //   }
-  //   currentIndex.value = index;
-  // }
+  }
 
 
   void resetAndGoToBookings() {
-    if (Get.isRegistered<BookingHistoryController>()) {
-      Get.delete<BookingHistoryController>(force: true);
+    print('🟢 [resetAndGoToBookings] START');
+
+    if (!Get.isRegistered<BookingHistoryController>()) {
+      Get.put(BookingHistoryController());
     }
 
-    bookingStack.assignAll([const BookingHistoryScreen()]);
+    final bookingCtrl = Get.find<BookingHistoryController>();
+
+   bookingStack.assignAll([const BookingHistoryScreen()]);
+    bookingStack.refresh();
 
     currentIndex.value = 0;
-
     update();
-    bookingStack.refresh();
+
+    print('🟢 [resetAndGoToBookings] END');
   }
 
-  void pushToBookings(Widget page,{dynamic arguments}) {
+  void pushToBookings(Widget page, {dynamic arguments}) {
+    if (page is SelectSeatScreen) {
+      if (bookingStack.isNotEmpty && bookingStack.last is! SelectSeatScreen) {
+        bookingStack.add(page);
+        update();
+        bookingStack.refresh();
+        return;
+      }
+    }
+
     bookingStack.add(page);
     update();
     bookingStack.refresh();
   }
-
 
   void pushToSubscription(Widget page) {
     if (!Get.isRegistered<SubscriptionDetailsController>()) {
@@ -125,37 +170,34 @@ class MainLayoutController extends GetxController {
     return false;
   }
 
+
   bool popBookings() {
     if (bookingStack.length > 1) {
       Widget topPage = bookingStack.last;
 
-      // إضافة هذا السطر:
+      bool isSelectSeat = topPage is SelectSeatScreen;
+
       if (Get.isRegistered<BookingHistoryController>()) {
         Get.find<BookingHistoryController>().clearHighlight();
-      }
-
-      if (topPage is TicketDetailsScreen) {
-        Get.delete<TicketController>();
       }
 
       bookingStack.removeLast();
       update();
       bookingStack.refresh();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (topPage is TicketDetailsScreen) {
+        } else if (topPage is SelectSeatScreen) {
+          if (Get.isRegistered<SelectSeatController>()) {
+            Get.delete<SelectSeatController>(force: true);
+          }
+        }
+      });
+
       return true;
     }
     return false;
   }
-
-  @override
-  void onInit() {
-    super.onInit();
-    _verifyUserStatusWithServer();
-
-    if (Get.arguments != null) {
-      currentIndex.value = Get.arguments;
-    }
-  }
-
   void _verifyUserStatusWithServer() async {
     try {
 
@@ -173,26 +215,31 @@ class MainLayoutController extends GetxController {
     exploreStack.refresh();
   }
 
-
-
   bool popExplore() {
     if (exploreStack.length > 1) {
       Widget topPage = exploreStack.last;
 
-      if (topPage is TicketDetailsScreen) {
-        Get.delete<TicketController>();
-      } else if (topPage is BookingSummaryScreen) {
-        Get.delete<BookingSummaryController>();
-      } else if (topPage is SelectSeatScreen) {
-        Get.delete<SelectSeatController>();
-      }
-
       exploreStack.removeLast();
       update();
+      exploreStack.refresh();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (topPage is TicketDetailsScreen) {
+          if (Get.isRegistered<TicketController>()) {
+            Get.delete<TicketController>();
+          }
+        } else if (topPage is BookingSummaryScreen) {
+          if (Get.isRegistered<BookingSummaryController>()) {
+            Get.delete<BookingSummaryController>();
+          }
+        }
+      });
+
       return true;
     }
     return false;
   }
+
 
   Future<bool> onWillPop() async {
     if (currentIndex.value == 0) {
@@ -200,14 +247,12 @@ class MainLayoutController extends GetxController {
         popBookings();
         return false;
       }
-    }
-    else if (currentIndex.value == 2) {
+    } else if (currentIndex.value == 2) {
       if (exploreStack.length > 1) {
         popExplore();
         return false;
       }
-    }
-    else if (currentIndex.value == 4) {
+    } else if (currentIndex.value == 4) {
       if (profileStack.length > 1) {
         popProfileStack();
         return false;
@@ -221,7 +266,6 @@ class MainLayoutController extends GetxController {
 
     return true;
   }
-
   void navigateBack() {
     if (currentIndex.value == 0) {
       popBookings();

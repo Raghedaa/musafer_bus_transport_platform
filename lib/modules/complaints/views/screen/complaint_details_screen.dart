@@ -75,7 +75,7 @@ class ComplaintDetailsScreen extends StatelessWidget {
             children: [
               InfoCard(model: model),
               SizedBox(height: 16.h),
-              TripCard(model: model), // الودجت الجديدة
+              TripCard(model: model),
               SizedBox(height: 16.h),
               AttachmentsSection(urls: model.attachmentUrls),
               SizedBox(height: 30.h,)

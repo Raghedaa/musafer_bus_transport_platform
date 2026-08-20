@@ -81,6 +81,8 @@ class _DashedLine extends StatelessWidget {
   }
 }
 
+
+
 class TicketSeatInfo extends StatelessWidget {
   final List<String> seats;
   final String date;
@@ -93,24 +95,59 @@ class TicketSeatInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // ✅ Seats (يسار)
-        Text(
-          "Seats: ".tr + seats.join(', '),
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
-            fontSize: 12.sp,
-          ),
-        ),
+    final seatsText = seats.isEmpty
+        ? '--'
+        : seats.join(', ');
 
-        Text(
-          date,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
-            fontSize: 12.sp,
-          ),
+    return Row(
+      mainAxisAlignment:
+      MainAxisAlignment.spaceBetween,
+      crossAxisAlignment:
+      CrossAxisAlignment.end,
+      children: [
+        Column(
+          crossAxisAlignment:
+          CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Seats'.tr,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 11.sp,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              seatsText,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment:
+          CrossAxisAlignment.end,
+          children: [
+            Text(
+              'Date'.tr,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 11.sp,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              date,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.sp,
+              ),
+            ),
+          ],
         ),
       ],
     );

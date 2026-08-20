@@ -23,4 +23,18 @@ class BookingProvider {
     return await _apiService.get(endPoint: 'passenger/bookings/$id');
   }
 
+  Future<Response> modifyBooking(Map<String, dynamic> data) async {
+    return await _apiService.post(endPoint: 'passenger/bookings/modify', data: data);
+  }
+
+  Future<Response> payChildBooking(int childBookingId, Map<String, dynamic> data) async {
+    return await _apiService.post(
+      endPoint: 'passenger/bookings/$childBookingId/pay',
+      data: data,
+    );
+  }
+
+  Future<Response> cancelBooking(int bookingId) async {
+    return await _apiService.post(endPoint: 'passenger/bookings/$bookingId/cancel', data: {});
+  }
 }

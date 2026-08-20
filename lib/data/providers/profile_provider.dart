@@ -9,4 +9,7 @@ class ProfileProvider {
 
   Future<Response> updateProfile(Map<String, dynamic> data) async =>
       await _apiService.patch(endPoint: 'passenger/profile', data: data);
+
+Future<Response> topUpWallet(Map<String, dynamic> data) async =>
+    await _apiService.post(endPoint: 'passenger/wallet/top-up', data: data);
 }

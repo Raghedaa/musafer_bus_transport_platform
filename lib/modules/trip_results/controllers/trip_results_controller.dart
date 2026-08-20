@@ -50,8 +50,15 @@ class TripResultsController extends GetxController {
   Future<void> fetchTripsFromServer() async {
     try {
       isLoading.value = true;
+
       trips.clear();
       _allTrips.clear();
+
+      print("🔍 بدء البحث في Controller:");
+      print("  - من: $_originId");
+      print("  - إلى: $_destinationId");
+      print("  - التاريخ: ${travelDate.value}");
+      print("  - الوقت: ${travelTime.value}");
 
       final fetchedTrips = await _tripRepository.fetchSearchedTrips(
         originId: _originId,
@@ -60,18 +67,22 @@ class TripResultsController extends GetxController {
         time: travelTime.value,
       );
 
+      print("✅ تم استلام ${fetchedTrips.length} رحلة في Controller");
+
       _allTrips.assignAll(fetchedTrips);
       trips.assignAll(fetchedTrips);
 
       applyFilter(selectedFilter.value);
 
     } catch (e) {
+      print("❌ خطأ في جلب الرحلات: $e");
       trips.clear();
       _allTrips.clear();
     } finally {
       isLoading.value = false;
     }
   }
+
 
   void applyFilter(String filterType) {
     selectedFilter.value = filterType;
