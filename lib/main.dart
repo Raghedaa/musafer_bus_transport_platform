@@ -20,7 +20,6 @@ import 'core/constants/app_theme.dart';
 import 'core/localization/locale_controller.dart';
 import 'core/theme/theme_controller.dart';
 
-import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
